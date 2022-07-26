@@ -1,0 +1,9 @@
+<div [ngClass]="isToday ? 'today' : ''"
+     [ngStyle]="{'height': '100%'}"
+>
+  <div class="day-title">{{dayModel.day}}</div>
+  <app-event-of-day [totalEventCount]="events.length"
+                    [eventOfDay]="eventOfDay"
+                    *ngFor="let eventOfDay of events">
+  </app-event-of-day>
+</div>

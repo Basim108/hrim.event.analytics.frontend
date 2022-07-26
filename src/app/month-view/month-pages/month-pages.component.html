@@ -1,0 +1,16 @@
+<div class="row justify-content-md-center">
+  <div class="col col-md-2"><h2>{{currentMonth.toFormat('yyyy LLLL')}}</h2></div>
+  <div class="col col-md-2">
+    <div class="btn-group-sm sb-1" role="grope" aria-label="Basic example">
+      <button type="button" class="btn btn-light" (click)="setPrevMonth()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_circle_left"></mat-icon>
+      </button>
+      <button type="button" class="btn btn-light" (click)="setCurrentMonth()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="cached"></mat-icon>
+      </button>
+      <button type="button" class="btn btn-light" (click)="setNextMonth()">
+        <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_circle_right"></mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
