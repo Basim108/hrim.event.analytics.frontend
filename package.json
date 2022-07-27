@@ -1,5 +1,5 @@
 {
-  "name": "hrim-events",
+  "name": "hrim-event-analytics",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -23,7 +23,6 @@
     "bootstrap": "^4.6.2",
     "luxon": "^3.0.1",
     "rxjs": "~7.5.0",
-    "rxjs-compat": "^6.6.7",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },

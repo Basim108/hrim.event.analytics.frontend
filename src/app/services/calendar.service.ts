@@ -23,11 +23,11 @@ export class CalendarService {
     const firstMonthDay = DateTime.fromObject({year: now.year, month: now.month, day: 1});
     const lastMonthDay = DateTime.fromObject({year: now.year, month: now.month, day: now.daysInMonth});
     const completeLastWeekDays = lastMonthDay.weekday < 7
-      ? 7 - lastMonthDay.weekday
+      ? 7 - lastMonthDay.weekday - 1
       : 6;
     const allReportDays = now.daysInMonth + firstMonthDay.weekday + completeLastWeekDays;
     const result = [];
-    let weekIndex = firstMonthDay.weekYear;
+    let weekIndex = firstMonthDay.weekNumber;
     let firstReportDay = firstMonthDay.minus({days: firstMonthDay.weekday});
     for (let i = 0; i < allReportDays; i++) {
       if (i % 7 === 0) {

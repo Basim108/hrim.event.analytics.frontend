@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/hrim-events'),
+      dir: require('path').join(__dirname, './coverage/hrim-event-analytics'),
       subdir: '.',
       reporters: [
         { type: 'html' },
