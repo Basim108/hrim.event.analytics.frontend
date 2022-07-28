@@ -1,7 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {HrimEventModel} from "../shared/hrim-event.model";
 import {GuidService} from "./guid.service";
-import {LogService} from "./log.service";
 import {ReplaySubject, Subject, of} from "rxjs";
 
 @Injectable({ providedIn: 'root'})
@@ -10,9 +9,8 @@ export class HrimEventService {
   // created$= new ReplaySubject<HrimEventModel>();
   // deleted$= new Subject<HrimEventModel>();
 
-  constructor(private guidService: GuidService,
-              private logger: LogService) {
-    logger.log('HrimEventService constructor');
+  constructor(private guidService: GuidService) {
+    console.debug('HrimEventService constructor');
   }
 
   createEvent(model: HrimEventModel): void {

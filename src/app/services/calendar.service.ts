@@ -1,17 +1,14 @@
 import {DateTime} from "luxon";
 import {WeekModel} from "../shared/week.model";
 import {DayModel} from "../shared/day.model";
-import {BehaviorSubject} from "rxjs";
-import {LogService} from "./log.service";
 import {Injectable} from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class CalendarService {
   private weeksByMonth: { [name: string]: WeekModel[] } = {};
-  monthChanges$ = new BehaviorSubject<DateTime>(DateTime.now());
 
-  constructor(private logger: LogService) {
-    logger.log('CalendarService constructor');
+  constructor(){
+    console.debug('CalendarService constructor');
   }
 
   getWeeks(date?: DateTime): WeekModel[] {

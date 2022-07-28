@@ -1,3 +1,7 @@
 [disabled] {
   cursor: not-allowed;
 }
+
+.nav-link {
+  cursor: pointer;
+}

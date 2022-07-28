@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LogService} from "../services/log.service";
+import {RouteService} from "../services/route.service";
 
 @Component({
   selector: 'app-header',
@@ -7,18 +7,22 @@ import {LogService} from "../services/log.service";
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  isAuthorized = false;
-  isMonthViewActive = true;
-
-  constructor(private logger: LogService) {
-    logger.log('HeaderComponent constructor');
+  constructor(private routeService: RouteService) {
+    console.debug('HeaderComponent constructor');
   }
 
   ngOnInit(): void {
-    this.logger.log('HeaderComponent ngOnInit');
+    console.debug('HeaderComponent ngOnInit');
+    console.log(window.location.href);
   }
 
-  switchToMonthView(){
-    this.isMonthViewActive = !this.isMonthViewActive;
+  navigateToMonthView() {
+    console.debug('start handing navigateToMonthView')
+    if (!this.isMonthViewActive())
+      this.routeService.navigateToLastSuccessfulMonth();
+  }
+
+  isMonthViewActive() {
+    return window.location.href.indexOf(this.routeService.monthView.path) > -1;
   }
 }

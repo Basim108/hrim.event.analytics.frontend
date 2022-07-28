@@ -2,7 +2,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CalendarService} from "../services/calendar.service";
 import {WeekModel} from "../shared/week.model";
 import {Subscription} from "rxjs";
-import {LogService} from "../services/log.service";
+import {ActivatedRoute, Params, Router} from "@angular/router";
+import {RouteService} from "../services/route.service";
+import {DateTime} from "luxon";
 
 @Component({
   selector: 'app-month-view',
@@ -12,23 +14,34 @@ import {LogService} from "../services/log.service";
 })
 export class MonthViewComponent implements OnInit, OnDestroy {
   weeks: WeekModel[];
-  monthChangedSubscription: Subscription;
+  currentMonth: DateTime;
+  routeParamsSubscription: Subscription;
 
   constructor(private calendarService: CalendarService,
-              private logger: LogService) {
-    logger.log('MonthViewComponent constructor');
+              private currentRoute: ActivatedRoute,
+              private router: Router,
+              private routeService: RouteService) {
+    console.debug('MonthViewComponent constructor');
   }
 
   ngOnDestroy(): void {
-    this.logger.log('MonthViewComponent ngOnDestroy');
-    this.monthChangedSubscription.unsubscribe();
+    console.debug('MonthViewComponent ngOnDestroy');
+    this.routeParamsSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.logger.log('MonthViewComponent ngOnInit');
-    // this.weeks = this.calendarService.getWeeks();
-    this.monthChangedSubscription = this.calendarService.monthChanges$.subscribe(monthDt => {
-      this.weeks = this.calendarService.getWeeks(monthDt)
-    });
+    console.debug('MonthViewComponent ngOnInit');
+    this.routeParamsSubscription = this.currentRoute.params.subscribe(
+      (params: Params) => {
+        const date = this.routeService.monthView.getDateFromParams(params);
+        console.debug('date from route params: ', date);
+        if (date) {
+          this.routeService.monthView.lastSuccessfulDate = date;
+          this.weeks = this.calendarService.getWeeks(date);
+          this.currentMonth = date;
+        } else {
+          this.router.navigate([this.routeService.notFoundPath]);
+        }
+      });
   }
 }
