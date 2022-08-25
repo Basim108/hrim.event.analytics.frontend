@@ -3,23 +3,33 @@ name: Node.js CI
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
   pull_request:
     branches: [ "main" ]
-
+    paths-ignore:
+      - '**.md'
+env:
+  NPM_PROJECT_PATH: 'Hrim.Event.Analytics.Web/ClientApp'
+  
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 'Hrim.Event.Analytics.Web/ClientApp'
     strategy:
       matrix:
         node-version: [16.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
       - run: npm ci
       - run: npm run build --if-present
 
