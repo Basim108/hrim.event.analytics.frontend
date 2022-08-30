@@ -2,13 +2,14 @@ import {DateTime} from "luxon";
 import {WeekModel} from "../shared/week.model";
 import {DayModel} from "../shared/day.model";
 import {Injectable} from "@angular/core";
+import {LogService} from "./log.service";
 
 @Injectable({ providedIn: 'root' })
 export class CalendarService {
   private weeksByMonth: { [name: string]: WeekModel[] } = {};
 
-  constructor(){
-    console.debug('CalendarService constructor');
+  constructor(private logger: LogService){
+    logger.logConstructor(this);
   }
 
   getWeeks(date?: DateTime): WeekModel[] {

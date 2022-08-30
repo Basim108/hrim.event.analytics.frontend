@@ -1,23 +1,33 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RouteService} from "../services/route.service";
+import {AuthService} from "../services/auth.service";
+import {Subscription} from "rxjs";
+import {LogService} from "../services/log.service";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
-  constructor(private routeService: RouteService) {
-    console.debug('HeaderComponent constructor');
+export class HeaderComponent implements OnInit, OnDestroy {
+  isAuthenticated = false;
+  isAuthenticatedSub: Subscription;
+
+  constructor(private routeService: RouteService,
+              private authService: AuthService,
+              private logger: LogService) {
+    logger.logConstructor(this);
   }
 
   ngOnInit(): void {
-    console.debug('HeaderComponent ngOnInit');
-    console.log(window.location.href);
+    this.isAuthenticatedSub = this.authService.user.subscribe(user => this.isAuthenticated = !!user);
+  }
+
+  ngOnDestroy() {
+    this.isAuthenticatedSub.unsubscribe();
   }
 
   navigateToMonthView() {
-    console.debug('start handing navigateToMonthView')
     if (!this.isMonthViewActive())
       this.routeService.navigateToLastSuccessfulMonth();
   }

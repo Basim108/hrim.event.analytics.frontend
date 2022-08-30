@@ -5,6 +5,7 @@ import {Subscription} from "rxjs";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {RouteService} from "../services/route.service";
 import {DateTime} from "luxon";
+import {LogService} from "../services/log.service";
 
 @Component({
   selector: 'app-month-view',
@@ -20,21 +21,22 @@ export class MonthViewComponent implements OnInit, OnDestroy {
   constructor(private calendarService: CalendarService,
               private currentRoute: ActivatedRoute,
               private router: Router,
-              private routeService: RouteService) {
-    console.debug('MonthViewComponent constructor');
+              private routeService: RouteService,
+              private logger: LogService) {
+    logger.logConstructor(this);
   }
 
   ngOnDestroy(): void {
-    console.debug('MonthViewComponent ngOnDestroy');
+    this.logger.debug('MonthViewComponent ngOnDestroy');
     this.routeParamsSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
-    console.debug('MonthViewComponent ngOnInit');
+    this.logger.debug('MonthViewComponent ngOnInit');
     this.routeParamsSubscription = this.currentRoute.params.subscribe(
       (params: Params) => {
         const date = this.routeService.monthView.getDateFromParams(params);
-        console.debug('date from route params: ', date);
+        this.logger.debug('date from route params: ', date);
         if (date) {
           this.routeService.monthView.lastSuccessfulDate = date;
           this.weeks = this.calendarService.getWeeks(date);

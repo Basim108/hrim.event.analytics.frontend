@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {HrimEventModel} from "../../../shared/hrim-event.model";
+import {LogService} from "../../../services/log.service";
 
 @Component({
   selector: 'app-event-of-day',
@@ -10,7 +11,9 @@ export class EventOfDayComponent implements OnInit {
   @Input() eventOfDay: HrimEventModel;
   @Input() totalEventCount: number;
 
-  constructor() { }
+  constructor(private logger: LogService) {
+    logger.logConstructor(this);
+  }
 
   ngOnInit(): void {
   }

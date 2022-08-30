@@ -1,10 +1,11 @@
 import {Injectable} from "@angular/core";
+import {LogService} from "./log.service";
 
 @Injectable({ providedIn: 'root' })
 export class GuidService {
 
-  constructor() {
-    console.debug('GuidService constructor');
+  constructor(private logger: LogService) {
+    logger.logConstructor(this);
   }
 
   generate() {

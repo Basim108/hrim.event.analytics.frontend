@@ -3,6 +3,7 @@ import {DateTime} from "luxon";
 import {CalendarService} from "../../services/calendar.service";
 import {Router} from "@angular/router";
 import {RouteService} from "../../services/route.service";
+import {LogService} from "../../services/log.service";
 
 @Component({
   selector: 'app-month-pages',
@@ -14,12 +15,13 @@ export class MonthPagesComponent implements OnInit {
 
   constructor(private calendarService: CalendarService,
               private router: Router,
-              private routeService: RouteService) {
-    console.debug('MonthPagesComponent constructor');
+              private routeService: RouteService,
+              private logger: LogService) {
+    logger.logConstructor(this);
   }
 
   ngOnInit(): void {
-    console.debug('MonthPagesComponent ngOnInit');
+    this.logger.debug('MonthPagesComponent ngOnInit');
   }
 
   setCurrentMonth() {

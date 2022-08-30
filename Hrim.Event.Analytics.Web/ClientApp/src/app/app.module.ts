@@ -11,23 +11,11 @@ import {EventOfDayComponent} from './month-view/day-of-month/event-of-day/event-
 import {MonthPagesComponent} from './month-view/month-pages/month-pages.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from '@angular/material/icon';
-import {RouterModule, Routes} from "@angular/router";
-import {DateTime} from "luxon";
-import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
-import {MonthViewRouteModel} from "./shared/month-view-route.model";
-import {YearViewRouteModel} from "./shared/year-view-route.model";
+import {PageNotFoundComponent} from './pages/page-not-found/page-not-found.component';
+import {HttpClientModule} from "@angular/common/http";
+import {AppRoutingModule} from "./app-routing.module";
+import { AuthMenuComponent } from './auth-menu/auth-menu.component';
 
-const monthView = new MonthViewRouteModel();
-const yearView = new YearViewRouteModel();
-
-const appRoutes: Routes = [
-  { path: yearView.configPath, component: YearViewComponent },
-  { path: monthView.configPath, component: MonthViewComponent },
-  { path: '', redirectTo: monthView.getRouteString(DateTime.now()), pathMatch: 'full' },
-  { path: '404', component: PageNotFoundComponent },
-  { path: '**', redirectTo: '/404', pathMatch: 'full' }
-];
-console.debug('route configs: ', appRoutes);
 
 @NgModule({
   declarations: [
@@ -39,13 +27,15 @@ console.debug('route configs: ', appRoutes);
     DayOfMonthComponent,
     EventOfDayComponent,
     MonthPagesComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    AuthMenuComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatIconModule,
-    RouterModule.forRoot(appRoutes)
+    HttpClientModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

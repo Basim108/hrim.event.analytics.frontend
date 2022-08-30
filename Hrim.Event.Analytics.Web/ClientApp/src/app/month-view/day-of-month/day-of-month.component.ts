@@ -5,6 +5,7 @@ import {DateTime} from "luxon";
 import {HrimEventService} from "../../services/hrim-event.service";
 import {Subscription} from "rxjs";
 import {filter, tap} from "rxjs/operators";
+import {LogService} from "../../services/log.service";
 
 @Component({
   selector: 'app-day-of-month',
@@ -30,7 +31,8 @@ export class DayOfMonthComponent implements OnInit, OnDestroy {
 
   eventsSubscription: Subscription;
 
-  constructor(private eventService: HrimEventService) {
+  constructor(private logger: LogService,
+              private eventService: HrimEventService) {
 
   }
 
@@ -40,7 +42,7 @@ export class DayOfMonthComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const eventsOfTheDay$ = this.eventService.hrimEvents$.pipe(
-      // tap(x => console.debug(x.id + ' ' + x.date.toISODate())),
+      // tap(x => this.logger.debug(x.id + ' ' + x.date.toISODate())),
       filter(x => x.date.toISODate() == this.dayModel.dateTime.toISODate())
     );
     this.eventsSubscription = eventsOfTheDay$.subscribe(event => this.events.push(event));

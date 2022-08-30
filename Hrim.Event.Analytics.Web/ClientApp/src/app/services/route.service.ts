@@ -3,6 +3,7 @@ import {MonthViewRouteModel} from "../shared/month-view-route.model";
 import {YearViewRouteModel} from "../shared/year-view-route.model";
 import {Router} from "@angular/router";
 import {DateTime} from "luxon";
+import {LogService} from "./log.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class RouteService {
   yearView = new YearViewRouteModel();
   notFoundPath = '404';
 
-  constructor(private router: Router) {
+  constructor(private logger: LogService, private router: Router) {
+    logger.logConstructor(this);
   }
 
   navigateToLastSuccessfulMonth() {

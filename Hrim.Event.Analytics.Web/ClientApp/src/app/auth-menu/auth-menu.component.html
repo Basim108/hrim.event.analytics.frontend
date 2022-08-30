@@ -1,0 +1,17 @@
+<div class="dropdown">
+  <a class="dropdown-toggle"
+     style="cursor: pointer"
+     role="button"
+     data-toggle="dropdown"
+     aria-haspopup="true"
+     aria-expanded="true">
+    <span *ngIf="!isAuthenticated">Sign In</span>
+    <img *ngIf="user !== null" [src]="user.picture_uri" [title]="user.full_name" [alt]="user.full_name"/>
+  </a>
+  <div class="dropdown-menu dropdown-menu-right">
+    <a class="dropdown-item" (click)="onGoogleLogin()" *ngIf="!isAuthenticated"><img src="assets/img/google.png" class="idp-logo" alt="">Login with Google</a>
+    <a class="dropdown-item" (click)="onFacebookLogin()" *ngIf="!isAuthenticated"><img src="assets/img/facebook.jpg" class="idp-logo" alt="">Login with Facebook</a>
+    <!--            <div class="dropdown-divider"></div>-->
+    <a class="dropdown-item" (click)="onLogout()"  *ngIf="isAuthenticated">Logout</a>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {LogService} from "../services/log.service";
 
 @Component({
   selector: 'app-year-view',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class YearViewComponent implements OnInit {
 
-  constructor() { }
+  constructor(private logger: LogService) {
+    logger.debug('YearViewComponent constructor')
+  }
 
   ngOnInit(): void {
   }

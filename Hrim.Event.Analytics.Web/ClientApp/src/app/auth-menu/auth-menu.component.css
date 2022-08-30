@@ -1,0 +1,12 @@
+.idp-logo{
+  width: 24px;
+  margin-right: 5px;
+}
+.dropdown-item {
+  cursor: pointer;
+}
+
+img {
+  width: 50px;
+  border-radius: 50%;
+}
