@@ -6,7 +6,11 @@
      aria-haspopup="true"
      aria-expanded="true">
     <span *ngIf="!isAuthenticated">Sign In</span>
-    <img *ngIf="user !== null" [src]="user.picture_uri" [title]="user.full_name" [alt]="user.full_name"/>
+    <img *ngIf="user !== null"
+         [src]="user.picture_uri"
+         [title]="user.full_name"
+         [alt]="user.full_name"
+         referrerpolicy="no-referrer"/>
   </a>
   <div class="dropdown-menu dropdown-menu-right">
     <a class="dropdown-item" (click)="onGoogleLogin()" *ngIf="!isAuthenticated"><img src="assets/img/google.png" class="idp-logo" alt="">Login with Google</a>

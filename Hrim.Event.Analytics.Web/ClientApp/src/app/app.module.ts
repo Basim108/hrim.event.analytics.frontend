@@ -15,6 +15,7 @@ import {PageNotFoundComponent} from './pages/page-not-found/page-not-found.compo
 import {HttpClientModule} from "@angular/common/http";
 import {AppRoutingModule} from "./app-routing.module";
 import { AuthMenuComponent } from './auth-menu/auth-menu.component';
+import { LandingViewComponent } from './landing-view/landing-view.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { AuthMenuComponent } from './auth-menu/auth-menu.component';
     EventOfDayComponent,
     MonthPagesComponent,
     PageNotFoundComponent,
-    AuthMenuComponent
+    AuthMenuComponent,
+    LandingViewComponent
   ],
   imports: [
     BrowserModule,

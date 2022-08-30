@@ -1,13 +1,13 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Subject} from "rxjs";
+import {BehaviorSubject} from "rxjs";
 import {LogService} from "./log.service";
 import {UserProfileModel} from "../shared/user-profile.model";
 import {environment} from "../../environments/environment";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-  user = new Subject<UserProfileModel | null>();
+  user = new BehaviorSubject<UserProfileModel | null>(null);
 
   constructor(private logger: LogService, private http: HttpClient) {
     logger.logConstructor(this);

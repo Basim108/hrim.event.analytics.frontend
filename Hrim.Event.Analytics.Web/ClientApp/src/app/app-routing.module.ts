@@ -6,14 +6,17 @@ import {MonthViewComponent} from "./month-view/month-view.component";
 import {DateTime} from "luxon";
 import {PageNotFoundComponent} from "./pages/page-not-found/page-not-found.component";
 import {NgModule} from "@angular/core";
+import {LandingViewComponent} from "./landing-view/landing-view.component";
+import {AuthGuard} from "./services/auth-guard.service";
 
 const monthView = new MonthViewRouteModel();
 const yearView = new YearViewRouteModel();
 
 const appRoutes: Routes = [
-  {path: yearView.configPath, component: YearViewComponent},
-  {path: monthView.configPath, component: MonthViewComponent},
-  {path: '', redirectTo: monthView.getRouteString(DateTime.now()), pathMatch: 'full'},
+  {path: yearView.configPath, canActivate: [AuthGuard], component: YearViewComponent},
+  {path: monthView.configPath, canActivate: [AuthGuard], component: MonthViewComponent},
+  {path: '', component: LandingViewComponent},
+  // {path: '', redirectTo: monthView.getRouteString(DateTime.now()), pathMatch: 'full'},
   {path: '404', component: PageNotFoundComponent},
   {path: '**', redirectTo: '/404', pathMatch: 'full'}
 ];

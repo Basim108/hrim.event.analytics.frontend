@@ -18,14 +18,14 @@ export class RouteService {
   }
 
   navigateToLastSuccessfulMonth() {
-    console.debug('start handling navigateToLastSuccessfulMonth');
-    console.debug('lastSuccessfulDate: ', this.monthView.lastSuccessfulDate)
+    this.logger.debug('start handling navigateToLastSuccessfulMonth');
+    this.logger.debug('lastSuccessfulDate: ', this.monthView.lastSuccessfulDate)
     this.navigateToMonthView(this.monthView.lastSuccessfulDate || DateTime.now());
   }
 
   navigateToMonthView(date: DateTime) {
     const dateParam = date.toFormat(this.monthView.format)
-    console.debug('navigate to month view: ', dateParam, date);
-    this.router.navigate([this.monthView.path, dateParam]);
+    this.logger.debug('navigate to month view: ', dateParam, date, this.monthView);
+    this.router.navigate(['/' + this.monthView.path, dateParam]);
   }
 }

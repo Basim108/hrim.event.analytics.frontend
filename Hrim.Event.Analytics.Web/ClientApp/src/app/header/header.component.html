@@ -6,14 +6,18 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="nav navbar-nav mr-auto">
-      <li class="nav-item" routerLinkActive="active">
+      <li class="nav-item"
+          *ngIf="isAuthenticated"
+          routerLinkActive="active">
         <a class="nav-link" [routerLink]="['year', '2022']">Year</a>
       </li>
-      <li class="nav-item" [ngClass]="{active: isMonthViewActive()}">
+      <li class="nav-item"
+          *ngIf="isAuthenticated"
+          [ngClass]="{active: isMonthViewActive()}">
         <a class="nav-link"
            (click)="navigateToMonthView()">Month <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="isAuthenticated">
         <a class="nav-link" disabled="disabled">Day</a>
       </li>
     </ul>
