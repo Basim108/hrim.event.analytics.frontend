@@ -10,12 +10,15 @@ import {DayOfMonthComponent} from './month-view/day-of-month/day-of-month.compon
 import {EventOfDayComponent} from './month-view/day-of-month/event-of-day/event-of-day.component';
 import {MonthPagesComponent} from './month-view/month-pages/month-pages.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatIconModule} from '@angular/material/icon';
 import {PageNotFoundComponent} from './pages/page-not-found/page-not-found.component';
 import {HttpClientModule} from "@angular/common/http";
 import {AppRoutingModule} from "./app-routing.module";
 import { AuthMenuComponent } from './auth-menu/auth-menu.component';
 import { LandingViewComponent } from './landing-view/landing-view.component';
+import { EventTypeListComponent } from './event-type-list/event-type-list.component';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from "@angular/material/button";
+import { EventTypeItemComponent } from './event-type-item/event-type-item.component';
 
 
 @NgModule({
@@ -30,14 +33,17 @@ import { LandingViewComponent } from './landing-view/landing-view.component';
     MonthPagesComponent,
     PageNotFoundComponent,
     AuthMenuComponent,
-    LandingViewComponent
+    LandingViewComponent,
+    EventTypeListComponent,
+    EventTypeItemComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    MatIconModule,
     HttpClientModule,
     AppRoutingModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
