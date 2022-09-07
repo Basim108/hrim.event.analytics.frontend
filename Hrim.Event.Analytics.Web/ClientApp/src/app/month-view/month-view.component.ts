@@ -16,7 +16,7 @@ import {LogService} from "../services/log.service";
 export class MonthViewComponent implements OnInit, OnDestroy {
   weeks: WeekModel[];
   currentMonth: DateTime;
-  routeParamsSubscription: Subscription;
+  routeParamsSub: Subscription;
 
   constructor(private calendarService: CalendarService,
               private currentRoute: ActivatedRoute,
@@ -28,12 +28,12 @@ export class MonthViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.logger.debug('MonthViewComponent ngOnDestroy');
-    this.routeParamsSubscription.unsubscribe();
+    this.routeParamsSub.unsubscribe();
   }
 
   ngOnInit(): void {
     this.logger.debug('MonthViewComponent ngOnInit');
-    this.routeParamsSubscription = this.currentRoute.params.subscribe(
+    this.routeParamsSub = this.currentRoute.params.subscribe(
       (params: Params) => {
         const date = this.routeService.monthView.getDateFromParams(params);
         this.logger.debug('date from route params: ', date);

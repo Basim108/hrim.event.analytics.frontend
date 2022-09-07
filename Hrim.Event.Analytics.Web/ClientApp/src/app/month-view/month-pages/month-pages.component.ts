@@ -1,7 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {DateTime} from "luxon";
-import {CalendarService} from "../../services/calendar.service";
-import {Router} from "@angular/router";
 import {RouteService} from "../../services/route.service";
 import {LogService} from "../../services/log.service";
 
@@ -10,18 +8,12 @@ import {LogService} from "../../services/log.service";
   templateUrl: './month-pages.component.html',
   styleUrls: ['./month-pages.component.css']
 })
-export class MonthPagesComponent implements OnInit {
+export class MonthPagesComponent {
   @Input() currentMonth!: DateTime;
 
-  constructor(private calendarService: CalendarService,
-              private router: Router,
-              private routeService: RouteService,
+  constructor(private routeService: RouteService,
               private logger: LogService) {
     logger.logConstructor(this);
-  }
-
-  ngOnInit(): void {
-    this.logger.debug('MonthPagesComponent ngOnInit');
   }
 
   setCurrentMonth() {
