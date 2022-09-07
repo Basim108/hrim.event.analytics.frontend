@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LogService} from "../services/log.service";
 import {EventTypeService} from "../services/user-event-type.service";
 import {UserEventType} from "../shared/event-type.model";
-import {mergeAll, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-event-type-list',
