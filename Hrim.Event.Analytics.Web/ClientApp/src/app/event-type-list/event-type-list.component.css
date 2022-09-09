@@ -14,6 +14,7 @@
   flex-shrink: 1;
   border: 1px solid #3f90e7;
   border-radius: 4px;
+  margin-top: 2px;
   margin-right: 2px;
   padding: 3px;
   cursor: pointer;

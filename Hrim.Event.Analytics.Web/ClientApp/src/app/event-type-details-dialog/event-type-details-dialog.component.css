@@ -1,0 +1,19 @@
+mat-dialog-content{
+  width: 300px;
+}
+
+@media only screen and (min-width: 1200px) {
+  mat-dialog-content{
+    width: 600px;
+  }
+}
+
+@media only screen and (min-width: 700px) and (max-width: 1199px) {
+  mat-dialog-content{
+    width: 400px;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}

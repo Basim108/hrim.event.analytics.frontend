@@ -18,3 +18,7 @@
 .event-type-title {
   margin-left: 3px;
 }
+
+button > mat-icon {
+  font-size: 16px;
+}

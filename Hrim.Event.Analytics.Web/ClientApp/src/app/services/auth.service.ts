@@ -5,6 +5,8 @@ import {LogService} from "./log.service";
 import {UserProfileModel} from "../shared/user-profile.model";
 import {environment} from "../../environments/environment";
 
+export type ExternalIdp = 'google' | 'facebook';
+
 @Injectable({providedIn: 'root'})
 export class AuthService {
   user = new BehaviorSubject<UserProfileModel | null>(null);
@@ -26,17 +28,16 @@ export class AuthService {
         switch (error.status) {
           case 0:
           case 401:
-          case 403:
             this.user.next(null);
             break;
           default:
-            this.logger.error(`failed request: (${error.status}) ${error.message}`, error)
+            this.logger.error(`failed get user profile request: (${error.status}) ${error.message}`, error)
         }
       }
     });
   }
 
-  login(idp: 'google' | 'facebook') {
+  login(idp: ExternalIdp) {
     window.location.href = `${environment.apiUrl}/auth/${idp}/login?returnUri=${encodeURIComponent(window.location.href)}`
   }
 
