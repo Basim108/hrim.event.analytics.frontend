@@ -3,7 +3,6 @@ import {YearViewRouteModel} from "./shared/year-view-route.model";
 import {RouterModule, Routes} from "@angular/router";
 import {YearViewComponent} from "./year-view/year-view.component";
 import {MonthViewComponent} from "./month-view/month-view.component";
-import {DateTime} from "luxon";
 import {PageNotFoundComponent} from "./pages/page-not-found/page-not-found.component";
 import {NgModule} from "@angular/core";
 import {LandingViewComponent} from "./landing-view/landing-view.component";

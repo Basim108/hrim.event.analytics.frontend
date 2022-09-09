@@ -1,7 +1,11 @@
 <div class="item-container">
   <span class="event-type-title">{{eventType.name}}</span>
   <div class="tool-bar">
-    <mat-icon>edit</mat-icon>
-    <mat-icon>delete</mat-icon>
+    <button mat-icon-button color="primary" (click)="onEditEventType()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" (click)="onDeleteEventType()">
+      <mat-icon>delete</mat-icon>
+    </button>
   </div>
 </div>

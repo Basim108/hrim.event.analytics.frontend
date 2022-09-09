@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {HrimEventModel} from "../../../shared/hrim-event.model";
 import {LogService} from "../../../services/log.service";
 
@@ -7,15 +7,12 @@ import {LogService} from "../../../services/log.service";
   templateUrl: './event-of-day.component.html',
   styleUrls: ['./event-of-day.component.css']
 })
-export class EventOfDayComponent implements OnInit {
+export class EventOfDayComponent {
   @Input() eventOfDay: HrimEventModel;
   @Input() totalEventCount: number;
 
   constructor(private logger: LogService) {
     logger.logConstructor(this);
-  }
-
-  ngOnInit(): void {
   }
 
   getEventHeight(){

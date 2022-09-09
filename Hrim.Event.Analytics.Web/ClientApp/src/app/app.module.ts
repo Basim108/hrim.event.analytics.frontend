@@ -1,5 +1,15 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from "@angular/material/button";
+import {AppRoutingModule} from "./app-routing.module";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MAT_COLOR_FORMATS, NgxMatColorPickerModule, NGX_MAT_COLOR_FORMATS} from '@angular-material-components/color-picker'
+import {ReactiveFormsModule} from "@angular/forms";
 
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
@@ -9,17 +19,14 @@ import {MonthViewComponent} from './month-view/month-view.component';
 import {DayOfMonthComponent} from './month-view/day-of-month/day-of-month.component';
 import {EventOfDayComponent} from './month-view/day-of-month/event-of-day/event-of-day.component';
 import {MonthPagesComponent} from './month-view/month-pages/month-pages.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {PageNotFoundComponent} from './pages/page-not-found/page-not-found.component';
-import {HttpClientModule} from "@angular/common/http";
-import {AppRoutingModule} from "./app-routing.module";
-import { AuthMenuComponent } from './auth-menu/auth-menu.component';
-import { LandingViewComponent } from './landing-view/landing-view.component';
-import { EventTypeListComponent } from './event-type-list/event-type-list.component';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from "@angular/material/button";
-import { EventTypeItemComponent } from './event-type-item/event-type-item.component';
+import {AuthMenuComponent} from './auth-menu/auth-menu.component';
+import {LandingViewComponent} from './landing-view/landing-view.component';
+import {EventTypeListComponent} from './event-type-list/event-type-list.component';
+import {EventTypeItemComponent} from './event-type-item/event-type-item.component';
+import {EventTypeDetailsDialog} from './event-type-details-dialog/event-type-details-dialog.component';
 
+import {ApiResponseInterceptor} from "./services/api-response-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -35,7 +42,8 @@ import { EventTypeItemComponent } from './event-type-item/event-type-item.compon
     AuthMenuComponent,
     LandingViewComponent,
     EventTypeListComponent,
-    EventTypeItemComponent
+    EventTypeItemComponent,
+    EventTypeDetailsDialog
   ],
   imports: [
     BrowserModule,
@@ -44,8 +52,16 @@ import { EventTypeItemComponent } from './event-type-item/event-type-item.compon
     AppRoutingModule,
     MatIconModule,
     MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgxMatColorPickerModule,
+    ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+    {provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS},
+    {provide: HTTP_INTERCEPTORS, useClass: ApiResponseInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
