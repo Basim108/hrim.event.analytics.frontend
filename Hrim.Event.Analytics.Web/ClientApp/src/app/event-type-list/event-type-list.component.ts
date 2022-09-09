@@ -42,4 +42,9 @@ export class EventTypeListComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  onDeleteEventType(deletedEventType: UserEventType) {
+    this.logger.debug(`removing an event type ${deletedEventType.name} from the list`, deletedEventType);
+    this.eventTypeService.eventTypes.next(this.eventTypes.filter(x => x.id !== deletedEventType.id))
+  }
 }

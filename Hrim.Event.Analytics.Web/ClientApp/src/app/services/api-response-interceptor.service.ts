@@ -32,14 +32,14 @@ export class ApiResponseInterceptor implements HttpInterceptor {
       retry({
         count: NUMBER_OR_RETRIES,
         delay: (error, value) => {
-          const isBadRequest = error.status === 400;
-          if (isBadRequest)
-            return throwError(error);
-          const isInternalServerError = error.status === 500;
-          if (isInternalServerError)
-            return throwError(error);
+          switch (error.status) {
+            case 400:
+            case 403:
+            case 500:
+              return throwError(error);
+          }
           const delay = value * RETRY_WAIT_COEFFICIENT;
-          console.debug(`delaying before retry; waiting for: ${delay/1000} sec.`)
+          console.debug(`delaying before retry; waiting for: ${delay / 1000} sec.`)
           return timer(delay)
         }
       })

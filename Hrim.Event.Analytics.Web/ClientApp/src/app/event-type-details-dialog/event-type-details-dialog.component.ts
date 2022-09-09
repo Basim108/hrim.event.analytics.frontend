@@ -20,7 +20,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
 
   formValueChangeSub: Subscription
   getDetailsSub: Subscription
-  saveEventType: Subscription
+  saveEventTypeSub: Subscription
 
   private originalEventType: UserEventType;
 
@@ -36,7 +36,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.formValueChangeSub.unsubscribe()
     this.getDetailsSub.unsubscribe()
-    this.saveEventType.unsubscribe()
+    this.saveEventTypeSub.unsubscribe()
   }
 
   ngOnInit(): void {
@@ -78,16 +78,16 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
 
   onSave() {
     this.updateModelFromControls(this.data.eventType);
-    this.saveEventType = this.eventTypeService.saveEventType(this.data.eventType)
-                             .subscribe({
-                               next: () => {
-                                 this.dialogRef.close(this.data.eventType);
-                               },
-                               error: error => {
-                                 this.logger.error('failed to save a user event type: ', error)
-                                 this.dialogRef.disableClose = true;
-                               }
-                             });
+    this.saveEventTypeSub = this.eventTypeService.saveEventType(this.data.eventType)
+                                .subscribe({
+                                  next: () => {
+                                    this.dialogRef.close(this.data.eventType);
+                                  },
+                                  error: error => {
+                                    this.logger.error('failed to save a user event type: ', error)
+                                    this.dialogRef.disableClose = true;
+                                  }
+                                });
     this.logger.debug('onSave clicked: ', this.data);
   }
 
