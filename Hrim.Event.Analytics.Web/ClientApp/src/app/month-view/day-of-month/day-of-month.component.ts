@@ -4,7 +4,7 @@ import {DayModel} from "../../shared/day.model";
 import {DateTime} from "luxon";
 import {HrimEventService} from "../../services/hrim-event.service";
 import {Subscription} from "rxjs";
-import {filter, tap} from "rxjs/operators";
+import {filter} from "rxjs/operators";
 import {LogService} from "../../services/log.service";
 
 @Component({
@@ -21,11 +21,11 @@ export class DayOfMonthComponent implements OnInit, OnDestroy {
 
   @HostBinding('class.last-week') get lastWeek() {
     return this.isLastWeek
-  };
+  }
 
   @HostBinding('class.out-of-month') get outOfMonth() {
     return this.isOutOfMonth
-  };
+  }
 
   events: HrimEventModel[] = [];
 

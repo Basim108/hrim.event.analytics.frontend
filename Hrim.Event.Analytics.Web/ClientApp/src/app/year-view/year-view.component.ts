@@ -1,18 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {LogService} from "../services/log.service";
 
 @Component({
   selector: 'app-year-view',
-  templateUrl: './year-view.component.html',
-  styleUrls: ['./year-view.component.css']
+  templateUrl: './year-view.component.html'
 })
-export class YearViewComponent implements OnInit {
+export class YearViewComponent {
 
   constructor(private logger: LogService) {
-    logger.debug('YearViewComponent constructor')
+    logger.logConstructor(this)
   }
-
-  ngOnInit(): void {
-  }
-
 }

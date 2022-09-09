@@ -5,8 +5,7 @@ import {LogService} from "../../services/log.service";
 
 @Component({
   selector: 'app-month-pages',
-  templateUrl: './month-pages.component.html',
-  styleUrls: ['./month-pages.component.css']
+  templateUrl: './month-pages.component.html'
 })
 export class MonthPagesComponent {
   @Input() currentMonth!: DateTime;

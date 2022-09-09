@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {LogService} from "./log.service";
-import {map, Observable, Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {UserEventType} from "../event-type-item/event-type.model";
