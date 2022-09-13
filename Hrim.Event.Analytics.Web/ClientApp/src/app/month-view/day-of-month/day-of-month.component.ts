@@ -1,21 +1,33 @@
-import {Component, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
-import {HrimEventModel} from 'src/app/shared/hrim-event.model';
+import {Component, HostBinding, HostListener, Input, OnInit} from '@angular/core';
 import {DayModel} from "../../shared/day.model";
 import {DateTime} from "luxon";
 import {HrimEventService} from "../../services/hrim-event.service";
-import {Subscription} from "rxjs";
-import {filter} from "rxjs/operators";
 import {LogService} from "../../services/log.service";
+import {EventOfDayModel} from "../../event-of-day/event-of-day.model";
+import {MatDialog} from "@angular/material/dialog";
+import {DialogDetailsRequest} from "../../shared/dialog-details-request";
+import {EventOccurrenceDetailsDialog} from "../../event-occurrence-details-dialog/event-occurrence-details-dialog.component";
+import {EventDurationDetailsDialog} from "../../event-duration-details-dialog/event-duration-details-dialog.component";
+import {DurationEvent, OccurrenceEvent} from "../../shared/events.model";
+
+const DURATION_KIND_ID = 1
+const OCCURRENCE_KIND_ID = 2
 
 @Component({
   selector: 'app-day-of-month',
   templateUrl: './day-of-month.component.html',
   styleUrls: ['./day-of-month.component.css']
 })
-export class DayOfMonthComponent implements OnInit, OnDestroy {
+export class DayOfMonthComponent implements OnInit {
   @Input('day') dayModel!: DayModel;
   @Input() isLastWeek!: boolean;
   @Input() currentMonth!: DateTime;
+  @Input() events: EventOfDayModel[];
+  kinds = [
+    {id: DURATION_KIND_ID, name: 'Duration'},
+    {id: OCCURRENCE_KIND_ID, name: 'Occurrence'}
+  ]
+
   isOutOfMonth: boolean;
   isToday: boolean;
 
@@ -27,40 +39,42 @@ export class DayOfMonthComponent implements OnInit, OnDestroy {
     return this.isOutOfMonth
   }
 
-  events: HrimEventModel[] = [];
-
-  eventsSubscription: Subscription;
-
   constructor(private logger: LogService,
+              public createDialog: MatDialog,
               private eventService: HrimEventService) {
 
   }
 
-  ngOnDestroy(): void {
-    this.eventsSubscription.unsubscribe();
-  }
-
   ngOnInit(): void {
-    const eventsOfTheDay$ = this.eventService.hrimEvents$.pipe(
-      // tap(x => this.logger.debug(x.id + ' ' + x.date.toISODate())),
-      filter(x => x.date.toISODate() == this.dayModel.dateTime.toISODate())
-    );
-    this.eventsSubscription = eventsOfTheDay$.subscribe(event => this.events.push(event));
     this.isToday = this.dayModel.dateTime.toISODate() === DateTime.now().toISODate();
     this.isOutOfMonth = this.dayModel.dateTime.month !== this.currentMonth.month || this.dayModel.dateTime.year !== this.currentMonth.year;
   }
 
   @HostListener("click") onClick() {
-    this.onEventCreated()
+
   }
 
-  onEventCreated() {
-    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    this.eventService.createEvent({
-      id: '',
-      name: 'new event',
-      color: '#' + randomColor,
-      date: this.dayModel.dateTime
-    })
+  createDuration() {
+    const dialogRef = this.createDialog.open(EventDurationDetailsDialog, {
+      data: new DialogDetailsRequest(false, new DurationEvent())
+    });
+    dialogRef.afterClosed().subscribe(
+      createdEntity => {
+        this.logger.debug('adding a created duration event to the list', createdEntity);
+        // this.eventService.createEvent(createdEntity)
+      }
+    );
+  }
+
+  createOccurrence() {
+    const dialogRef = this.createDialog.open(EventOccurrenceDetailsDialog, {
+      data: new DialogDetailsRequest(false, new OccurrenceEvent())
+    });
+    dialogRef.afterClosed().subscribe(
+      createdEntity => {
+        this.logger.debug('adding a created occurrence event to the list', createdEntity);
+        // this.eventService.createEvent(createdEntity)
+      }
+    );
   }
 }

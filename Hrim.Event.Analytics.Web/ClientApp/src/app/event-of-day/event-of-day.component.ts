@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {HrimEventModel} from "../../../shared/hrim-event.model";
-import {LogService} from "../../../services/log.service";
+import {EventOfDayModel} from "./event-of-day.model";
+import {LogService} from "../services/log.service";
 
 @Component({
   selector: 'app-event-of-day',
@@ -8,7 +8,7 @@ import {LogService} from "../../../services/log.service";
   styleUrls: ['./event-of-day.component.css']
 })
 export class EventOfDayComponent {
-  @Input() eventOfDay: HrimEventModel;
+  @Input() eventOfDay: EventOfDayModel;
   @Input() totalEventCount: number;
 
   constructor(private logger: LogService) {

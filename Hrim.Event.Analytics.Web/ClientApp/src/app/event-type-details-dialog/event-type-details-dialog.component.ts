@@ -1,12 +1,12 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {LogService} from "../services/log.service";
-import {EventTypeDetailsRequest} from "./event-type-details-request";
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {EventTypeService} from "../services/user-event-type.service";
 import {Color} from "@angular-material-components/color-picker";
 import {debounceTime, Subscription} from "rxjs";
-import {UserEventType} from "../event-type-item/event-type.model";
+import {UserEventType} from "../shared/event-type.model";
+import {DialogDetailsRequest} from "../shared/dialog-details-request";
 
 @Component({
   selector: 'app-event-type-details-dialog',
@@ -24,36 +24,37 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
 
   private originalEventType: UserEventType;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: EventTypeDetailsRequest,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogDetailsRequest<UserEventType>,
               private dialogRef: MatDialogRef<EventTypeDetailsDialog>,
               private formBuilder: FormBuilder,
               private eventTypeService: EventTypeService,
               private logger: LogService) {
     logger.logConstructor(this);
-    this.originalEventType = {...this.data.eventType};
+    this.originalEventType = {...this.data.entity};
   }
 
   ngOnDestroy(): void {
     this.formValueChangeSub.unsubscribe()
-    this.getDetailsSub.unsubscribe()
+    if (this.getDetailsSub)
+      this.getDetailsSub.unsubscribe()
     this.saveEventTypeSub.unsubscribe()
   }
 
   ngOnInit(): void {
-    this.isReadOnly = !!this.data.eventType.id && !this.data.eventType.is_mine;
-    const color = this.getColorFromHex(this.data.eventType.color || '#83ee84');
+    this.isReadOnly = !!this.data.entity.id && !this.data.entity.is_mine;
+    const color = this.getColorFromHex(this.data.entity.color || '#83ee84');
     this.form = this.formBuilder.group({
-      name: [this.data.eventType.name || '', [Validators.required]],
-      description: [this.data.eventType.description || ''],
+      name: [this.data.entity.name || '', [Validators.required]],
+      description: [this.data.entity.description || ''],
       color: new FormControl(color, [Validators.required])
     });
-    if (this.data.eventType.id && this.data.eventType.is_mine) {
-      this.getDetailsSub = this.eventTypeService.getDetails(this.data.eventType.id)
+    if (this.data.entity.id && this.data.entity.is_mine) {
+      this.getDetailsSub = this.eventTypeService.getDetails(this.data.entity.id)
                                .subscribe({
                                  next: loadedEventType => {
                                    this.logger.debug('User event type details was successfully loaded: ', loadedEventType)
                                    this.updateModelFromControls(loadedEventType);
-                                   this.data.eventType = loadedEventType
+                                   this.data.entity = loadedEventType
                                    this.originalEventType = {...loadedEventType};
                                  }
                                })
@@ -77,11 +78,11 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   }
 
   onSave() {
-    this.updateModelFromControls(this.data.eventType);
-    this.saveEventTypeSub = this.eventTypeService.saveEventType(this.data.eventType)
+    this.updateModelFromControls(this.data.entity);
+    this.saveEventTypeSub = this.eventTypeService.saveEventType(this.data.entity)
                                 .subscribe({
                                   next: () => {
-                                    this.dialogRef.close(this.data.eventType);
+                                    this.dialogRef.close(this.data.entity);
                                   },
                                   error: error => {
                                     this.logger.error('failed to save a user event type: ', error)
@@ -92,8 +93,8 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   }
 
   onCancel() {
-    this.data.eventType = {...this.originalEventType};
-    this.logger.debug('onCanceled clicked: ', this.data);
+    this.data.entity = {...this.originalEventType};
+    this.logger.debug('Cancel event type details dialog.', this.data);
   }
 
   getColorFromHex(hex: string): Color {

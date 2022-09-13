@@ -14,7 +14,13 @@
        *ngFor="let week of weeks; index as weekIndex">
     <div class="col-md"
          *ngFor="let day of week.days; index as i">
-      <app-day-of-month [currentMonth]="currentMonth" [day]="day" [isLastWeek]="weekIndex === weeks.length-1"></app-day-of-month>
+      <app-day-of-month [currentMonth]="currentMonth"
+                        [day]="day"
+                        [isLastWeek]="weekIndex === weeks.length-1"
+                        [events]="getEventsForDay(day.dateTime)"
+      >
+
+      </app-day-of-month>
     </div>
   </div>
 </div>

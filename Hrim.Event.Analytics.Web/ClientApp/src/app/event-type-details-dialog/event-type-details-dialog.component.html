@@ -6,7 +6,7 @@
         <mat-label>Event Type Name</mat-label>
         <input matInput
                id="name" name="name" formControlName="name"
-               [value]="data.eventType.name ? data.eventType.name : ''">
+               [value]="data.entity.name ? data.entity.name : ''">
         <mat-hint>e.g. headache</mat-hint>
       </mat-form-field>
     </p>
@@ -15,7 +15,7 @@
         <mat-label>Event Type Description</mat-label>
         <textarea matInput
                   id="description" name="description" formControlName="description"
-                  [value]="data.eventType.description ? data.eventType.description : ''"></textarea>
+                  [value]="data.entity.description ? data.entity.description : ''"></textarea>
         <mat-hint>e.g. all times I had a headache</mat-hint>
       </mat-form-field>
     </p>

@@ -4,8 +4,8 @@ import {EventTypeService} from "../services/user-event-type.service";
 import {Subscription} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {EventTypeDetailsDialog} from "../event-type-details-dialog/event-type-details-dialog.component";
-import {EventTypeDetailsRequest} from "../event-type-details-dialog/event-type-details-request";
-import {UserEventType} from "../event-type-item/event-type.model";
+import {UserEventType} from "../shared/event-type.model";
+import {DialogDetailsRequest} from "../shared/dialog-details-request";
 
 @Component({
   selector: 'app-event-type-list',
@@ -27,24 +27,24 @@ export class EventTypeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.eventTypesSub = this.eventTypeService.eventTypes.subscribe(eventTypes => this.eventTypes = eventTypes);
+    this.eventTypesSub = this.eventTypeService.eventTypes$.subscribe(eventTypes => this.eventTypes = eventTypes);
     this.eventTypeService.load();
   }
 
   onCreateEventType() {
     const dialogRef = this.createDialog.open(EventTypeDetailsDialog, {
-      data: new EventTypeDetailsRequest(new UserEventType())
+      data: new DialogDetailsRequest<UserEventType>(false, new UserEventType())
     });
     dialogRef.afterClosed().subscribe(
       createdEntity => {
         this.logger.debug('adding a created event type to the list', createdEntity);
-        this.eventTypeService.eventTypes.next([...this.eventTypes, createdEntity])
+        this.eventTypeService.eventTypes$.next([...this.eventTypes, createdEntity])
       }
     );
   }
 
   onDeleteEventType(deletedEventType: UserEventType) {
     this.logger.debug(`removing an event type ${deletedEventType.name} from the list`, deletedEventType);
-    this.eventTypeService.eventTypes.next(this.eventTypes.filter(x => x.id !== deletedEventType.id))
+    this.eventTypeService.eventTypes$.next(this.eventTypes.filter(x => x.id !== deletedEventType.id))
   }
 }

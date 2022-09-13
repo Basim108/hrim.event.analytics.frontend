@@ -2,6 +2,21 @@
      [ngStyle]="{'height': '100%'}"
 >
   <div class="day-title">{{dayModel.day}}</div>
+  <div class="create-event-menu">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="add event">
+      <mat-icon>add</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="createDuration()">
+        <mat-icon>date_range</mat-icon>
+        <span>Duration event</span>
+      </button>
+      <button mat-menu-item (click)="createOccurrence()">
+        <mat-icon>event_available</mat-icon>
+        <span>Occurrence event</span>
+      </button>
+    </mat-menu>
+  </div>
   <app-event-of-day [totalEventCount]="events.length"
                     [eventOfDay]="eventOfDay"
                     *ngFor="let eventOfDay of events">

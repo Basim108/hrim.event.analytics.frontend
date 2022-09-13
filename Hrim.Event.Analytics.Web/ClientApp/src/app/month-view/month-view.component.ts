@@ -6,6 +6,9 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {RouteService} from "../services/route.service";
 import {DateTime} from "luxon";
 import {LogService} from "../services/log.service";
+import {HrimEventService} from "../services/hrim-event.service";
+import {EventOfDayModel} from "../event-of-day/event-of-day.model";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-month-view',
@@ -14,11 +17,14 @@ import {LogService} from "../services/log.service";
   providers: [CalendarService]
 })
 export class MonthViewComponent implements OnInit, OnDestroy {
-  weeks: WeekModel[];
-  currentMonth: DateTime;
-  routeParamsSub: Subscription;
+  weeks: WeekModel[]
+  currentMonth: DateTime
+  routeParamsSub: Subscription
+  monthEvents: EventOfDayModel[] = []
+  eventsSub: Subscription
 
   constructor(private calendarService: CalendarService,
+              private eventService: HrimEventService,
               private currentRoute: ActivatedRoute,
               private router: Router,
               private routeService: RouteService,
@@ -27,12 +33,11 @@ export class MonthViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.logger.debug('MonthViewComponent ngOnDestroy');
-    this.routeParamsSub.unsubscribe();
+    this.routeParamsSub.unsubscribe()
+    this.eventsSub.unsubscribe()
   }
 
   ngOnInit(): void {
-    this.logger.debug('MonthViewComponent ngOnInit');
     this.routeParamsSub = this.currentRoute.params.subscribe(
       (params: Params) => {
         const date = this.routeService.monthView.getDateFromParams(params);
@@ -41,9 +46,29 @@ export class MonthViewComponent implements OnInit, OnDestroy {
           this.routeService.monthView.lastSuccessfulDate = date;
           this.weeks = this.calendarService.getWeeks(date);
           this.currentMonth = date;
+          const firstMonthDay = DateTime.fromObject({year: date.year, month: date.month, day: 1});
+          const lastMonthDay = DateTime.fromObject({year: date.year, month: date.month, day: date.daysInMonth});
+          this.eventsSub = this.eventService.load(firstMonthDay, lastMonthDay)
+                               .pipe(
+                                 filter(eventOfDay =>
+                                   eventOfDay.date.year == this.currentMonth.year &&
+                                   eventOfDay.date.month == this.currentMonth.month)
+                               )
+                               .subscribe({
+                                 next: event => this.monthEvents.push(event)
+                               })
         } else {
           this.router.navigate([this.routeService.notFoundPath]);
         }
       });
+  }
+
+  getEventsForDay(day: DateTime) {
+    return this.monthEvents
+               .filter(e =>
+                 e.date.year == day.year &&
+                 e.date.month == day.month &&
+                 e.date.day == day.day
+               );
   }
 }

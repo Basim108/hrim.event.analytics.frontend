@@ -1,13 +1,13 @@
 import {Injectable} from "@angular/core";
 import {LogService} from "./log.service";
-import {Observable, Subject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {UserEventType} from "../event-type-item/event-type.model";
+import {UserEventType} from "../shared/event-type.model";
 
 @Injectable({providedIn: 'root'})
 export class EventTypeService {
-  eventTypes = new Subject<UserEventType[]>();
+  eventTypes$ = new BehaviorSubject<UserEventType[]>([]);
 
   url = `${environment.apiUrl}/v1/event-type/`;
   entityUrl = `${environment.apiUrl}/v1/entity/`;
@@ -22,7 +22,7 @@ export class EventTypeService {
         .subscribe({
           next: userEventTypes => {
             this.logger.debug('User event types loaded from server:', userEventTypes)
-            this.eventTypes.next(userEventTypes);
+            this.eventTypes$.next(userEventTypes);
           }
         });
   }

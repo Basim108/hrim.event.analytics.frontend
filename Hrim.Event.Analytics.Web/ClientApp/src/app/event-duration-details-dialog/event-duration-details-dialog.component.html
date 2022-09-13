@@ -1,0 +1,50 @@
+<form [formGroup]="form" (ngSubmit)="onSave()">
+  <h2 mat-dialog-title>{{data.title}}</h2>
+  <mat-dialog-content>
+    <p>
+      <mat-form-field appearance="fill" class="event-type-field">
+        <mat-label>Event Type</mat-label>
+        <mat-select id="event_type" formControlName="event_type">
+          <mat-option *ngFor="let eventType of eventTypes"
+                      [value]="eventType.id">
+            {{eventType.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Started on date</mat-label>
+        <input matInput [matDatepicker]="started_on_picker"
+               id="started_on" formControlName="started_on">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="started_on_picker"></mat-datepicker-toggle>
+        <mat-datepicker #started_on_picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Started at time</mat-label>
+        <input matInput id="started_at" formControlName="started_at">
+        <mat-hint>HH:MM</mat-hint>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Finished on date</mat-label>
+        <input matInput [matDatepicker]="finished_on_picker"
+               id="finished_on" formControlName="finished_on">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="finished_on_picker"></mat-datepicker-toggle>
+        <mat-datepicker #finished_on_picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Finished at time</mat-label>
+        <input matInput id="finished_at" formControlName="finished_at">
+        <mat-hint>HH:MM</mat-hint>
+      </mat-form-field>
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="false">Cancel</button>
+    <button mat-button type="submit" [disabled]="!isChanged || !form.valid">{{data.action}}</button>
+  </mat-dialog-actions>
+</form>

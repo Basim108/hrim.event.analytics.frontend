@@ -2,10 +2,10 @@ import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {LogService} from "../services/log.service";
 import {MatDialog} from "@angular/material/dialog";
 import {EventTypeDetailsDialog} from "../event-type-details-dialog/event-type-details-dialog.component";
-import {EventTypeDetailsRequest} from "../event-type-details-dialog/event-type-details-request";
 import {EventTypeService} from "../services/user-event-type.service";
-import {UserEventType} from "./event-type.model";
 import {Subscription} from "rxjs";
+import {UserEventType} from "../shared/event-type.model";
+import {DialogDetailsRequest} from "../shared/dialog-details-request";
 
 @Component({
   selector: 'app-event-type-item',
@@ -30,7 +30,7 @@ export class EventTypeItemComponent implements OnDestroy {
 
   onEditEventType() {
     const dialogRef = this.editDialog.open(EventTypeDetailsDialog, {
-      data: new EventTypeDetailsRequest(this.eventType, true)
+      data: new DialogDetailsRequest<UserEventType>(true, this.eventType)
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

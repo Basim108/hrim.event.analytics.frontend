@@ -20,7 +20,7 @@ export class AuthMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.isAuthenticatedSub = this.authService.user.subscribe(user => {
+    this.isAuthenticatedSub = this.authService.user$.subscribe(user => {
       this.isAuthenticated = !!user
       this.user = user;
       this.logger.debug('got user:', user)
