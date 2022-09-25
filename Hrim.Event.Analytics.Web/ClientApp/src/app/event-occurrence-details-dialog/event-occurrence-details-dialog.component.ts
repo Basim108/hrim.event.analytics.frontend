@@ -5,10 +5,11 @@ import {Subscription} from "rxjs";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DateTime} from "luxon";
-import {HrimEventService} from "../services/hrim-event.service";
+import {DATE_FORMAT, HrimEventService} from "../services/hrim-event.service";
 import {UserEventType} from "../shared/event-type.model";
 import {OccurrenceEvent} from "../shared/events.model";
 import {DialogDetailsRequest} from "../shared/dialog-details-request";
+import {EventOfDayModel} from "../event-of-day/event-of-day.model";
 
 
 const TIME_FORMAT = 'HH:mm'
@@ -43,8 +44,9 @@ export class EventOccurrenceDetailsDialog implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const additionalControls: any = {};
+    const format = `${DATE_FORMAT} HH:mm:ss.SSSZZ`;
     this.occurred_on = this.data.entity?.occurred_at
-                       ? DateTime.fromISO(this.data.entity?.occurred_at)
+                       ? DateTime.fromFormat(this.data.entity?.occurred_at, format)
                        : DateTime.now()
     this.occurred_at = this.occurred_on.toFormat(TIME_FORMAT)
 
@@ -75,12 +77,18 @@ export class EventOccurrenceDetailsDialog implements OnInit, OnDestroy {
     if (this.data.entity == null) {
       this.data.entity = new OccurrenceEvent()
     }
-    this.data.entity.occurred_at = this.getFormDateTime('occurred').toISO()
+    const dateTime = this.getFormDateTime('occurred')
+    this.data.entity.occurred_at =  dateTime.toISO()
     this.data.entity.event_type_id = this.form.get('event_type')?.value
+    const eventType = this.eventTypes.find(x => x.id == this.data.entity.event_type_id)
+    if(!eventType){
+      throw new Error(`Cannot find event_type by id '${this.data.entity.event_type_id}'`)
+    }
+    this.data.entity.color = eventType.color
     this.saveEventSub = this.eventService.saveEvent(this.data.entity)
                             .subscribe({
                               next: () => {
-                                this.dialogRef.close(this.data.entity);
+                                this.dialogRef.close(new EventOfDayModel<OccurrenceEvent>(this.data.entity, dateTime));
                               },
                               error: error => {
                                 this.logger.error('failed to save an occurrence event: ', error, this.data.entity)
@@ -90,7 +98,8 @@ export class EventOccurrenceDetailsDialog implements OnInit, OnDestroy {
   }
 
   getFormDateTime(prefix: string): DateTime {
-    const date = this.form.get(`${prefix}_on`)?.value
+    const dateTime = this.form.get(`${prefix}_on`)?.value.toISODate()
+    const date = DateTime.fromISO(dateTime)
     const time = this.form.get(`${prefix}_at`)?.value.split(':')
     return date?.plus({hours: time[0], minutes: time[1]}) || null
   }

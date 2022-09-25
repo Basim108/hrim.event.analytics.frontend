@@ -5,10 +5,11 @@ import {Subscription} from "rxjs";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DateTime} from "luxon";
-import {HrimEventService} from "../services/hrim-event.service";
+import {DATE_FORMAT, HrimEventService} from "../services/hrim-event.service";
 import {UserEventType} from "../shared/event-type.model";
 import {DurationEvent} from "../shared/events.model";
 import {DialogDetailsRequest} from "../shared/dialog-details-request";
+import {EventOfDayModel} from "../event-of-day/event-of-day.model";
 
 const TIME_FORMAT = 'HH:mm'
 
@@ -42,8 +43,9 @@ export class EventDurationDetailsDialog implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    const format = `${DATE_FORMAT} HH:mm:ss.SSSZZ`;
     this.started_on = this.data.entity?.started_at
-                      ? DateTime.fromISO(this.data.entity.started_at)
+                      ? DateTime.fromFormat(this.data.entity.started_at, format)
                       : DateTime.now()
     this.started_at = this.started_on.toFormat(TIME_FORMAT)
     this.finished_on = this.data.entity?.finished_at
@@ -55,8 +57,8 @@ export class EventDurationDetailsDialog implements OnInit, OnDestroy {
       event_type: [this.eventTypes, [Validators.required]],
       started_on: [this.started_on, [Validators.required]],
       started_at: [this.started_at, [Validators.required]],
-      finished_on: [this.started_on, []],
-      finished_at: [this.started_at, []],
+      finished_on: [this.finished_on, []],
+      finished_at: [this.finished_at, []],
     });
     this.eventTypeSub = this.eventTypeService.eventTypes$.subscribe({
       next: eventTypes => this.eventTypes = eventTypes
@@ -77,23 +79,39 @@ export class EventDurationDetailsDialog implements OnInit, OnDestroy {
     if (this.data.entity == null) {
       this.data.entity = new DurationEvent()
     }
-    this.data.entity.started_at = this.getFormDateTime('started').toISO()
+    const dateTime = this.getFormDateTime('started')
+    if(dateTime === null){
+      const msg = 'started_at field must not be null'
+      this.logger.error(msg, this.form.get('started_on'), this.form.get('started_at'))
+      throw new Error(msg)
+    }
+    this.data.entity.started_at =  dateTime.toISO()
     this.data.entity.finished_at = this.getFormDateTime('finished')?.toISO() || null
     this.data.entity.event_type_id = this.form.get('event_type')?.value
+    const eventType = this.eventTypes.find(x => x.id == this.data.entity.event_type_id)
+    if(!eventType){
+      throw new Error(`Cannot find event_type by id '${this.data.entity.event_type_id}'`)
+    }
+    this.data.entity.color = eventType.color
     this.saveEventSub = this.eventService.saveEvent(this.data.entity)
                             .subscribe({
                               next: () => {
-                                this.dialogRef.close(this.data.entity);
+                                this.dialogRef.close(new EventOfDayModel<DurationEvent>(this.data.entity, dateTime));
                               },
                               error: error => {
-                                this.logger.error('failed to save a duration event: ', error, this.data.entity)
+                                this.logger.error('failed to save an occurrence event: ', error, this.data.entity)
                                 this.dialogRef.disableClose = true;
                               }
                             });
   }
 
-  getFormDateTime(prefix: string): DateTime {
-    const date = this.form.get(`${prefix}_on`)?.value
+  getFormDateTime(prefix: string): DateTime | null {
+    const fieldValue = this.form.get(`${prefix}_on`)?.value
+    if(fieldValue === null){
+      return null
+    }
+    const dateTimeStr = fieldValue?.toISODate()
+    const date = DateTime.fromISO(dateTimeStr)
     const time = this.form.get(`${prefix}_at`)?.value.split(':')
     return date?.plus({hours: time[0], minutes: time[1]}) || null
   }

@@ -7,11 +7,11 @@
       <mat-icon>add</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="createDuration()">
+      <button mat-menu-item (click)="createEvent(durationKindId)">
         <mat-icon>date_range</mat-icon>
         <span>Duration event</span>
       </button>
-      <button mat-menu-item (click)="createOccurrence()">
+      <button mat-menu-item (click)="createEvent(occurrenceKindId)">
         <mat-icon>event_available</mat-icon>
         <span>Occurrence event</span>
       </button>
