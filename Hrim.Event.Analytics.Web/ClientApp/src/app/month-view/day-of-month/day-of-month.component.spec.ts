@@ -7,6 +7,7 @@ describe('DayOfMonthComponent', () => {
   let fixture: ComponentFixture<DayOfMonthComponent>;
 
   beforeEach(async () => {
+    pending()
     await TestBed.configureTestingModule({
       declarations: [ DayOfMonthComponent ]
     })

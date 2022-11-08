@@ -7,6 +7,7 @@ describe('EventTypeListComponent', () => {
   let fixture: ComponentFixture<EventTypeListComponent>;
 
   beforeEach(async () => {
+    pending()
     await TestBed.configureTestingModule({
       declarations: [ EventTypeListComponent ]
     })

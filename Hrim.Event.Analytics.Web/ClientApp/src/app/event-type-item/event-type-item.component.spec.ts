@@ -7,6 +7,7 @@ describe('EventTypeItemComponent', () => {
   let fixture: ComponentFixture<EventTypeItemComponent>;
 
   beforeEach(async () => {
+    pending()
     await TestBed.configureTestingModule({
       declarations: [ EventTypeItemComponent ]
     })

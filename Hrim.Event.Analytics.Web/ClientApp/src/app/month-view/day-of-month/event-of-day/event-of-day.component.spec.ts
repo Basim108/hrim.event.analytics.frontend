@@ -7,6 +7,7 @@ describe('EventOfDayComponent', () => {
   let fixture: ComponentFixture<EventOfDayComponent>;
 
   beforeEach(async () => {
+    pending()
     await TestBed.configureTestingModule({
       declarations: [ EventOfDayComponent ]
     })
