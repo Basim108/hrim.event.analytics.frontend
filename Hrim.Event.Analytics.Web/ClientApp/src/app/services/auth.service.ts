@@ -9,7 +9,7 @@ export type ExternalIdp = 'google' | 'facebook';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-  user = new BehaviorSubject<UserProfileModel | null>(null);
+  user$ = new BehaviorSubject<UserProfileModel | null>(null);
 
   constructor(private logger: LogService, private http: HttpClient) {
     logger.logConstructor(this);
@@ -22,13 +22,13 @@ export class AuthService {
     }).subscribe({
       next: userProfile => {
         this.logger.debug('User is authenticated.', userProfile)
-        this.user.next(userProfile)
+        this.user$.next(userProfile)
       },
       error: error => {
         switch (error.status) {
           case 0:
           case 401:
-            this.user.next(null);
+            this.user$.next(null);
             break;
           default:
             this.logger.error(`failed get user profile request: (${error.status}) ${error.message}`, error)
