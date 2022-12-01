@@ -4,7 +4,6 @@ import {LogService} from "./log.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {EVENT_TYPES} from "../../test_data/event-types";
 import {environment} from "../../environments/environment";
-import * as http from "http";
 
 describe('EventTypeService', () => {
 
@@ -26,10 +25,11 @@ describe('EventTypeService', () => {
     httpTestingController.verify()
   })
 
-  it('should load all event types', () => {
+  it('should load all event types', (done) => {
     service.eventTypes.subscribe(eventTypes => {
       expect(eventTypes).toBeTruthy()
       expect(eventTypes.length).toBe(4)
+      done()
     })
     service.load()
     const req = httpTestingController.expectOne(url)
@@ -37,22 +37,24 @@ describe('EventTypeService', () => {
     req.flush(Object.values(EVENT_TYPES))
   })
 
-  it('should get details for event type by id', () => {
+  it('should get details for event type by id', (done) => {
     service.getDetails(EVENT_TYPES["reading"].id)
            .subscribe(eventType => {
              expect(eventType).toBeTruthy()
              expect(eventType.id).toBe(EVENT_TYPES["reading"].id)
+             done()
            })
     const req = httpTestingController.expectOne(url + EVENT_TYPES["reading"].id)
     expect(req.request.method).toEqual('GET')
     req.flush({...EVENT_TYPES["reading"]})
   })
 
-  it('should soft delete an event type by id', () => {
+  it('should soft delete an event type by id', (done) => {
     service.deleteEventType(EVENT_TYPES["reading"])
            .subscribe(eventType => {
              expect(eventType).toBeTruthy()
              expect(eventType.id).toBe(EVENT_TYPES["reading"].id)
+             done()
            })
     const deleteUrl = `${entityUrl}${EVENT_TYPES["reading"].id}?entity_type=event_type`
     const req = httpTestingController.expectOne(deleteUrl)
@@ -60,20 +62,22 @@ describe('EventTypeService', () => {
     req.flush({...EVENT_TYPES["reading"]})
   })
 
-  it('should update an existed event type by id', () => {
+  it('should update an existed event type by id', (done) => {
     service.saveEventType({...EVENT_TYPES["reading"]})
            .subscribe(eventType => {
              expect(eventType).toBeTruthy()
+             done()
            })
     const req = httpTestingController.expectOne(url)
     expect(req.request.method).toEqual('PUT')
     req.flush({...EVENT_TYPES["reading"]})
   })
 
-  it('should create a new event type', () => {
+  it('should create a new event type', (done) => {
     service.saveEventType({...EVENT_TYPES["reading"], id: ''})
            .subscribe(eventType => {
              expect(eventType).toBeTruthy()
+             done()
            })
     const req = httpTestingController.expectOne(url)
     expect(req.request.method).toEqual('POST')
