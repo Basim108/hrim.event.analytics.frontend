@@ -1,8 +1,8 @@
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=Basim108_hrim.event.analytics.frontend)
 
-# Hrim Events Analytics
+# Hrim Event Analytics
 
-This project is a frontend of event analytics 
+This repo is a frontend of event analytics. A backend repo could be found [here](https://github.com/Basim108/hrim.event.analytics.backend).
 
 ## Development server
 
