@@ -27,7 +27,7 @@ export class ApiResponseInterceptor implements HttpInterceptor {
             delay(TOO_MANY_REQUEST_DELAY)
           );
         }
-        return throwError(error);
+        return throwError(() => error);
       }),
       retry({
         count: NUMBER_OR_RETRIES,
@@ -36,7 +36,7 @@ export class ApiResponseInterceptor implements HttpInterceptor {
             case 400:
             case 403:
             case 500:
-              return throwError(error);
+              return throwError(() => error);
           }
           const delay = value * RETRY_WAIT_COEFFICIENT;
           console.debug(`delaying before retry; waiting for: ${delay / 1000} sec.`)
