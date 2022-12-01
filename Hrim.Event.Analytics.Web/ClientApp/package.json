@@ -10,7 +10,8 @@
     "build": "ng build",
     "build:ssr": "ng run Hrim.Event.Analytics.Web:server:dev",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test --browsers=Chrome",
+    "cover": "ng test --code-coverage --browsers=ChromeHeadless --no-watch --reporters=junit"
   },
   "private": true,
   "dependencies": {
@@ -50,6 +51,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.0.0",
     "karma-jasmine-html-reporter": "^1.7.0",
+    "karma-junit-reporter": "^2.0.1",
     "typescript": "~4.7.2"
   }
 }

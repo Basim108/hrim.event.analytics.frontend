@@ -7,6 +7,7 @@ describe('AuthMenuComponent', () => {
   let fixture: ComponentFixture<AuthMenuComponent>;
 
   beforeEach(async () => {
+    pending()
     await TestBed.configureTestingModule({
       declarations: [ AuthMenuComponent ]
     })

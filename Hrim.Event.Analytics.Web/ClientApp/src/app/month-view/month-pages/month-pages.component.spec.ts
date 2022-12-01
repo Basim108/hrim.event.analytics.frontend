@@ -7,6 +7,7 @@ describe('MonthPagesComponent', () => {
   let fixture: ComponentFixture<MonthPagesComponent>;
 
   beforeEach(async () => {
+    pending()
     await TestBed.configureTestingModule({
       declarations: [ MonthPagesComponent ]
     })

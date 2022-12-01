@@ -7,6 +7,7 @@ describe('EventTypeDetailsDialogComponent', () => {
   let fixture: ComponentFixture<EventTypeDetailsDialog>;
 
   beforeEach(async () => {
+    pending()
     await TestBed.configureTestingModule({
       declarations: [ EventTypeDetailsDialog ]
     })

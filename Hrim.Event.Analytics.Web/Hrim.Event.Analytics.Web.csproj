@@ -27,6 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="ClientApp\coverage" />
       <Folder Include="Controllers" />
       <Folder Include="Models" />
     </ItemGroup>

@@ -36,10 +36,17 @@ jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 'Hrim.Event.Analytics.Web/ClientApp'
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Install dependencies
+        run: npm install
+      - name: Test and coverage
+        run: npm run cover
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

@@ -7,6 +7,7 @@ describe('LandingViewComponent', () => {
   let fixture: ComponentFixture<LandingViewComponent>;
 
   beforeEach(async () => {
+    pending()
     await TestBed.configureTestingModule({
       declarations: [ LandingViewComponent ]
     })
