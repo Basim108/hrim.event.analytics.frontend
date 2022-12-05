@@ -11,11 +11,10 @@ import {AuthGuard} from "./services/auth-guard.service";
 const monthView = new MonthViewRouteModel();
 const yearView = new YearViewRouteModel();
 
-const appRoutes: Routes = [
+export const appRoutes: Routes = [
   {path: yearView.configPath, canActivate: [AuthGuard], component: YearViewComponent},
   {path: monthView.configPath, canActivate: [AuthGuard], component: MonthViewComponent},
   {path: '', component: LandingViewComponent},
-  // {path: '', redirectTo: monthView.getRouteString(DateTime.now()), pathMatch: 'full'},
   {path: '404', component: PageNotFoundComponent},
   {path: '**', redirectTo: '/404', pathMatch: 'full'}
 ];

@@ -26,7 +26,7 @@ describe('EventTypeService', () => {
   })
 
   it('should load all event types', (done) => {
-    service.eventTypes.subscribe(eventTypes => {
+    service.eventTypes$.subscribe(eventTypes => {
       expect(eventTypes).toBeTruthy()
       expect(eventTypes.length).toBe(4)
       done()

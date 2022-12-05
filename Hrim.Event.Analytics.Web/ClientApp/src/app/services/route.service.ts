@@ -11,7 +11,7 @@ import {LogService} from "./log.service";
 export class RouteService {
   monthView = new MonthViewRouteModel();
   yearView = new YearViewRouteModel();
-  notFoundPath = '404';
+  readonly notFoundPath = '404';
 
   constructor(private logger: LogService, private router: Router) {
     logger.logConstructor(this);

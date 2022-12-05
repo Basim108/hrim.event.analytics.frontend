@@ -7,7 +7,7 @@ import {UserEventType} from "../event-type-item/event-type.model";
 
 @Injectable({providedIn: 'root'})
 export class EventTypeService {
-  eventTypes = new Subject<UserEventType[]>();
+  eventTypes$ = new Subject<UserEventType[]>();
 
   url = `${environment.apiUrl}/v1/event-type/`;
   entityUrl = `${environment.apiUrl}/v1/entity/`;
@@ -22,7 +22,7 @@ export class EventTypeService {
         .subscribe({
           next: userEventTypes => {
             this.logger.debug('User event types loaded from server:', userEventTypes)
-            this.eventTypes.next(userEventTypes);
+            this.eventTypes$.next(userEventTypes);
           }
         });
   }
