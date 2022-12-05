@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GuidService } from './guid.service';
+import { ErrorMetadataService } from './error-metadata.service';
 
-describe('GuidService', () => {
-  let service: GuidService;
+describe('ErrorMetadataService', () => {
+  let service: ErrorMetadataService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(GuidService);
+    service = TestBed.inject(ErrorMetadataService);
   });
 
   it('should be created', () => {

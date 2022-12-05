@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
@@ -27,6 +27,7 @@ import {EventTypeItemComponent} from './event-type-item/event-type-item.componen
 import {EventTypeDetailsDialog} from './event-type-details-dialog/event-type-details-dialog.component';
 
 import {ApiResponseInterceptor} from "./services/api-response-interceptor.service";
+import {ErrorMetadataService} from "./services/error-metadata.service";
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import {ApiResponseInterceptor} from "./services/api-response-interceptor.servic
     ReactiveFormsModule,
   ],
   providers: [
+    {provide: ErrorHandler, useClass: ErrorMetadataService},
     {provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS},
     {provide: HTTP_INTERCEPTORS, useClass: ApiResponseInterceptor, multi: true}
   ],
