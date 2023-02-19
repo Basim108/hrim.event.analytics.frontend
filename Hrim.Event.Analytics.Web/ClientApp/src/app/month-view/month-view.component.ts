@@ -28,7 +28,7 @@ export class MonthViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.logger.debug('MonthViewComponent ngOnDestroy');
-    this.routeParamsSub.unsubscribe();
+    this.routeParamsSub?.unsubscribe();
   }
 
   ngOnInit(): void {

@@ -25,7 +25,7 @@ export class EventTypeItemComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.deleteEventTypeSub.unsubscribe();
+    this.deleteEventTypeSub?.unsubscribe();
   }
 
   onEditEventType() {

@@ -34,9 +34,9 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.formValueChangeSub.unsubscribe()
-    this.getDetailsSub.unsubscribe()
-    this.saveEventTypeSub.unsubscribe()
+    this.formValueChangeSub?.unsubscribe()
+    this.getDetailsSub?.unsubscribe()
+    this.saveEventTypeSub?.unsubscribe()
   }
 
   ngOnInit(): void {

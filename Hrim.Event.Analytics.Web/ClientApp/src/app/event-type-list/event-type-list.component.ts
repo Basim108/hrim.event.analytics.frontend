@@ -23,7 +23,7 @@ export class EventTypeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.eventTypesSub.unsubscribe();
+    this.eventTypesSub?.unsubscribe();
   }
 
   ngOnInit(): void {
