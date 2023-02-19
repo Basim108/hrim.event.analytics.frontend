@@ -11,6 +11,7 @@
     "build:ssr": "ng run Hrim.Event.Analytics.Web:server:dev",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --browsers=Chrome",
+    "test:ci": "ng test --browsers=ChromeHeadless --watch=false",
     "cover": "ng test --code-coverage --browsers=ChromeHeadless --no-watch --reporters=junit"
   },
   "private": true,
