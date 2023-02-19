@@ -13,8 +13,8 @@
          referrerpolicy="no-referrer"/>
   </a>
   <div class="dropdown-menu dropdown-menu-right">
-    <a class="dropdown-item" (click)="onGoogleLogin()" *ngIf="!isAuthenticated"><img src="assets/img/google.png" class="idp-logo" alt="">Login with Google</a>
-    <a class="dropdown-item" (click)="onFacebookLogin()" *ngIf="!isAuthenticated"><img src="assets/img/facebook.jpg" class="idp-logo" alt="">Login with Facebook</a>
-    <a class="dropdown-item" (click)="onLogout()"  *ngIf="isAuthenticated">Logout</a>
+    <a class="dropdown-item login-google-btn" (click)="onGoogleLogin()" *ngIf="!isAuthenticated"><img src="assets/img/google.png" class="idp-logo" alt="">Login with Google</a>
+    <a class="dropdown-item login-facebook-btn" (click)="onFacebookLogin()" *ngIf="!isAuthenticated"><img src="assets/img/facebook.jpg" class="idp-logo" alt="">Login with Facebook</a>
+    <a class="dropdown-item logout-btn" (click)="onLogout()"  *ngIf="isAuthenticated">Logout</a>
   </div>
 </div>
