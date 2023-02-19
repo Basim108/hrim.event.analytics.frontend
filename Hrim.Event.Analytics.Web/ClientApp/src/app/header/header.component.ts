@@ -35,10 +35,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   isMonthViewActive() {
-    // return window.location.href.indexOf(this.routeService.monthView.path) > -1;
-    console.log('router.url is ', this.router.url)
-    console.log('this.routeService.monthView.path is ', this.routeService.monthView.path)
-
     return this.router.url.indexOf(this.routeService.monthView.path) > -1;
   }
 }
