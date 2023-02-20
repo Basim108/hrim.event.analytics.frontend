@@ -37,7 +37,7 @@ export class DayOfMonthComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.eventsSubscription.unsubscribe();
+    this.eventsSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {

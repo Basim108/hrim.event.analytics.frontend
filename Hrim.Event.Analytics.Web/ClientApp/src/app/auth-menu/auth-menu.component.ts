@@ -28,7 +28,7 @@ export class AuthMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.isAuthenticatedSub.unsubscribe();
+    this.isAuthenticatedSub?.unsubscribe();
   }
 
   onGoogleLogin() {

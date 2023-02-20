@@ -3,6 +3,7 @@ import {RouteService} from "../services/route.service";
 import {AuthService} from "../services/auth.service";
 import {Subscription} from "rxjs";
 import {LogService} from "../services/log.service";
+import {Router} from '@angular/router'
 
 @Component({
   selector: 'app-header',
@@ -10,11 +11,12 @@ import {LogService} from "../services/log.service";
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  isAuthenticated = false;
+  isAuthenticated = true;
   isAuthenticatedSub: Subscription;
 
   constructor(private routeService: RouteService,
               private authService: AuthService,
+              private router: Router,
               private logger: LogService) {
     logger.logConstructor(this);
   }
@@ -24,7 +26,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.isAuthenticatedSub.unsubscribe();
+    this.isAuthenticatedSub?.unsubscribe();
   }
 
   navigateToMonthView() {
@@ -33,6 +35,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   isMonthViewActive() {
-    return window.location.href.indexOf(this.routeService.monthView.path) > -1;
+    return this.router.url.indexOf(this.routeService.monthView.path) > -1;
   }
 }
