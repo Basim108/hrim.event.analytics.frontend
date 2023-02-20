@@ -55,11 +55,10 @@ export class DayOfMonthComponent implements OnInit, OnDestroy {
   }
 
   onEventCreated() {
-    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
     this.eventService.createEvent({
       id: '',
       name: 'new event',
-      color: '#' + randomColor,
+      color: '#ff00ff',
       date: this.dayModel.dateTime
     })
   }
