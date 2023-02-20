@@ -1,10 +1,10 @@
-import {TestBed} from "@angular/core/testing";
-import {AuthService} from "./auth.service";
-import {LogService} from "./log.service";
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {environment} from "../../environments/environment";
-import {USERS} from "../../test_data/users";
-import {skip, take} from "rxjs";
+import {TestBed} from '@angular/core/testing'
+import {AuthService} from './auth.service'
+import {LogService} from './log.service'
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing'
+import {environment} from '../../environments/environment'
+import {USERS} from '../../test_data/users'
+import {skip, take} from 'rxjs'
 
 const USER_PROFILE_URL = `${environment.apiUrl}/v1/user-profile/me`
 
@@ -14,10 +14,10 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports:   [HttpClientTestingModule],
       providers: [LogService]
     })
-    service = TestBed.inject(AuthService)
+    service               = TestBed.inject(AuthService)
     httpTestingController = TestBed.inject(HttpTestingController)
   })
   afterEach(() => {
@@ -31,12 +31,64 @@ describe('AuthService', () => {
              take(1)
            )
            .subscribe(user => {
-      expect(user).toBeNull()
-      done()
-    })
+             expect(user).toBeNull()
+             done()
+           })
     const req = httpTestingController.expectOne(USER_PROFILE_URL)
     expect(req.request.method).toEqual('GET')
-    req.flush('Unathurized', {status: 401, statusText: 'Unathurized'})
+    req.flush('Unauthorized', {status: 401, statusText: 'Unauthorized'})
+  })
+
+  it('given 401 should not log error', done => {
+    let userNext = jasmine.createSpy('userNext')
+    const logService = TestBed.inject(LogService)
+    spyOn(logService, 'error')
+    service.user$
+           .pipe(
+             skip(1),
+             take(1)
+           )
+           .subscribe(userNext)
+    const req = httpTestingController.expectOne(USER_PROFILE_URL)
+    expect(req.request.method).toEqual('GET')
+    req.flush('Unauthorized', {status: 401, statusText: 'Unauthorized'})
+
+    expect(logService.error).not.toHaveBeenCalled()
+    done()
+  })
+
+  it('given 500 should not emmit null user', done => {
+    let userNext = jasmine.createSpy('userNext')
+    service.user$
+           .pipe(
+             skip(1),
+             take(1)
+           )
+           .subscribe(userNext)
+    const req = httpTestingController.expectOne(USER_PROFILE_URL)
+    expect(req.request.method).toEqual('GET')
+    req.flush('Internal Server Error', {status: 500, statusText: 'Internal Server Error'})
+
+    expect(userNext).not.toHaveBeenCalled()
+    done()
+  })
+
+  it('given 500 should log error', done => {
+    let userNext     = jasmine.createSpy('userNext')
+    const logService = TestBed.inject(LogService)
+    spyOn(logService, 'error')
+    service.user$
+           .pipe(
+             skip(1),
+             take(1)
+           )
+           .subscribe(userNext)
+    const req = httpTestingController.expectOne(USER_PROFILE_URL)
+    expect(req.request.method).toEqual('GET')
+    req.flush('Internal Server Error', {status: 500, statusText: 'Internal Server Error'})
+
+    expect(logService.error).toHaveBeenCalled()
+    done()
   })
 
   it('given a user should emmit it', done => {
@@ -46,11 +98,11 @@ describe('AuthService', () => {
              take(1)
            )
            .subscribe(user => {
-             expect(user?.id).toEqual(USERS["john_doe"].id)
+             expect(user?.id).toEqual(USERS['john_doe'].id)
              done()
            })
     const req = httpTestingController.expectOne(USER_PROFILE_URL)
     expect(req.request.method).toEqual('GET')
-    req.flush({...USERS["john_doe"]})
+    req.flush({...USERS['john_doe']})
   })
 })
