@@ -1,24 +1,66 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing'
 
-import { MonthPagesComponent } from './month-pages.component';
+import {MonthPagesComponent} from './month-pages.component'
+import {RouteService} from '../../services/route.service'
+import {HttpClientTestingModule} from '@angular/common/http/testing'
+import {RouterTestingModule} from '@angular/router/testing'
+import {MatIconModule} from '@angular/material/icon'
+import {MatButtonModule} from '@angular/material/button'
+import {MatDialogModule} from '@angular/material/dialog'
+import {MatInputModule} from '@angular/material/input'
+import {DateTime} from 'luxon'
 
 describe('MonthPagesComponent', () => {
-  let component: MonthPagesComponent;
-  let fixture: ComponentFixture<MonthPagesComponent>;
+  let component: MonthPagesComponent
+  let fixture: ComponentFixture<MonthPagesComponent>
+  let routeService: RouteService
 
   beforeEach(async () => {
-    pending()
     await TestBed.configureTestingModule({
-      declarations: [ MonthPagesComponent ]
-    })
-    .compileComponents();
+                   imports:      [
+                     HttpClientTestingModule,
+                     RouterTestingModule.withRoutes([]),
+                     MatIconModule,
+                     MatButtonModule,
+                     MatDialogModule,
+                     MatInputModule
+                   ],
+                   declarations: [MonthPagesComponent],
+                   providers:    [RouteService]
+                 })
+                 .compileComponents()
 
-    fixture = TestBed.createComponent(MonthPagesComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    routeService = TestBed.inject(RouteService)
+    fixture      = TestBed.createComponent(MonthPagesComponent)
+    component    = fixture.componentInstance
+    component.currentMonth = DateTime.fromFormat('2022-05', 'yyyy-MM')
+    spyOn(routeService, 'navigateToMonthView')
+    fixture.detectChanges()
+  })
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(component).toBeTruthy()
+  })
+
+  it('setCurrentMonth should set current month and navigate', () => {
+    component.setCurrentMonth()
+
+    expect(routeService.navigateToMonthView).toHaveBeenCalled()
+    const currentMonth = DateTime.now().toFormat('MM')
+    expect(component.currentMonth.toFormat('MM')).toEqual(currentMonth)
+  })
+
+  it('setPrevMonth should set current month and navigate', () => {
+    component.setPrevMonth()
+
+    expect(routeService.navigateToMonthView).toHaveBeenCalled()
+    expect(component.currentMonth.toFormat('MM')).toEqual('04')
+  })
+
+  it('setNextMonth should set current month and navigate', () => {
+    component.setNextMonth()
+
+    expect(routeService.navigateToMonthView).toHaveBeenCalled()
+    expect(component.currentMonth.toFormat('MM')).toEqual('06')
+  })
+})

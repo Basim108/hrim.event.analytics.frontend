@@ -2,13 +2,13 @@
   <div class="col col-md-2"><h5>{{currentMonth.toFormat('yyyy LLLL')}}</h5></div>
   <div class="col col-md-2">
     <div class="btn-group-sm sb-1" role="group" aria-label="Basic example">
-      <button type="button" class="btn btn-light" (click)="setPrevMonth()">
+      <button type="button" class="btn btn-light prev-month-btn" (click)="setPrevMonth()">
         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_circle_left"></mat-icon>
       </button>
-      <button type="button" class="btn btn-light" (click)="setCurrentMonth()">
+      <button type="button" class="btn btn-light current-month-btn" (click)="setCurrentMonth()">
         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="cached"></mat-icon>
       </button>
-      <button type="button" class="btn btn-light" (click)="setNextMonth()">
+      <button type="button" class="btn btn-light next-month-btn" (click)="setNextMonth()">
         <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="arrow_circle_right"></mat-icon>
       </button>
     </div>
