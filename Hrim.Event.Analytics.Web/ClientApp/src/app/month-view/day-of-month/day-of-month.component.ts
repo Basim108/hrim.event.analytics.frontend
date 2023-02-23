@@ -1,23 +1,28 @@
-import {Component, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
-import {HrimEventModel} from 'src/app/shared/hrim-event.model';
-import {DayModel} from "../../shared/day.model";
-import {DateTime} from "luxon";
-import {HrimEventService} from "../../services/hrim-event.service";
-import {Subscription} from "rxjs";
-import {filter} from "rxjs/operators";
-import {LogService} from "../../services/log.service";
+import {Component, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core'
+import {OccurrenceEventModel}                                           from 'src/app/shared/occurrence-event.model'
+import {DayModel}                                                       from '../../shared/day.model'
+import {DateTime}                                                       from 'luxon'
+import {HrimEventService}                                               from '../../services/hrim-event.service'
+import {Subscription}                                                   from 'rxjs'
+import {LogService}                                                     from '../../services/log.service'
+import {DurationEventModel}                                             from '../../shared/duration-event.model'
+import {UserEventType}                                                  from "../../shared/event-type.model";
 
 @Component({
-  selector: 'app-day-of-month',
-  templateUrl: './day-of-month.component.html',
-  styleUrls: ['./day-of-month.component.css']
-})
-export class DayOfMonthComponent implements OnInit, OnDestroy {
-  @Input('day') dayModel!: DayModel;
-  @Input() isLastWeek!: boolean;
-  @Input() currentMonth!: DateTime;
-  isOutOfMonth: boolean;
-  isToday: boolean;
+             selector   : 'app-day-of-month',
+             templateUrl: './day-of-month.component.html',
+             styleUrls  : ['./day-of-month.component.css']
+           })
+export class DayOfMonthComponent implements OnInit,
+                                            OnDestroy {
+  @Input('day') dayModel!: DayModel
+  @Input() isLastWeek!: boolean
+  @Input() currentMonth!: DateTime
+  @Input() occurrenceEvents: OccurrenceEventModel[]
+  @Input() durationEvents: DurationEventModel[]
+
+  isOutOfMonth: boolean
+  isToday: boolean
 
   @HostBinding('class.last-week') get lastWeek() {
     return this.isLastWeek
@@ -27,9 +32,7 @@ export class DayOfMonthComponent implements OnInit, OnDestroy {
     return this.isOutOfMonth
   }
 
-  events: HrimEventModel[] = [];
-
-  eventsSubscription: Subscription;
+  eventsSub: Subscription
 
   constructor(private logger: LogService,
               private eventService: HrimEventService) {
@@ -37,29 +40,34 @@ export class DayOfMonthComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.eventsSubscription?.unsubscribe();
+    this.eventsSub?.unsubscribe()
   }
 
   ngOnInit(): void {
-    const eventsOfTheDay$ = this.eventService.hrimEvents$.pipe(
-      // tap(x => this.logger.debug(x.id + ' ' + x.date.toISODate())),
-      filter(x => x.date.toISODate() == this.dayModel.dateTime.toISODate())
-    );
-    this.eventsSubscription = eventsOfTheDay$.subscribe(event => this.events.push(event));
-    this.isToday = this.dayModel.dateTime.toISODate() === DateTime.now().toISODate();
-    this.isOutOfMonth = this.dayModel.dateTime.month !== this.currentMonth.month || this.dayModel.dateTime.year !== this.currentMonth.year;
+    this.isToday      = this.dayModel.dateTime.toISODate() === DateTime.now().toISODate()
+    this.isOutOfMonth = this.dayModel.dateTime.month !== this.currentMonth.month || this.dayModel.dateTime.year !== this.currentMonth.year
   }
 
-  @HostListener("click") onClick() {
+  @HostListener('click') onClick() {
     this.onEventCreated()
   }
 
   onEventCreated() {
-    this.eventService.createEvent({
-      id: '',
-      name: 'new event',
-      color: '#ff00ff',
-      date: this.dayModel.dateTime
-    })
+    const createdEvent           = {
+      id             : '',
+      eventType      : new UserEventType(),
+      occurredAt     : this.dayModel.dateTime,
+      occurredOn     : this.dayModel.dateTime.toISODate(),
+      concurrentToken: 0
+    }
+    createdEvent.eventType.color = '#ff00ff'
+    this.eventService.createEvent(createdEvent)
+  }
+
+  getLastOccurrence() {
+    const occurrenceLength = this.occurrenceEvents.length
+    return occurrenceLength > 0
+           ? this.occurrenceEvents[occurrenceLength - 1]
+           : null
   }
 }

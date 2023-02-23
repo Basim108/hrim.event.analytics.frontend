@@ -6,7 +6,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {EventTypeService} from "../services/user-event-type.service";
 import {Color} from "@angular-material-components/color-picker";
 import {debounceTime, Subscription} from "rxjs";
-import {UserEventType} from "../event-type-item/event-type.model";
+import {UserEventType} from "../shared/event-type.model";
 
 @Component({
   selector: 'app-event-type-details-dialog',

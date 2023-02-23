@@ -1,7 +1,7 @@
-import {Component, Input} from '@angular/core';
-import {DateTime} from "luxon";
-import {RouteService} from "../../services/route.service";
-import {LogService} from "../../services/log.service";
+import {Component, Input} from '@angular/core'
+import {DateTime} from 'luxon'
+import {RouteService} from '../../services/route.service'
+import {LogService} from '../../services/log.service'
 
 @Component({
   selector: 'app-month-pages',

@@ -17,8 +17,7 @@ export class AuthGuard implements CanActivate {
     return this.authService.user$.pipe(
         take(1),
         map(user => {
-          const isAuth = !!user;
-          if (isAuth) {
+          if (user) {
             this.logger.debug('auth guard passes the route for the user')
             return true;
           }
@@ -26,5 +25,4 @@ export class AuthGuard implements CanActivate {
           return this.router.createUrlTree(['/']);
         }));
   }
-
 }

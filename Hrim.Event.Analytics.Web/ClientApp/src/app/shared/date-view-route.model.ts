@@ -1,5 +1,5 @@
 import {DateTime} from "luxon";
-import {Params} from "@angular/router";
+import {Params, UrlSegment} from '@angular/router'
 
 export abstract class DateViewRouteModel {
   format: string;
@@ -22,6 +22,14 @@ export abstract class DateViewRouteModel {
   getDateFromParams(params: Params): DateTime | null {
     const dateStr = params[this.paramName];
     const date = DateTime.fromFormat(dateStr, this.format);
+    if (date.invalidReason) {
+      return null;
+    }
+    return date;
+  }
+
+  getDateFromUrl(url: UrlSegment[]): DateTime | null {
+    const date = DateTime.fromFormat(url[1].path, this.format);
     if (date.invalidReason) {
       return null;
     }

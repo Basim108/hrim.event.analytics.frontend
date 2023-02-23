@@ -2,8 +2,14 @@
      [ngStyle]="{'height': '100%'}"
 >
   <div class="day-title">{{dayModel.day}}</div>
-  <app-event-of-day [totalEventCount]="events.length"
+  <app-event-of-day [totalEventCount]="occurrenceEvents.length + durationEvents.length"
                     [eventOfDay]="eventOfDay"
-                    *ngFor="let eventOfDay of events">
+                    [prevEventOfDay]="i > 0 ? occurrenceEvents[i-1] : null"
+                    *ngFor="let eventOfDay of occurrenceEvents; index as i">
+  </app-event-of-day>
+  <app-event-of-day [totalEventCount]="occurrenceEvents.length + durationEvents.length"
+                    [eventOfDay]="eventOfDay"
+                    [prevEventOfDay]="i > 0 ? durationEvents[i-1] : getLastOccurrence()"
+                    *ngFor="let eventOfDay of durationEvents; index as i">
   </app-event-of-day>
 </div>

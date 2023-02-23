@@ -1,14 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 
 import { HrimEventService } from './hrim-event.service';
-import {HrimEventModel} from "../shared/hrim-event.model";
+import {OccurrenceEventModel} from "../shared/occurrence-event.model";
 import {EVENTS} from "../../test_data/events";
+import {HttpClientTestingModule} from '@angular/common/http/testing'
+import {LogService} from './log.service'
 
 describe('HrimEventService', () => {
   let service: HrimEventService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+                                     imports:   [HttpClientTestingModule],
+                                     providers: [LogService]
+                                   })
     service = TestBed.inject(HrimEventService);
   });
 
@@ -17,14 +22,14 @@ describe('HrimEventService', () => {
   });
 
   it('createEvent should set event id', () => {
-    const event = new HrimEventModel();
+    const event = new OccurrenceEventModel(null);
     service.createEvent(event);
     expect(event.id).not.toBeFalsy();
   });
 
   it('createEvent should emit created event', done => {
     const testEvent = {...EVENTS["eventOfDay_1"], id: ''}
-    service.hrimEvents$.subscribe(createdEvent => {
+    service.occurrenceEvents$.subscribe(createdEvent => {
       expect(createdEvent.id).toBeTruthy()
       expect(createdEvent.color).toBe(testEvent.color)
       done()
@@ -34,10 +39,10 @@ describe('HrimEventService', () => {
 
   it('new subscriber should get all previously emitted events', done => {
     const testEvent = {...EVENTS["eventOfDay_1"], id: ''}
-    service.hrimEvents$.subscribe(() => {
+    service.occurrenceEvents$.subscribe(() => {
     })
     service.createEvent(testEvent);
-    service.hrimEvents$.subscribe(createdEvent => {
+    service.occurrenceEvents$.subscribe(createdEvent => {
       expect(createdEvent.id).toBeTruthy()
       expect(createdEvent.color).toBe(testEvent.color)
       done()

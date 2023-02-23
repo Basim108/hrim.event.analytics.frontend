@@ -4,7 +4,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {EventTypeDetailsDialog} from "../event-type-details-dialog/event-type-details-dialog.component";
 import {EventTypeDetailsRequest} from "../event-type-details-dialog/event-type-details-request";
 import {EventTypeService} from "../services/user-event-type.service";
-import {UserEventType} from "./event-type.model";
+import {UserEventType} from "../shared/event-type.model";
 import {Subscription} from "rxjs";
 
 @Component({

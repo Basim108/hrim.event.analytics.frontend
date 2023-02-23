@@ -3,7 +3,7 @@ import {LogService} from "./log.service";
 import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {UserEventType} from "../event-type-item/event-type.model";
+import {UserEventType} from "../shared/event-type.model";
 
 @Injectable({providedIn: 'root'})
 export class EventTypeService {

@@ -1,4 +1,4 @@
-import {UserEventType} from "../app/event-type-item/event-type.model";
+import {UserEventType} from "../app/shared/event-type.model";
 
 export const EVENT_TYPES: {[name: string]: UserEventType } = {
   reading: {
