@@ -1,16 +1,16 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {EventTypeListComponent} from './event-type-list.component'
-import {HttpClientTestingModule} from '@angular/common/http/testing'
-import {MatIconModule} from '@angular/material/icon'
-import {MatButtonModule} from '@angular/material/button'
-import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog'
-import {MatInputModule} from '@angular/material/input'
-import {EventTypeService} from '../services/user-event-type.service'
-import {EVENT_TYPES} from '../../test_data/event-types'
-import {EventTypeItemComponent} from '../event-type-item/event-type-item.component'
-import {of} from 'rxjs'
-import {UserEventType} from '../event-type-item/event-type.model'
+import {EventTypeListComponent}     from './event-type-list.component'
+import {HttpClientTestingModule}    from '@angular/common/http/testing'
+import {MatIconModule}              from '@angular/material/icon'
+import {MatButtonModule}            from '@angular/material/button'
+import {MatDialog, MatDialogModule} from '@angular/material/dialog'
+import {MatInputModule}             from '@angular/material/input'
+import {EventTypeService}           from '../services/user-event-type.service'
+import {EVENT_TYPES}                from '../../test_data/event-types'
+import {EventTypeItemComponent}     from '../event-type-item/event-type-item.component'
+import {of}                         from 'rxjs'
+import {UserEventType}              from '../shared/event-type.model'
 
 describe('EventTypeListComponent', () => {
   let component: EventTypeListComponent

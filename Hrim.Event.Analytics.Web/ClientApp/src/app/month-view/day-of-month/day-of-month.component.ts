@@ -7,6 +7,7 @@ import {Subscription}                                                   from 'rx
 import {LogService}                                                     from '../../services/log.service'
 import {DurationEventModel}                                             from '../../shared/duration-event.model'
 import {UserEventType}                                                  from "../../shared/event-type.model";
+import {EventTypeService}                                               from "../../services/user-event-type.service";
 
 @Component({
              selector   : 'app-day-of-month',
@@ -35,6 +36,7 @@ export class DayOfMonthComponent implements OnInit,
   eventsSub: Subscription
 
   constructor(private logger: LogService,
+              private eventTypeService: EventTypeService,
               private eventService: HrimEventService) {
 
   }
@@ -69,5 +71,12 @@ export class DayOfMonthComponent implements OnInit,
     return occurrenceLength > 0
            ? this.occurrenceEvents[occurrenceLength - 1]
            : null
+  }
+
+  getTotalVisibleTypeCount(occurrences: OccurrenceEventModel[], durations: DurationEventModel[]) {
+    const typesInfo          = this.eventTypeService.typesInfo
+    const visibleOccurrences = occurrences.filter(e => typesInfo[e.eventType.id]?.isSelected)
+    const visibleDurations   = durations.filter(e => typesInfo[e.eventType.id]?.isSelected)
+    return visibleOccurrences.length + visibleDurations.length;
   }
 }

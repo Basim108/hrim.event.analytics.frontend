@@ -1,20 +1,21 @@
 import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {LogService} from "../services/log.service";
-import {MatDialog} from "@angular/material/dialog";
-import {EventTypeDetailsDialog} from "../event-type-details-dialog/event-type-details-dialog.component";
-import {EventTypeDetailsRequest} from "../event-type-details-dialog/event-type-details-request";
-import {EventTypeService} from "../services/user-event-type.service";
-import {UserEventType} from "../shared/event-type.model";
-import {Subscription} from "rxjs";
+import {LogService}                                        from "../services/log.service";
+import {MatDialog}                                         from "@angular/material/dialog";
+import {EventTypeDetailsDialog}                            from "../dialogs/event-type-details-dialog/event-type-details-dialog.component";
+import {EventTypeDetailsRequest}                           from "../dialogs/event-type-details-dialog/event-type-details-request";
+import {EventTypeService}                                  from "../services/user-event-type.service";
+import {UserEventType}                                     from "../shared/event-type.model";
+import {Subscription}                                      from "rxjs";
 
 @Component({
-  selector: 'app-event-type-item',
-  templateUrl: './event-type-item.component.html',
-  styleUrls: ['./event-type-item.component.css']
-})
+             selector   : 'app-event-type-item',
+             templateUrl: './event-type-item.component.html',
+             styleUrls  : ['./event-type-item.component.css']
+           })
 export class EventTypeItemComponent implements OnDestroy {
   @Input('eventType') eventType: UserEventType;
-  @Output() delete = new EventEmitter<UserEventType>;
+  @Output() delete    = new EventEmitter<UserEventType>;
+  isSelected: boolean = false
 
   deleteEventTypeSub: Subscription;
 
@@ -42,10 +43,16 @@ export class EventTypeItemComponent implements OnDestroy {
 
   onDeleteEventType() {
     this.deleteEventTypeSub = this.eventTypeService.deleteEventType(this.eventType).subscribe({
-      next: (deletedEventType) => {
-        if (deletedEventType.is_deleted)
-          this.delete.emit(this.eventType)
-      }
-    });
+                                                                                                next: (deletedEventType) => {
+                                                                                                  if (deletedEventType.is_deleted) {
+                                                                                                    this.delete.emit(this.eventType)
+                                                                                                  }
+                                                                                                }
+                                                                                              });
+  }
+
+  toggleEventType() {
+    this.isSelected = !this.isSelected
+    this.eventTypeService.updateTypeInfo(this.eventType, this.isSelected)
   }
 }

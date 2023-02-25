@@ -7,3 +7,8 @@ export class UserEventType {
   is_mine: boolean
   concurrent_token: number
 }
+
+export interface UserEventTypeInfo {
+  isSelected: boolean
+  eventType: UserEventType
+}

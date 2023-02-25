@@ -1,21 +1,35 @@
-import {Component, Input}        from '@angular/core'
-import {BaseEventModel}          from '../../../shared/base-event.model'
-import {OccurrenceEventModel}    from "../../../shared/occurrence-event.model";
-import {EventTypeDetailsDialog}  from "../../../event-type-details-dialog/event-type-details-dialog.component";
-import {EventTypeDetailsRequest} from "../../../event-type-details-dialog/event-type-details-request";
-import {MatDialog}               from "@angular/material/dialog";
+import {Component, Input, OnDestroy, OnInit} from '@angular/core'
+import {OccurrenceEventModel}                from "../../../shared/occurrence-event.model";
+import {SomeEventModel}                      from "../../../shared/some-event.model";
+import {EventTypeService}                    from "../../../services/user-event-type.service";
+import {Subscription}                        from "rxjs";
+import {LogService}                          from "../../../services/log.service";
 
 @Component({
              selector   : 'app-event-of-day',
              templateUrl: './event-of-day.component.html',
              styleUrls  : ['./event-of-day.component.css']
            })
-export class EventOfDayComponent {
-  @Input() eventOfDay: BaseEventModel;
+export class EventOfDayComponent implements OnInit, OnDestroy {
+  @Input() eventOfDay: SomeEventModel;
   @Input() totalEventCount: number;
-  @Input() prevEventOfDay: BaseEventModel | null;
+  @Input() prevEventOfDay: SomeEventModel | null;
 
-  constructor(public editDialog: MatDialog) {
+  isShown = false
+
+  selectedTypesSub: Subscription
+
+  constructor(private eventTypeService: EventTypeService,
+              private logger: LogService) {
+  }
+
+  ngOnInit() {
+    this.selectedTypesSub = this.eventTypeService.selectedTypesInfo$
+                                .subscribe(() => this.eventTypeSelectionChanged())
+  }
+
+  ngOnDestroy() {
+    this.selectedTypesSub?.unsubscribe()
   }
 
   getEventHeight() {
@@ -55,5 +69,10 @@ export class EventOfDayComponent {
     return this.prevEventOfDay?.eventType.color === this.eventOfDay.eventType.color ?? false
            ? 'dashed black 1px'
            : 'none'
+  }
+
+  private eventTypeSelectionChanged() {
+    const typeInfo = this.eventTypeService.typesInfo[this.eventOfDay.eventType.id]
+    this.isShown = typeInfo?.isSelected ?? false
   }
 }

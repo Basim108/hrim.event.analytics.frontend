@@ -1,12 +1,12 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {LogService} from "../services/log.service";
-import {EventTypeDetailsRequest} from "./event-type-details-request";
+import {Component, Inject, OnDestroy, OnInit}            from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef}                   from "@angular/material/dialog";
+import {LogService}                                      from "../../services/log.service";
+import {EventTypeDetailsRequest}                         from "./event-type-details-request";
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {EventTypeService} from "../services/user-event-type.service";
-import {Color} from "@angular-material-components/color-picker";
-import {debounceTime, Subscription} from "rxjs";
-import {UserEventType} from "../shared/event-type.model";
+import {EventTypeService}                                from "../../services/user-event-type.service";
+import {Color}                                           from "@angular-material-components/color-picker";
+import {debounceTime, Subscription}                      from "rxjs";
+import {UserEventType}                                   from "../../shared/event-type.model";
 
 @Component({
   selector: 'app-event-type-details-dialog',

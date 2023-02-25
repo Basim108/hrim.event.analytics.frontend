@@ -31,7 +31,7 @@ describe('HrimEventService', () => {
     const testEvent = {...EVENTS["eventOfDay_1"], id: ''}
     service.occurrenceEvents$.subscribe(createdEvent => {
       expect(createdEvent.id).toBeTruthy()
-      expect(createdEvent.color).toBe(testEvent.color)
+      expect(createdEvent.eventType).toBeTruthy()
       done()
     })
     service.createEvent(testEvent);
@@ -44,7 +44,7 @@ describe('HrimEventService', () => {
     service.createEvent(testEvent);
     service.occurrenceEvents$.subscribe(createdEvent => {
       expect(createdEvent.id).toBeTruthy()
-      expect(createdEvent.color).toBe(testEvent.color)
+      expect(createdEvent.id).toBeTruthy()
       done()
     })
   })

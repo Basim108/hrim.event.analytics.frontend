@@ -1,4 +1,4 @@
-import {UserEventType} from "../shared/event-type.model";
+import {UserEventType} from "../../shared/event-type.model";
 
 export class EventTypeDetailsRequest {
   title: string

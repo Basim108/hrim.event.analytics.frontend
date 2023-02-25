@@ -1,20 +1,21 @@
-import {Component, OnDestroy, OnInit} from '@angular/core'
-import {CalendarService} from '../services/calendar.service'
-import {WeekModel} from '../shared/week.model'
-import {filter, Subscription, take} from 'rxjs'
+import {Component, OnDestroy, OnInit}                  from '@angular/core'
+import {CalendarService}                               from '../services/calendar.service'
+import {WeekModel}                                     from '../shared/week.model'
+import {filter, Subscription, take}                    from 'rxjs'
 import {ActivatedRoute, NavigationEnd, Params, Router} from '@angular/router'
-import {RouteService} from '../services/route.service'
-import {DateTime} from 'luxon'
-import {LogService} from '../services/log.service'
-import {HrimEventService} from '../services/hrim-event.service'
-import {OccurrenceEventModel} from '../shared/occurrence-event.model'
-import {DayModel} from '../shared/day.model'
-import {DurationEventModel} from '../shared/duration-event.model'
+import {RouteService}                                  from '../services/route.service'
+import {DateTime}                                      from 'luxon'
+import {LogService}                                    from '../services/log.service'
+import {HrimEventService}                              from '../services/hrim-event.service'
+import {OccurrenceEventModel}                          from '../shared/occurrence-event.model'
+import {DayModel}                                      from '../shared/day.model'
+import {DurationEventModel}                            from '../shared/duration-event.model'
+import {EventTypeService}                              from "../services/user-event-type.service";
 
 @Component({
-             selector:    'app-month-view',
+             selector   : 'app-month-view',
              templateUrl: './month-view.component.html',
-             styleUrls:   ['./month-view.component.css']
+             styleUrls  : ['./month-view.component.css']
            })
 export class MonthViewComponent implements OnInit,
                                            OnDestroy {
@@ -32,6 +33,7 @@ export class MonthViewComponent implements OnInit,
               private router: Router,
               private routeService: RouteService,
               private eventService: HrimEventService,
+              private eventTypeService: EventTypeService,
               private logger: LogService) {
     logger.logConstructor(this)
   }
@@ -40,6 +42,7 @@ export class MonthViewComponent implements OnInit,
     this.routeParamsSub?.unsubscribe()
     this.routeEventSub?.unsubscribe()
     this.occurenceEventSub?.unsubscribe()
+    this.durationEventSub?.unsubscribe()
   }
 
   ngOnInit(): void {
@@ -51,14 +54,14 @@ export class MonthViewComponent implements OnInit,
                               .events
                               .pipe(filter(routeEvent => routeEvent instanceof NavigationEnd))
                               .subscribe({
-                                           next:  () => this.onRouteParamChanged(this.currentRoute.snapshot.params),
+                                           next : () => this.onRouteParamChanged(this.currentRoute.snapshot.params),
                                            error: this.logger.error
                                          })
     this.routeParamsSub = this.currentRoute
                               .params
                               .pipe(take(1))
                               .subscribe({
-                                           next:  params => this.onRouteParamChanged(params),
+                                           next : params => this.onRouteParamChanged(params),
                                            error: this.logger.error
                                          })
   }
@@ -66,28 +69,34 @@ export class MonthViewComponent implements OnInit,
   async onRouteParamChanged(params: Params) {
     const date = this.routeService.monthView.getDateFromParams(params)
     this.logger.debug('route params changed: ', params, this.currentRoute)
+
     if (date) {
       this.routeService
         .monthView
         .lastSuccessfulDate = date
       this.weeks            = this.calendarService.getWeeks(date)
       this.currentMonth     = date
-      this.routeParamsSub?.unsubscribe()
       this.occurenceEventSub?.unsubscribe()
+      this.durationEventSub?.unsubscribe()
       this.occurenceEventSub = this.eventService
                                    .loadMonthOccurrenceEvents(date)
                                    .subscribe({
-                                                next:  events => this.occurrenceEvents = events,
+                                                next : events => {
+                                                  this.occurrenceEvents = events
+                                                  setTimeout(() => this.eventTypeService.selectedTypesInfo$.next())
+                                                },
                                                 error: err => this.logger.error('month-view occurrence loading: ', err)
                                               })
       this.durationEventSub  = this.eventService
                                    .loadMonthDurationEvents(date)
                                    .subscribe({
-                                                next:  events => this.durationEvents = events,
+                                                next : events => {
+                                                  this.durationEvents = events
+                                                  setTimeout(() => this.eventTypeService.selectedTypesInfo$.next())
+                                                },
                                                 error: err => this.logger.error('month-view duration loading: ', err)
                                               })
-    }
-    else {
+    } else {
       await this.router.navigate([this.routeService.notFoundPath])
     }
   }

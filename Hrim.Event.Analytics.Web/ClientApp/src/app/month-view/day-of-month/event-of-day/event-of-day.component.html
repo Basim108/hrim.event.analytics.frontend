@@ -1,11 +1,11 @@
-<div
-  class="event-of-day"
-  [ngStyle]="{
-    'background-color': eventOfDay.eventType.color,
-    'height': getEventHeight(),
-    'border-top': getTopBorderStyle()
-  }"
-  [title]="getEventInfo()">
+<div class="event-of-day"
+     *ngIf="isShown"
+     [ngStyle]="{
+        'background-color': eventOfDay.eventType.color,
+        'height': getEventHeight(),
+        'border-top': getTopBorderStyle()
+      }"
+     [title]="getEventInfo()">
   <div class="tool-bar">
     <button mat-icon-button class="edit-btn" color="primary" (click)="onEditEventType()">
       <mat-icon>edit</mat-icon>

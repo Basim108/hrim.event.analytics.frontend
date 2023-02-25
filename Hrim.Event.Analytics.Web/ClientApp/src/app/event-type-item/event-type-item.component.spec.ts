@@ -1,14 +1,14 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {EventTypeItemComponent} from './event-type-item.component'
-import {EventTypeService} from '../services/user-event-type.service'
-import {HttpClientTestingModule} from '@angular/common/http/testing'
-import {MatIconModule} from '@angular/material/icon'
-import {MatButtonModule} from '@angular/material/button'
+import {EventTypeItemComponent}     from './event-type-item.component'
+import {EventTypeService}           from '../services/user-event-type.service'
+import {HttpClientTestingModule}    from '@angular/common/http/testing'
+import {MatIconModule}              from '@angular/material/icon'
+import {MatButtonModule}            from '@angular/material/button'
 import {MatDialog, MatDialogModule} from '@angular/material/dialog'
-import {EVENT_TYPES} from '../../test_data/event-types'
-import {of} from 'rxjs'
-import {UserEventType} from './event-type.model'
+import {EVENT_TYPES}                from '../../test_data/event-types'
+import {of}                         from 'rxjs'
+import {UserEventType}              from '../shared/event-type.model'
 
 describe('EventTypeItemComponent', () => {
   let component: EventTypeItemComponent
