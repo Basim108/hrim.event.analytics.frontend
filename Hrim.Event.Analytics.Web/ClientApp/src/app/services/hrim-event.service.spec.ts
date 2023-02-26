@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
 import { HrimEventService } from './hrim-event.service';
-import {OccurrenceEventModel} from "../shared/occurrence-event.model";
-import {EVENTS} from "../../test_data/events";
+import {OccurrenceEventModel}    from "../shared/occurrence-event.model";
+import {OCCURRENCE_EVENTS}       from "../../test_data/events";
 import {HttpClientTestingModule} from '@angular/common/http/testing'
 import {LogService} from './log.service'
 
@@ -28,7 +28,7 @@ describe('HrimEventService', () => {
   });
 
   it('createEvent should emit created event', done => {
-    const testEvent = {...EVENTS["eventOfDay_1"], id: ''}
+    const testEvent = {...OCCURRENCE_EVENTS["reading_1"], id: ''}
     service.occurrenceEvents$.subscribe(createdEvent => {
       expect(createdEvent.id).toBeTruthy()
       expect(createdEvent.eventType).toBeTruthy()
@@ -38,7 +38,7 @@ describe('HrimEventService', () => {
   })
 
   it('new subscriber should get all previously emitted events', done => {
-    const testEvent = {...EVENTS["eventOfDay_1"], id: ''}
+    const testEvent = {...OCCURRENCE_EVENTS["reading_1"], id: ''}
     service.occurrenceEvents$.subscribe(() => {
     })
     service.createEvent(testEvent);

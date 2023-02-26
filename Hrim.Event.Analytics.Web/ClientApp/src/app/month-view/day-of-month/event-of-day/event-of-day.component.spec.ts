@@ -4,9 +4,9 @@ import {EventOfDayComponent}                            from './event-of-day.com
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {LogService}                                     from "../../../services/log.service";
 import {EventTypeService}                               from "../../../services/user-event-type.service";
-import {EVENT_TYPES}                                    from "../../../../test_data/event-types";
-import {EVENTS}                                         from "../../../../test_data/events";
-import {By}                                             from "@angular/platform-browser";
+import {EVENT_TYPES}       from "../../../../test_data/event-types";
+import {OCCURRENCE_EVENTS} from "../../../../test_data/events";
+import {By}                from "@angular/platform-browser";
 import {MatIconModule}                                  from "@angular/material/icon";
 import {MatButtonModule}                                from "@angular/material/button";
 
@@ -30,7 +30,7 @@ describe('EventOfDayComponent', () => {
 
     fixture              = TestBed.createComponent(EventOfDayComponent);
     component            = fixture.componentInstance;
-    component.eventOfDay = EVENTS['eventOfDay_1']
+    component.eventOfDay = OCCURRENCE_EVENTS['reading_1']
     fixture.detectChanges();
   });
 
@@ -52,7 +52,7 @@ describe('EventOfDayComponent', () => {
 
   it('given prevEvent with the same color should dash its own top border', () => {
     eventTypeService.updateTypeInfo(EVENT_TYPES['reading'], true)
-    component.prevEventOfDay = EVENTS['eventOfDay_1']
+    component.prevEventOfDay = OCCURRENCE_EVENTS['reading_1']
     fixture.detectChanges();
 
     const style = fixture.debugElement.parent?.nativeElement.querySelector('.event-of-day').getAttribute('style')
@@ -61,7 +61,7 @@ describe('EventOfDayComponent', () => {
 
   it('given prevEvent with the different color should dash its own top border', () => {
     eventTypeService.updateTypeInfo(EVENT_TYPES['reading'], true)
-    component.prevEventOfDay = EVENTS['eventOfDay_2']
+    component.prevEventOfDay = OCCURRENCE_EVENTS['yoga_practice_1']
     fixture.detectChanges();
 
     const style = fixture.debugElement.parent?.nativeElement.querySelector('.event-of-day').getAttribute('style')
