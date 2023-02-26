@@ -24,11 +24,13 @@ export class EventTypeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.logger.debug('event-type-list destroy')
     this.eventTypesSub?.unsubscribe()
     this.dialogSub?.unsubscribe()
   }
 
   ngOnInit(): void {
+    this.logger.debug('event-type-list initialization')
     this.eventTypesSub = this.eventTypeService.eventTypes$.subscribe(eventTypes => this.eventTypes = eventTypes)
     this.eventTypeService.load()
   }

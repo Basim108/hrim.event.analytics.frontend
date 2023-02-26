@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {LogService}                                        from "../services/log.service";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {LogService}                                                from "../services/log.service";
 import {MatDialog}                                         from "@angular/material/dialog";
 import {EventTypeDetailsDialog}                            from "../dialogs/event-type-details-dialog/event-type-details-dialog.component";
 import {EventTypeDetailsRequest}                           from "../dialogs/event-type-details-dialog/event-type-details-request";
@@ -12,7 +12,7 @@ import {Subscription}                                      from "rxjs";
              templateUrl: './event-type-item.component.html',
              styleUrls  : ['./event-type-item.component.css']
            })
-export class EventTypeItemComponent implements OnDestroy {
+export class EventTypeItemComponent implements OnInit, OnDestroy {
   @Input('eventType') eventType: UserEventType;
   @Output() delete    = new EventEmitter<UserEventType>;
   isSelected: boolean = false
@@ -25,7 +25,13 @@ export class EventTypeItemComponent implements OnDestroy {
     logger.logConstructor(this)
   }
 
+  ngOnInit(){
+    this.logger.debug('event-type-item initialization')
+    this.isSelected = this.eventTypeService.typesInfo[this.eventType.id]?.isSelected ?? false
+  }
+
   ngOnDestroy(): void {
+    this.logger.debug('event-type-item destroy')
     this.deleteEventTypeSub?.unsubscribe();
   }
 

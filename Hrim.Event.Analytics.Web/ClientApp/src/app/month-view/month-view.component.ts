@@ -39,6 +39,7 @@ export class MonthViewComponent implements OnInit,
   }
 
   ngOnDestroy(): void {
+    this.logger.debug('month-view destroy')
     this.routeParamsSub?.unsubscribe()
     this.routeEventSub?.unsubscribe()
     this.occurenceEventSub?.unsubscribe()
@@ -46,7 +47,9 @@ export class MonthViewComponent implements OnInit,
   }
 
   ngOnInit(): void {
+    this.logger.debug('month-view initialization')
     this.setupRouteChanges()
+    this.eventTypeService.selectedTypesInfo$.next()
   }
 
   setupRouteChanges() {
