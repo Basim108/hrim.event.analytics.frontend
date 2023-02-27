@@ -1,16 +1,17 @@
-import {Injectable}                       from "@angular/core";
-import {LogService}                       from "./log.service";
-import {Observable, Subject}              from "rxjs";
-import {HttpClient, HttpParams}           from "@angular/common/http";
-import {environment}                      from "../../environments/environment";
-import {UserEventType, UserEventTypeInfo} from "../shared/event-type.model";
+import {Injectable}             from "@angular/core";
+import {LogService}             from "./log.service";
+import {Observable, Subject}    from "rxjs";
+import {HttpClient, HttpParams} from "@angular/common/http";
+import {environment}            from "../../environments/environment";
+import {UserEventType}          from "../shared/event-type.model";
+import {EntityState}            from "../shared/entity-state";
 
 @Injectable({providedIn: 'root'})
 export class EventTypeService {
   eventTypes$        = new Subject<UserEventType[]>();
   selectedTypesInfo$ = new Subject<void>();
 
-  typesInfo: { [eventTypeId: string]: UserEventTypeInfo } = {}
+  typeContexts: { [eventTypeId: string]: EntityState<UserEventType> } = {}
 
   url       = `${environment.apiUrl}/v1/event-type/`;
   entityUrl = `${environment.apiUrl}/v1/entity/`;
@@ -37,14 +38,14 @@ export class EventTypeService {
    */
   synchronizeTypeInfo(loadedTypes: UserEventType[]) {
     for (let type of loadedTypes) {
-      this.updateTypeInfo(type, false, false, false)
+      this.updateTypeContext(type, false, false, false)
     }
-    for (let existedTypeId in this.typesInfo) {
-      if (!this.typesInfo.hasOwnProperty(existedTypeId)) {
+    for (let existedTypeId in this.typeContexts) {
+      if (!this.typeContexts.hasOwnProperty(existedTypeId)) {
         continue
       }
       if (loadedTypes.every(x => x.id !== existedTypeId)) {
-        delete this.typesInfo[existedTypeId]
+        delete this.typeContexts[existedTypeId]
       }
     }
     this.selectedTypesInfo$.next()
@@ -59,16 +60,21 @@ export class EventTypeService {
    * @param emitChanges for those who subscribe about changes in event type info
    * @param updateExisted
    */
-  updateTypeInfo(eventType: UserEventType, isSelected: boolean = false, emitChanges = true, updateExisted = true) {
-    const info = this.typesInfo[eventType.id]
+  updateTypeContext(eventType: UserEventType, isSelected: boolean = false, emitChanges = true, updateExisted = true) {
+    const info = this.typeContexts[eventType.id]
     if (info) {
-      info.eventType  = eventType
-      if(updateExisted)
+      info.entity = eventType
+      if (updateExisted) {
         info.isSelected = isSelected
+      }
     } else {
-      this.typesInfo[eventType.id] = {isSelected, eventType}
+      const context      = new EntityState<UserEventType>()
+      context.entity     = eventType
+      context.isSelected = isSelected
+
+      this.typeContexts[eventType.id] = context
     }
-    this.logger.debug('event type info updated', this.typesInfo[eventType.id], this.typesInfo)
+    this.logger.debug('event type info updated', this.typeContexts[eventType.id], this.typeContexts)
     if (emitChanges) {
       this.logger.debug('emitting event type info update status', info)
       this.selectedTypesInfo$.next()

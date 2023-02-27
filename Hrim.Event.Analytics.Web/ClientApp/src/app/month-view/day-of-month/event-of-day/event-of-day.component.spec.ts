@@ -39,7 +39,7 @@ describe('EventOfDayComponent', () => {
     component.isVisible  = true
 
     eventService.registerEntityState(component.eventOfDay)
-    eventTypeService.updateTypeInfo(EVENT_TYPES['reading'], true)
+    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true)
     fixture.detectChanges();
   });
 
@@ -48,19 +48,19 @@ describe('EventOfDayComponent', () => {
   });
 
   it('given selected event type should display its event', () => {
-    eventTypeService.updateTypeInfo(EVENT_TYPES['reading'], true)
+    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true)
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.event-of-day'))).not.toBeNull()
   });
 
   it('given no selected event type should hide its event', () => {
-    eventTypeService.updateTypeInfo(EVENT_TYPES['reading'], false)
+    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], false)
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.event-of-day'))).toBeNull()
   });
 
   it('given prevEvent with the same color should dash its own top border', () => {
-    eventTypeService.updateTypeInfo(EVENT_TYPES['reading'], true)
+    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true)
     component.prevEventOfDay = OCCURRENCE_EVENTS['reading_1']
     fixture.detectChanges();
 
@@ -69,7 +69,7 @@ describe('EventOfDayComponent', () => {
   });
 
   it('given prevEvent with the different color should dash its own top border', () => {
-    eventTypeService.updateTypeInfo(EVENT_TYPES['reading'], true)
+    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true)
     component.prevEventOfDay = OCCURRENCE_EVENTS['yoga_practice_1']
     fixture.detectChanges();
 

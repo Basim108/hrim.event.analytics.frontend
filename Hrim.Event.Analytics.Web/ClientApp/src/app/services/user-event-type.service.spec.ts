@@ -44,19 +44,19 @@ describe('EventTypeService', () => {
     const req = httpTestingController.expectOne(url)
     expect(req.request.method).toEqual('GET')
     req.flush(Object.values(EVENT_TYPES))
-    expect(service.typesInfo).toBeTruthy()
+    expect(service.typeContexts).toBeTruthy()
     for (let typeName in EVENT_TYPES) {
       const typeId = EVENT_TYPES[typeName].id
-      expect(service.typesInfo[typeId]).toBeTruthy()
-      expect(service.typesInfo[typeId].eventType).toEqual(EVENT_TYPES[typeName])
-      expect(service.typesInfo[typeId].isSelected).toBeFalse()
+      expect(service.typeContexts[typeId]).toBeTruthy()
+      expect(service.typeContexts[typeId].entity).toEqual(EVENT_TYPES[typeName])
+      expect(service.typeContexts[typeId].isSelected).toBeFalse()
     }
     done()
   })
 
   it('after loading event types should reset typesInfo', (done) => {
-    service.updateTypeInfo(EVENT_TYPES['reading'], false)
-    service.updateTypeInfo(EVENT_TYPES['yogaPractice'], false)
+    service.updateTypeContext(EVENT_TYPES['reading'], false)
+    service.updateTypeContext(EVENT_TYPES['yogaPractice'], false)
 
     service.load()
     const req = httpTestingController.expectOne(url)
@@ -64,17 +64,17 @@ describe('EventTypeService', () => {
     req.flush([EVENT_TYPES['successfulTroubleshooting']])
     const typeId = EVENT_TYPES['successfulTroubleshooting'].id
 
-    expect(service.typesInfo).toBeTruthy()
-    expect(Object.keys(service.typesInfo).length).toEqual(1)
-    expect(service.typesInfo[typeId]).toBeTruthy()
-    expect(service.typesInfo[typeId].eventType).toEqual(EVENT_TYPES['successfulTroubleshooting'])
-    expect(service.typesInfo[typeId].isSelected).toBeFalse()
+    expect(service.typeContexts).toBeTruthy()
+    expect(Object.keys(service.typeContexts).length).toEqual(1)
+    expect(service.typeContexts[typeId]).toBeTruthy()
+    expect(service.typeContexts[typeId].entity).toEqual(EVENT_TYPES['successfulTroubleshooting'])
+    expect(service.typeContexts[typeId].isSelected).toBeFalse()
     done()
   })
 
   it('after loading event types should save type info of existed types', (done) => {
-    service.updateTypeInfo(EVENT_TYPES['reading'], true)
-    service.updateTypeInfo(EVENT_TYPES['yogaPractice'], false)
+    service.updateTypeContext(EVENT_TYPES['reading'], true)
+    service.updateTypeContext(EVENT_TYPES['yogaPractice'], false)
 
     service.load()
     const req = httpTestingController.expectOne(url)
@@ -82,35 +82,35 @@ describe('EventTypeService', () => {
     req.flush([EVENT_TYPES['reading']])
     const typeId = EVENT_TYPES['reading'].id
 
-    expect(service.typesInfo).toBeTruthy()
-    expect(Object.keys(service.typesInfo).length).toEqual(1)
-    expect(service.typesInfo[typeId]).toBeTruthy()
-    expect(service.typesInfo[typeId].eventType).toEqual(EVENT_TYPES['reading'])
-    expect(service.typesInfo[typeId].isSelected).toBeTrue()
+    expect(service.typeContexts).toBeTruthy()
+    expect(Object.keys(service.typeContexts).length).toEqual(1)
+    expect(service.typeContexts[typeId]).toBeTruthy()
+    expect(service.typeContexts[typeId].entity).toEqual(EVENT_TYPES['reading'])
+    expect(service.typeContexts[typeId].isSelected).toBeTrue()
     done()
   })
 
   it('updateTypeInfo should add new event type info', () => {
-    service.updateTypeInfo(EVENT_TYPES['reading'], true)
+    service.updateTypeContext(EVENT_TYPES['reading'], true)
     const typeId = EVENT_TYPES['reading'].id
 
-    expect(service.typesInfo).toBeTruthy()
-    expect(Object.keys(service.typesInfo).length).toEqual(1)
-    expect(service.typesInfo[typeId]).toBeTruthy()
-    expect(service.typesInfo[typeId].eventType).toEqual(EVENT_TYPES['reading'])
-    expect(service.typesInfo[typeId].isSelected).toBeTrue()
+    expect(service.typeContexts).toBeTruthy()
+    expect(Object.keys(service.typeContexts).length).toEqual(1)
+    expect(service.typeContexts[typeId]).toBeTruthy()
+    expect(service.typeContexts[typeId].entity).toEqual(EVENT_TYPES['reading'])
+    expect(service.typeContexts[typeId].isSelected).toBeTrue()
   })
 
   it('updateTypeInfo should update existed event type info', () => {
-    service.updateTypeInfo(EVENT_TYPES['reading'], false)
-    service.updateTypeInfo(EVENT_TYPES['reading'], true)
+    service.updateTypeContext(EVENT_TYPES['reading'], false)
+    service.updateTypeContext(EVENT_TYPES['reading'], true)
     const typeId = EVENT_TYPES['reading'].id
 
-    expect(service.typesInfo).toBeTruthy()
-    expect(Object.keys(service.typesInfo).length).toEqual(1)
-    expect(service.typesInfo[typeId]).toBeTruthy()
-    expect(service.typesInfo[typeId].eventType).toEqual(EVENT_TYPES['reading'])
-    expect(service.typesInfo[typeId].isSelected).toBeTrue()
+    expect(service.typeContexts).toBeTruthy()
+    expect(Object.keys(service.typeContexts).length).toEqual(1)
+    expect(service.typeContexts[typeId]).toBeTruthy()
+    expect(service.typeContexts[typeId].entity).toEqual(EVENT_TYPES['reading'])
+    expect(service.typeContexts[typeId].isSelected).toBeTrue()
   })
 
   it('should get details for event type by id', (done) => {

@@ -84,7 +84,7 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   }
 
   private eventTypeSelectionChanged() {
-    const typeInfo     = this.eventTypeService.typesInfo[this.eventOfDay.eventType.id]
+    const typeInfo     = this.eventTypeService.typeContexts[this.eventOfDay.eventType.id]
     this.isVisible = typeInfo?.isSelected ?? false
   }
 }

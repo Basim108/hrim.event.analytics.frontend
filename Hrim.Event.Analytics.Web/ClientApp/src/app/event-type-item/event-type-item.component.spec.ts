@@ -9,6 +9,7 @@ import {MatDialog, MatDialogModule} from '@angular/material/dialog'
 import {EVENT_TYPES}                from '../../test_data/event-types'
 import {of}                         from 'rxjs'
 import {UserEventType}              from '../shared/event-type.model'
+import {EntityState}                from "../shared/entity-state";
 
 describe('EventTypeItemComponent', () => {
   let component: EventTypeItemComponent
@@ -32,10 +33,10 @@ describe('EventTypeItemComponent', () => {
     component           = fixture.componentInstance
     component.eventType = EVENT_TYPES['reading']
 
-    eventTypeService.typesInfo[EVENT_TYPES['reading'].id] = {
-      isSelected: true,
-      eventType : EVENT_TYPES['reading']
-    }
+    const typeContext = new EntityState<UserEventType>()
+    typeContext.isSelected = true
+    typeContext.entity = EVENT_TYPES['reading']
+    eventTypeService.typeContexts[EVENT_TYPES['reading'].id] = typeContext
     fixture.detectChanges()
   })
 
@@ -115,7 +116,7 @@ describe('EventTypeItemComponent', () => {
   it('toggleEventType should update event type info', () => {
     component.isSelected = true
     component.toggleEventType()
-    expect(eventTypeService.typesInfo[component.eventType.id]).toBeTruthy()
-    expect(eventTypeService.typesInfo[component.eventType.id].isSelected).toBeFalse()
+    expect(eventTypeService.typeContexts[component.eventType.id]).toBeTruthy()
+    expect(eventTypeService.typeContexts[component.eventType.id].isSelected).toBeFalse()
   })
 })

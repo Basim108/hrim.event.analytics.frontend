@@ -41,7 +41,7 @@ describe('DayOfMonthComponent', () => {
 
   it('getTotalVisibleTypeCount should exclude occurrence events which event types are not selected', () => {
     component.occurrenceEvents = [OCCURRENCE_EVENTS['reading_1'], OCCURRENCE_EVENTS['yoga_practice_1']]
-    eventTypeService.updateTypeInfo(EVENT_TYPES['reading'], true, false)
+    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true, false)
     fixture.detectChanges();
 
     const actualCount = component.getTotalVisibleTypeCount(component.occurrenceEvents, component.durationEvents)
@@ -50,7 +50,7 @@ describe('DayOfMonthComponent', () => {
 
   it('getTotalVisibleTypeCount should exclude duration events which event types are not selected', () => {
     component.durationEvents = [DURATION_EVENTS['reading_1'], DURATION_EVENTS['yoga_practice_1']]
-    eventTypeService.updateTypeInfo(EVENT_TYPES['reading'], true, false)
+    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true, false)
     fixture.detectChanges();
 
     const actualCount = component.getTotalVisibleTypeCount(component.occurrenceEvents, component.durationEvents)
@@ -60,7 +60,7 @@ describe('DayOfMonthComponent', () => {
   it('getTotalVisibleTypeCount should exclude durations & occurrence events which event types are not selected', () => {
     component.durationEvents = [DURATION_EVENTS['reading_1'], DURATION_EVENTS['yoga_practice_1']]
     component.occurrenceEvents = [OCCURRENCE_EVENTS['reading_1'], OCCURRENCE_EVENTS['yoga_practice_1']]
-    eventTypeService.updateTypeInfo(EVENT_TYPES['reading'], true, false)
+    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true, false)
     fixture.detectChanges();
 
     const actualCount = component.getTotalVisibleTypeCount(component.occurrenceEvents, component.durationEvents)

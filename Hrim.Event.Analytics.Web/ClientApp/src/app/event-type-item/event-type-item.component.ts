@@ -27,7 +27,7 @@ export class EventTypeItemComponent implements OnInit, OnDestroy {
 
   ngOnInit(){
     this.logger.debug('event-type-item initialization')
-    this.isSelected = this.eventTypeService.typesInfo[this.eventType.id]?.isSelected ?? false
+    this.isSelected = this.eventTypeService.typeContexts[this.eventType.id]?.isSelected ?? false
   }
 
   ngOnDestroy(): void {
@@ -59,6 +59,6 @@ export class EventTypeItemComponent implements OnInit, OnDestroy {
 
   toggleEventType() {
     this.isSelected = !this.isSelected
-    this.eventTypeService.updateTypeInfo(this.eventType, this.isSelected)
+    this.eventTypeService.updateTypeContext(this.eventType, this.isSelected)
   }
 }

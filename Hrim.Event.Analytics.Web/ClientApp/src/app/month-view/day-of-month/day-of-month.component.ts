@@ -24,7 +24,7 @@ export class DayOfMonthComponent implements OnInit,
   @Input() occurrenceEvents: OccurrenceEventModel[]
   @Input() durationEvents: DurationEventModel[]
   @Output() deleteEvent: EventEmitter<SomeEventModel> = new EventEmitter<SomeEventModel>()
-  
+
   isOutOfMonth: boolean
   isToday: boolean
 
@@ -68,7 +68,7 @@ export class DayOfMonthComponent implements OnInit,
   }
 
   getTotalVisibleTypeCount(occurrences: OccurrenceEventModel[], durations: DurationEventModel[]) {
-    const typesInfo          = this.eventTypeService.typesInfo
+    const typesInfo          = this.eventTypeService.typeContexts
     const visibleOccurrences = occurrences.filter(e => typesInfo[e.eventType.id]?.isSelected)
     const visibleDurations   = durations.filter(e => typesInfo[e.eventType.id]?.isSelected)
     return visibleOccurrences.length + visibleDurations.length;
