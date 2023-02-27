@@ -5,11 +5,13 @@
   <app-event-of-day [totalEventCount]="getTotalVisibleTypeCount(occurrenceEvents, durationEvents)"
                     [eventOfDay]="eventOfDay"
                     [prevEventOfDay]="i > 0 ? occurrenceEvents[i-1] : null"
+                    (delete)="deleteEvent.emit($event)"
                     *ngFor="let eventOfDay of occurrenceEvents; index as i">
   </app-event-of-day>
   <app-event-of-day [totalEventCount]="getTotalVisibleTypeCount(occurrenceEvents, durationEvents)"
                     [eventOfDay]="eventOfDay"
                     [prevEventOfDay]="i > 0 ? durationEvents[i-1] : getLastOccurrence()"
+                    (delete)="deleteEvent.emit($event)"
                     *ngFor="let eventOfDay of durationEvents; index as i">
   </app-event-of-day>
 </div>

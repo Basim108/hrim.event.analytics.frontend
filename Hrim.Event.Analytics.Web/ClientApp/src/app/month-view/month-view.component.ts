@@ -11,6 +11,8 @@ import {OccurrenceEventModel}                          from '../shared/occurrenc
 import {DayModel}                                      from '../shared/day.model'
 import {DurationEventModel}                            from '../shared/duration-event.model'
 import {EventTypeService}                              from "../services/user-event-type.service";
+import {BaseEventModel}                                from "../shared/base-event.model";
+import {SomeEventModel}                                from "../shared/some-event.model";
 
 @Component({
              selector   : 'app-month-view',
@@ -116,5 +118,21 @@ export class MonthViewComponent implements OnInit,
                                                          : date === x.startedOn)
     // this.logger.debug(`filtering durations:  for day ${date}`, resultEvents, this.durationEvents)
     return resultEvents
+  }
+
+  onEventDeleted($event: SomeEventModel) {
+    const prevOccurrences = this.occurrenceEvents
+    const prevDurations = this.durationEvents
+    if ($event instanceof OccurrenceEventModel) {
+      this.occurrenceEvents = this.occurrenceEvents.filter(x => x.id !== $event.id)
+    } else {
+      this.durationEvents = this.durationEvents.filter(x => x.id !== $event.id)
+    }
+    this.logger.debug('month-view handle event deletion: ', {
+      prevOccurrences,
+      occurrences: this.occurrenceEvents,
+      prevDurations,
+      durations: this.durationEvents
+    })
   }
 }

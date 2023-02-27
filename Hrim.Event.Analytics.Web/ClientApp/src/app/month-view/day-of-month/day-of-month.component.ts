@@ -1,13 +1,15 @@
-import {Component, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core'
-import {OccurrenceEventModel}                                           from 'src/app/shared/occurrence-event.model'
-import {DayModel}                                                       from '../../shared/day.model'
-import {DateTime}                                                       from 'luxon'
-import {HrimEventService}                                               from '../../services/hrim-event.service'
-import {Subscription}                                                   from 'rxjs'
-import {LogService}                                                     from '../../services/log.service'
-import {DurationEventModel}                                             from '../../shared/duration-event.model'
-import {UserEventType}                                                  from "../../shared/event-type.model";
-import {EventTypeService}                                               from "../../services/user-event-type.service";
+import {
+  Component, EventEmitter, HostBinding, HostListener, Input,
+  OnDestroy, OnInit, Output
+}                             from '@angular/core'
+import {OccurrenceEventModel} from 'src/app/shared/occurrence-event.model'
+import {DayModel}             from '../../shared/day.model'
+import {DateTime}             from 'luxon'
+import {Subscription}         from 'rxjs'
+import {LogService}           from '../../services/log.service'
+import {DurationEventModel}   from '../../shared/duration-event.model'
+import {EventTypeService}     from "../../services/user-event-type.service";
+import {SomeEventModel}       from "../../shared/some-event.model";
 
 @Component({
              selector   : 'app-day-of-month',
@@ -21,7 +23,8 @@ export class DayOfMonthComponent implements OnInit,
   @Input() currentMonth!: DateTime
   @Input() occurrenceEvents: OccurrenceEventModel[]
   @Input() durationEvents: DurationEventModel[]
-
+  @Output() deleteEvent: EventEmitter<SomeEventModel> = new EventEmitter<SomeEventModel>()
+  
   isOutOfMonth: boolean
   isToday: boolean
 
@@ -36,13 +39,8 @@ export class DayOfMonthComponent implements OnInit,
   eventsSub: Subscription
 
   constructor(private logger: LogService,
-              private eventTypeService: EventTypeService,
-              private eventService: HrimEventService) {
+              private eventTypeService: EventTypeService) {
 
-  }
-
-  ngOnDestroy(): void {
-    this.eventsSub?.unsubscribe()
   }
 
   ngOnInit(): void {
@@ -50,20 +48,16 @@ export class DayOfMonthComponent implements OnInit,
     this.isOutOfMonth = this.dayModel.dateTime.month !== this.currentMonth.month || this.dayModel.dateTime.year !== this.currentMonth.year
   }
 
+  ngOnDestroy(): void {
+    this.eventsSub?.unsubscribe()
+  }
+
   @HostListener('click') onClick() {
     this.onEventCreated()
   }
 
   onEventCreated() {
-    const createdEvent           = {
-      id             : '',
-      eventType      : new UserEventType(),
-      occurredAt     : this.dayModel.dateTime,
-      occurredOn     : this.dayModel.dateTime.toISODate(),
-      concurrentToken: 0
-    }
-    createdEvent.eventType.color = '#ff00ff'
-    this.eventService.createEvent(createdEvent)
+    // TODO: save to the backend and in any way add to current arrays. mark an event with status saved/unsaved
   }
 
   getLastOccurrence() {

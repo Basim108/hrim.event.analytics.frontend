@@ -1,9 +1,13 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core'
-import {OccurrenceEventModel}                from "../../../shared/occurrence-event.model";
-import {SomeEventModel}                      from "../../../shared/some-event.model";
-import {EventTypeService}                    from "../../../services/user-event-type.service";
-import {Subscription}                        from "rxjs";
-import {LogService}                          from "../../../services/log.service";
+import {
+  Component, EventEmitter, Input,
+  OnDestroy, OnInit, Output
+}                             from '@angular/core'
+import {OccurrenceEventModel} from "../../../shared/occurrence-event.model";
+import {SomeEventModel}       from "../../../shared/some-event.model";
+import {EventTypeService}     from "../../../services/user-event-type.service";
+import {Subscription}         from "rxjs";
+import {LogService}           from "../../../services/log.service";
+import {HrimEventService}     from "../../../services/hrim-event.service";
 
 @Component({
              selector   : 'app-event-of-day',
@@ -14,12 +18,15 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   @Input() eventOfDay: SomeEventModel;
   @Input() totalEventCount: number;
   @Input() prevEventOfDay: SomeEventModel | null;
+  @Output() delete: EventEmitter<SomeEventModel> = new EventEmitter<SomeEventModel>()
 
-  isShown = false
+  isVisible = false
 
   selectedTypesSub: Subscription
+  deleteEventSub: Subscription
 
   constructor(private eventTypeService: EventTypeService,
+              private eventService: HrimEventService,
               private logger: LogService) {
   }
 
@@ -30,6 +37,7 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.selectedTypesSub?.unsubscribe()
+    this.deleteEventSub?.unsubscribe()
   }
 
   getEventHeight() {
@@ -57,12 +65,16 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   }
 
   onDeleteEventType() {
-    // this.deleteEventTypeSub = this.eventTypeService.deleteEventType(this.eventType).subscribe({
-    //                                                                                             next: (deletedEventType) => {
-    //                                                                                               if (deletedEventType.is_deleted)
-    //                                                                                                 this.delete.emit(this.eventType)
-    //                                                                                             }
-    //                                                                                           });
+    this.deleteEventSub = this.eventService.deleteEvent(this.eventOfDay)
+                              .subscribe({
+                                           next : () => this.delete.emit(this.eventOfDay),
+                                           error: err => {
+                                             const eventContext = this.eventService.eventContext[this.eventOfDay.id]
+                                             eventContext.isDeleted = true
+                                             eventContext.isUnsaved = true
+                                             this.logger.error('Failed to delete event: ' + err, this.eventOfDay, eventContext)
+                                           }
+                                         });
   }
 
   getTopBorderStyle() {
@@ -72,7 +84,7 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   }
 
   private eventTypeSelectionChanged() {
-    const typeInfo = this.eventTypeService.typesInfo[this.eventOfDay.eventType.id]
-    this.isShown = typeInfo?.isSelected ?? false
+    const typeInfo     = this.eventTypeService.typesInfo[this.eventOfDay.eventType.id]
+    this.isVisible = typeInfo?.isSelected ?? false
   }
 }

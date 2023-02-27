@@ -1,17 +1,15 @@
 import {UserEventType} from "./event-type.model";
+import {EntityModel}   from "./entity.model";
 
-export abstract class BaseEventModel {
-  id: string
+export abstract class BaseEventModel extends EntityModel {
   eventType: UserEventType
-  concurrentToken: number
 
   protected constructor(model: BaseEventSnakeModel | null) {
+    super(model?.id ?? '', model?.concurrent_token ?? -1)
     if (!model) {
       return;
     }
-    this.id              = model.id
-    this.eventType       = model.event_type
-    this.concurrentToken = model.concurrent_token
+    this.eventType = model.event_type
   }
 }
 
