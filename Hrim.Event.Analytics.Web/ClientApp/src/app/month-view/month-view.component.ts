@@ -11,7 +11,6 @@ import {OccurrenceEventModel}                          from '../shared/occurrenc
 import {DayModel}                                      from '../shared/day.model'
 import {DurationEventModel}                            from '../shared/duration-event.model'
 import {EventTypeService}                              from "../services/user-event-type.service";
-import {BaseEventModel}                                from "../shared/base-event.model";
 import {SomeEventModel}                                from "../shared/some-event.model";
 
 @Component({
@@ -19,16 +18,13 @@ import {SomeEventModel}                                from "../shared/some-even
              templateUrl: './month-view.component.html',
              styleUrls  : ['./month-view.component.css']
            })
-export class MonthViewComponent implements OnInit,
-                                           OnDestroy {
+export class MonthViewComponent implements OnInit, OnDestroy {
   weeks: WeekModel[]
   currentMonth: DateTime
   occurrenceEvents: OccurrenceEventModel[] = []
   durationEvents: DurationEventModel[]     = []
-  occurenceEventSub: Subscription
-  durationEventSub: Subscription
-  routeParamsSub: Subscription
-  routeEventSub: Subscription
+  createdOccurrenceSub: Subscription
+  createdDurationSub: Subscription
 
   constructor(private calendarService: CalendarService,
               private currentRoute: ActivatedRoute,
@@ -40,35 +36,38 @@ export class MonthViewComponent implements OnInit,
     logger.logConstructor(this)
   }
 
-  ngOnDestroy(): void {
-    this.logger.debug('month-view destroy')
-    this.routeParamsSub?.unsubscribe()
-    this.routeEventSub?.unsubscribe()
-    this.occurenceEventSub?.unsubscribe()
-    this.durationEventSub?.unsubscribe()
-  }
-
   ngOnInit(): void {
     this.logger.debug('month-view initialization')
     this.setupRouteChanges()
+    this.createdOccurrenceSub = this.eventService
+                                    .createdOccurrences$
+                                    .subscribe(model => this.onEventCreated(model))
+    this.createdDurationSub   = this.eventService
+                                    .createdDurations$
+                                    .subscribe(model => this.onEventCreated(model))
     this.eventTypeService.selectedTypesInfo$.next()
   }
 
+  ngOnDestroy() {
+    this.createdDurationSub?.unsubscribe()
+    this.createdOccurrenceSub?.unsubscribe()
+  }
+
   setupRouteChanges() {
-    this.routeEventSub  = this.router
-                              .events
-                              .pipe(filter(routeEvent => routeEvent instanceof NavigationEnd))
-                              .subscribe({
-                                           next : () => this.onRouteParamChanged(this.currentRoute.snapshot.params),
-                                           error: this.logger.error
-                                         })
-    this.routeParamsSub = this.currentRoute
-                              .params
-                              .pipe(take(1))
-                              .subscribe({
-                                           next : params => this.onRouteParamChanged(params),
-                                           error: this.logger.error
-                                         })
+    this.router
+        .events
+        .pipe(filter(routeEvent => routeEvent instanceof NavigationEnd))
+        .subscribe({
+                     next : () => this.onRouteParamChanged(this.currentRoute.snapshot.params),
+                     error: this.logger.error
+                   })
+    this.currentRoute
+        .params
+        .pipe(take(1))
+        .subscribe({
+                     next : params => this.onRouteParamChanged(params),
+                     error: this.logger.error
+                   })
   }
 
   async onRouteParamChanged(params: Params) {
@@ -81,26 +80,24 @@ export class MonthViewComponent implements OnInit,
         .lastSuccessfulDate = date
       this.weeks            = this.calendarService.getWeeks(date)
       this.currentMonth     = date
-      this.occurenceEventSub?.unsubscribe()
-      this.durationEventSub?.unsubscribe()
-      this.occurenceEventSub = this.eventService
-                                   .loadMonthOccurrenceEvents(date)
-                                   .subscribe({
-                                                next : events => {
-                                                  this.occurrenceEvents = events
-                                                  setTimeout(() => this.eventTypeService.selectedTypesInfo$.next())
-                                                },
-                                                error: err => this.logger.error('month-view occurrence loading: ', err)
-                                              })
-      this.durationEventSub  = this.eventService
-                                   .loadMonthDurationEvents(date)
-                                   .subscribe({
-                                                next : events => {
-                                                  this.durationEvents = events
-                                                  setTimeout(() => this.eventTypeService.selectedTypesInfo$.next())
-                                                },
-                                                error: err => this.logger.error('month-view duration loading: ', err)
-                                              })
+      this.eventService
+          .loadMonthOccurrenceEvents(date)
+          .subscribe({
+                       next : events => {
+                         this.occurrenceEvents = events
+                         setTimeout(() => this.eventTypeService.selectedTypesInfo$.next())
+                       },
+                       error: err => this.logger.error('month-view occurrence loading: ', err)
+                     })
+      this.eventService
+          .loadMonthDurationEvents(date)
+          .subscribe({
+                       next : events => {
+                         this.durationEvents = events
+                         setTimeout(() => this.eventTypeService.selectedTypesInfo$.next())
+                       },
+                       error: err => this.logger.error('month-view duration loading: ', err)
+                     })
     } else {
       await this.router.navigate([this.routeService.notFoundPath])
     }
@@ -116,23 +113,27 @@ export class MonthViewComponent implements OnInit,
     const resultEvents = this.durationEvents.filter(x => x.finishedOn
                                                          ? date >= x.startedOn && date <= x.finishedOn
                                                          : date === x.startedOn)
-    // this.logger.debug(`filtering durations:  for day ${date}`, resultEvents, this.durationEvents)
     return resultEvents
   }
 
   onEventDeleted($event: SomeEventModel) {
-    const prevOccurrences = this.occurrenceEvents
-    const prevDurations = this.durationEvents
     if ($event instanceof OccurrenceEventModel) {
       this.occurrenceEvents = this.occurrenceEvents.filter(x => x.id !== $event.id)
+      this.logger.debug('month-view event removed from occurrences', $event)
     } else {
       this.durationEvents = this.durationEvents.filter(x => x.id !== $event.id)
+      this.logger.debug('month-view event removed from durations', $event)
     }
-    this.logger.debug('month-view handle event deletion: ', {
-      prevOccurrences,
-      occurrences: this.occurrenceEvents,
-      prevDurations,
-      durations: this.durationEvents
-    })
+  }
+
+  onEventCreated($event: SomeEventModel) {
+    if ($event instanceof OccurrenceEventModel) {
+      this.occurrenceEvents = [...this.occurrenceEvents, $event]
+      this.logger.debug('month-view event added to occurrences', $event)
+    } else {
+      this.durationEvents = [...this.durationEvents, $event]
+      this.logger.debug('month-view event added to durations', $event)
+    }
+    setTimeout(() => this.eventTypeService.selectedTypesInfo$.next())
   }
 }

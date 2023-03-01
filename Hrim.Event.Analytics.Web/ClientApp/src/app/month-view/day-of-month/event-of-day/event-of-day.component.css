@@ -2,8 +2,8 @@
   display: none;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
+  align-items: end;
   vertical-align: center;
 }
 
@@ -17,6 +17,6 @@ button > mat-icon {
 
 .event-of-day {
   display: flex;
-  align-items: center;
+  align-items: end;
   justify-content: center;
 }

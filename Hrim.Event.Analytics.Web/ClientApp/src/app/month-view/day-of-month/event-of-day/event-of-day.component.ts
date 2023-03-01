@@ -1,13 +1,10 @@
-import {
-  Component, EventEmitter, Input,
-  OnDestroy, OnInit, Output
-}                             from '@angular/core'
-import {OccurrenceEventModel} from "../../../shared/occurrence-event.model";
-import {SomeEventModel}       from "../../../shared/some-event.model";
-import {EventTypeService}     from "../../../services/user-event-type.service";
-import {Subscription}         from "rxjs";
-import {LogService}           from "../../../services/log.service";
-import {HrimEventService}     from "../../../services/hrim-event.service";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core'
+import {OccurrenceEventModel}                                      from "../../../shared/occurrence-event.model";
+import {SomeEventModel}                                            from "../../../shared/some-event.model";
+import {EventTypeService}                                          from "../../../services/user-event-type.service";
+import {Subscription}                                              from "rxjs";
+import {LogService}                                                from "../../../services/log.service";
+import {HrimEventService}                                          from "../../../services/hrim-event.service";
 
 @Component({
              selector   : 'app-event-of-day',
@@ -23,7 +20,6 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   isVisible = false
 
   selectedTypesSub: Subscription
-  deleteEventSub: Subscription
 
   constructor(private eventTypeService: EventTypeService,
               private eventService: HrimEventService,
@@ -31,13 +27,13 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.selectedTypesSub = this.eventTypeService.selectedTypesInfo$
+    this.selectedTypesSub = this.eventTypeService
+                                .selectedTypesInfo$
                                 .subscribe(() => this.eventTypeSelectionChanged())
   }
 
   ngOnDestroy() {
     this.selectedTypesSub?.unsubscribe()
-    this.deleteEventSub?.unsubscribe()
   }
 
   getEventHeight() {
@@ -52,7 +48,9 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   }
 
 
-  onEditEventType() {
+  onEdit($event: any) {
+    this.logger.debug('event-of-day edit clicked')
+    $event.stopPropagation()
     // const dialogRef = this.editDialog.open(EventTypeDetailsDialog, {
     //   data: new EventDetailsRequest(this.eventOfDay, true)
     // });
@@ -64,17 +62,23 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
     // });
   }
 
-  onDeleteEventType() {
-    this.deleteEventSub = this.eventService.deleteEvent(this.eventOfDay)
-                              .subscribe({
-                                           next : () => this.delete.emit(this.eventOfDay),
-                                           error: err => {
-                                             const eventContext = this.eventService.eventContext[this.eventOfDay.id]
-                                             eventContext.isDeleted = true
-                                             eventContext.isUnsaved = true
-                                             this.logger.error('Failed to delete event: ' + err, this.eventOfDay, eventContext)
-                                           }
-                                         });
+  onDelete($event: any) {
+    this.logger.debug('event-of-day delete clicked')
+    $event.stopPropagation()
+    this.eventService
+        .deleteEvent(this.eventOfDay)
+        .subscribe({
+                     next : () => {
+                       delete this.eventService.eventContext[this.eventOfDay.id]
+                       this.delete.emit(this.eventOfDay)
+                     },
+                     error: err => {
+                       const eventContext     = this.eventService.eventContext[this.eventOfDay.id]
+                       eventContext.isDeleted = true
+                       eventContext.isUnsaved = true
+                       this.logger.error('Failed to delete event: ' + err, this.eventOfDay, eventContext)
+                     }
+                   });
   }
 
   getTopBorderStyle() {
@@ -84,7 +88,12 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   }
 
   private eventTypeSelectionChanged() {
-    const typeInfo     = this.eventTypeService.typeContexts[this.eventOfDay.eventType.id]
+    const typeInfo = this.eventTypeService.typeContexts[this.eventOfDay.eventType.id]
     this.isVisible = typeInfo?.isSelected ?? false
+  }
+
+  onClick($event: any) {
+    $event.stopPropagation()
+    this.logger.debug('event-of-day clicked')
   }
 }

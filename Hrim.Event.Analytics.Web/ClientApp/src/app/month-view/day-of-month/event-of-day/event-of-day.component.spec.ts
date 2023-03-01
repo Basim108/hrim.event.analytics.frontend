@@ -38,7 +38,7 @@ describe('EventOfDayComponent', () => {
     component.eventOfDay = OCCURRENCE_EVENTS['reading_1']
     component.isVisible  = true
 
-    eventService.registerEntityState(component.eventOfDay)
+    eventService.registerEventContext(component.eventOfDay)
     eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true)
     fixture.detectChanges();
   });
@@ -91,7 +91,7 @@ describe('EventOfDayComponent', () => {
     const deletionPipe = of(component.eventOfDay)
     spyOn(eventService, 'deleteEvent').and.returnValue(deletionPipe)
 
-    component.onDeleteEventType()
+    component.onDelete()
 
     expect(component.delete.emit).toHaveBeenCalledWith(component.eventOfDay)
     done()
@@ -104,7 +104,7 @@ describe('EventOfDayComponent', () => {
     })
     spyOn(eventService, 'deleteEvent').and.returnValue(deletionPipe)
 
-    component.onDeleteEventType()
+    component.onDelete()
 
     expect(component.delete.emit).not.toHaveBeenCalled()
     const eventContext = eventService.eventContext[component.eventOfDay.id]

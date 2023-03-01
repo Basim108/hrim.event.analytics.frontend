@@ -1,23 +1,24 @@
-import {Injectable}                     from '@angular/core'
-import {OccurrenceEventModel}           from '../shared/occurrence-event.model'
-import {map, Observable, ReplaySubject} from 'rxjs'
-import {LogService}                     from './log.service'
-import {HttpClient, HttpParams}         from '@angular/common/http'
-import {tap}                            from 'rxjs/operators'
-import {environment}                    from '../../environments/environment'
-import {DateTime}                       from 'luxon'
-import EventsForPeriodResponseModel     from '../shared/events-for-period-response.model'
-import {DurationEventModel}             from '../shared/duration-event.model'
-import {SomeEventModel}                 from "../shared/some-event.model";
-import {EntityState}                    from "../shared/entity-state";
+import {EventEmitter, Injectable}                        from '@angular/core'
+import {OccurrenceEventModel, OccurrenceEventSnakeModel} from '../shared/occurrence-event.model'
+import {map, Observable, Subject}                        from 'rxjs'
+import {LogService}                                      from './log.service'
+import {HttpClient, HttpParams}                          from '@angular/common/http'
+import {tap}                                             from 'rxjs/operators'
+import {environment}                                     from '../../environments/environment'
+import {DateTime}                                        from 'luxon'
+import EventsForPeriodResponseModel                      from '../shared/events-for-period-response.model'
+import {DurationEventModel, DurationEventSnakeModel}     from '../shared/duration-event.model'
+import {SomeEventModel}                                  from "../shared/some-event.model";
+import {EntityState}                                     from "../shared/entity-state";
 
 @Injectable({providedIn: 'root'})
 export class HrimEventService {
-  occurrenceEvents$ = new ReplaySubject<OccurrenceEventModel>()
-  occurrenceUrl     = `${environment.apiUrl}/v1/event/occurrence`
-  durationUrl       = `${environment.apiUrl}/v1/event/duration`
-  entityUrl         = `${environment.apiUrl}/v1/entity/`
-  periodFormat      = 'yyyy-MM-d'
+  createdOccurrences$ = new Subject<OccurrenceEventModel>()
+  createdDurations$   = new Subject<DurationEventModel>()
+  occurrenceUrl       = `${environment.apiUrl}/v1/event/occurrence`
+  durationUrl         = `${environment.apiUrl}/v1/event/duration`
+  entityUrl           = `${environment.apiUrl}/v1/entity/`
+  periodFormat        = 'yyyy-MM-d'
 
   eventContext: { [eventId: string]: EntityState<SomeEventModel> } = {}
 
@@ -26,12 +27,74 @@ export class HrimEventService {
     logger.logConstructor(this)
   }
 
-  createEvent(model: OccurrenceEventModel): void {
-    model.id = crypto.randomUUID()
-    this.occurrenceEvents$.next(model)
+  createEvent(model: SomeEventModel): void {
+    const entityState     = this.registerEventContext(model)
+    entityState.isCreated = true
+    entityState.isUnsaved = true
+    if (model instanceof OccurrenceEventModel) {
+      this.createOccurrenceEvent(model)
+      return
+    }
+    this.createDurationEvent(model)
   }
 
-  registerEntityState(entity: SomeEventModel) {
+  private createOccurrenceEvent(model: OccurrenceEventModel) {
+    const options = {
+      withCredentials: true
+    }
+    const body    = {
+      occurred_at  : model.occurredAt,
+      event_type_id: model.eventType.id
+    }
+    this.http
+        .post<OccurrenceEventSnakeModel>(this.occurrenceUrl, body, options)
+        .subscribe({
+                     next : createdEvent => {
+                       const event = new OccurrenceEventModel(createdEvent)
+                       event.eventType = model.eventType
+                       this.contextSaved(model, event)
+                       this.createdOccurrences$.next(event)
+                     },
+                     error: err => this.logger.error('Occurrence event creation failed: ' + err, model)
+                   })
+  }
+
+  private createDurationEvent(model: DurationEventModel) {
+    const options = {
+      withCredentials: true
+    }
+    const body    = {
+      started_at   : model.startedAt,
+      finished_at  : model.finishedAt,
+      event_type_id: model.eventType.id
+    }
+    this.http
+        .post<DurationEventSnakeModel>(this.durationUrl, body, options)
+        .subscribe({
+                     next : createdEvent => {
+                       const event = new DurationEventModel(createdEvent)
+                       event.eventType = model.eventType
+                       this.contextSaved(model, event)
+                       this.createdDurations$.next(event)
+                     },
+                     error: err => this.logger.error('Occurrence event creation failed: ' + err, model)
+                   })
+  }
+
+  private contextSaved(modelCandidate: SomeEventModel, savedModel: SomeEventModel) {
+    let eventContext = Object.values(this.eventContext).find(x => x.entity.id === modelCandidate.id)
+    if (eventContext) {
+      eventContext.entity = savedModel
+    } else {
+      eventContext = this.registerEventContext(savedModel)
+    }
+    eventContext.isDeleted  = false
+    eventContext.isModified = false
+    eventContext.isCreated  = false
+    eventContext.isUnsaved  = false
+  }
+
+  registerEventContext(entity: SomeEventModel): EntityState<SomeEventModel> {
     let eventContext = this.eventContext[entity.id]
     if (eventContext) {
       eventContext.entity = entity
@@ -40,6 +103,7 @@ export class HrimEventService {
       eventContext.entity          = entity
       this.eventContext[entity.id] = eventContext
     }
+    return eventContext
   }
 
   loadMonthOccurrenceEvents(month: DateTime): Observable<OccurrenceEventModel[]> {
@@ -53,7 +117,7 @@ export class HrimEventService {
                  tap(responseModel => this.logger.debug('occurence events loaded from the cloud:', responseModel)),
                  map(responseModel => responseModel.occurrences.map(x => {
                    const event = new OccurrenceEventModel(x)
-                   this.registerEntityState(event)
+                   this.registerEventContext(event)
                    return event
                  })),
                  tap(occurrenceEvents => this.logger.debug('occurence events transformed:', occurrenceEvents))
@@ -71,7 +135,7 @@ export class HrimEventService {
                  tap(responseModel => this.logger.debug('duration events loaded from the cloud:', responseModel)),
                  map(responseModel => responseModel.durations.map(x => {
                    const event = new DurationEventModel(x)
-                   this.registerEntityState(event)
+                   this.registerEventContext(event)
                    return event
                  })),
                  tap(durationEvents => this.logger.debug('duration events transformed:', durationEvents))

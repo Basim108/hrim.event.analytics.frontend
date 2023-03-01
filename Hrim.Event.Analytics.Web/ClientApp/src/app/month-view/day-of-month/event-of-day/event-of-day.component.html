@@ -7,13 +7,10 @@
       }"
      [title]="getEventInfo()">
   <div class="tool-bar">
-    <button mat-icon-button class="edit-btn" color="primary" (click)="onEditEventType()">
+    <button mat-icon-button class="edit-btn" color="primary" (click)="onEdit($event)">
       <mat-icon>edit</mat-icon>
     </button>
-    <button mat-icon-button class="create-btn" color="primary" (click)="onDeleteEventType()">
-      <mat-icon>add</mat-icon>
-    </button>
-    <button mat-icon-button class="delete-btn" color="primary" (click)="onDeleteEventType()">
+    <button mat-icon-button class="delete-btn" color="primary" (click)="onDelete($event)">
       <mat-icon>delete</mat-icon>
     </button>
   </div>

@@ -1,23 +1,20 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LogService}                                                from "../services/log.service";
-import {MatDialog}                                         from "@angular/material/dialog";
-import {EventTypeDetailsDialog}                            from "../dialogs/event-type-details-dialog/event-type-details-dialog.component";
-import {EventTypeDetailsRequest}                           from "../dialogs/event-type-details-dialog/event-type-details-request";
-import {EventTypeService}                                  from "../services/user-event-type.service";
-import {UserEventType}                                     from "../shared/event-type.model";
-import {Subscription}                                      from "rxjs";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {LogService}                                     from "../services/log.service";
+import {MatDialog}                                      from "@angular/material/dialog";
+import {EventTypeDetailsDialog}                         from "../dialogs/event-type-details-dialog/event-type-details-dialog.component";
+import {EventTypeDetailsRequest}                        from "../dialogs/event-type-details-dialog/event-type-details-request";
+import {EventTypeService}                               from "../services/user-event-type.service";
+import {UserEventType}                                  from "../shared/event-type.model";
 
 @Component({
              selector   : 'app-event-type-item',
              templateUrl: './event-type-item.component.html',
              styleUrls  : ['./event-type-item.component.css']
            })
-export class EventTypeItemComponent implements OnInit, OnDestroy {
+export class EventTypeItemComponent implements OnInit {
   @Input('eventType') eventType: UserEventType;
   @Output() delete    = new EventEmitter<UserEventType>;
   isSelected: boolean = false
-
-  deleteEventTypeSub: Subscription;
 
   constructor(public editDialog: MatDialog,
               private eventTypeService: EventTypeService,
@@ -25,14 +22,9 @@ export class EventTypeItemComponent implements OnInit, OnDestroy {
     logger.logConstructor(this)
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.logger.debug('event-type-item initialization')
     this.isSelected = this.eventTypeService.typeContexts[this.eventType.id]?.isSelected ?? false
-  }
-
-  ngOnDestroy(): void {
-    this.logger.debug('event-type-item destroy')
-    this.deleteEventTypeSub?.unsubscribe();
   }
 
   onEditEventType() {
@@ -48,13 +40,15 @@ export class EventTypeItemComponent implements OnInit, OnDestroy {
   }
 
   onDeleteEventType() {
-    this.deleteEventTypeSub = this.eventTypeService.deleteEventType(this.eventType).subscribe({
-                                                                                                next: (deletedEventType) => {
-                                                                                                  if (deletedEventType.is_deleted) {
-                                                                                                    this.delete.emit(this.eventType)
-                                                                                                  }
-                                                                                                }
-                                                                                              });
+    this.eventTypeService
+        .deleteEventType(this.eventType)
+        .subscribe({
+                     next: (deletedEventType) => {
+                       if (deletedEventType.is_deleted) {
+                         this.delete.emit(this.eventType)
+                       }
+                     }
+                   });
   }
 
   toggleEventType() {

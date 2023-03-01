@@ -29,7 +29,7 @@ describe('HrimEventService', () => {
 
   it('createEvent should emit created event', done => {
     const testEvent = {...OCCURRENCE_EVENTS["reading_1"], id: ''}
-    service.occurrenceEvents$.subscribe(createdEvent => {
+    service.createdOccurrences$.subscribe(createdEvent => {
       expect(createdEvent.id).toBeTruthy()
       expect(createdEvent.eventType).toBeTruthy()
       done()
@@ -39,10 +39,10 @@ describe('HrimEventService', () => {
 
   it('new subscriber should get all previously emitted events', done => {
     const testEvent = {...OCCURRENCE_EVENTS["reading_1"], id: ''}
-    service.occurrenceEvents$.subscribe(() => {
+    service.createdOccurrences$.subscribe(() => {
     })
     service.createEvent(testEvent);
-    service.occurrenceEvents$.subscribe(createdEvent => {
+    service.createdOccurrences$.subscribe(createdEvent => {
       expect(createdEvent.id).toBeTruthy()
       expect(createdEvent.id).toBeTruthy()
       done()
