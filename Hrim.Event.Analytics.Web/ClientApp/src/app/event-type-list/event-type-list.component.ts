@@ -3,15 +3,15 @@ import {LogService}                   from '../services/log.service'
 import {EventTypeService}             from '../services/user-event-type.service'
 import {Subscription}                 from 'rxjs'
 import {MatDialog}                    from '@angular/material/dialog'
-import {EventTypeDetailsDialog}       from '../dialogs/event-type-details-dialog/event-type-details-dialog.component'
-import {EventTypeDetailsRequest}      from '../dialogs/event-type-details-dialog/event-type-details-request'
-import {UserEventType}                from '../shared/event-type.model'
+import {EventTypeDetailsDialog}        from '../dialogs/event-type-details-dialog/event-type-details-dialog.component'
+import {EventTypeDetailsDialogRequest} from "../shared/dialogs/event-type-details-dialog-request";
+import {UserEventType}                 from '../shared/event-type.model'
 
 @Component({
-  selector:    'app-event-type-list',
-  templateUrl: './event-type-list.component.html',
-  styleUrls:   ['./event-type-list.component.css']
-})
+             selector   : 'app-event-type-list',
+             templateUrl: './event-type-list.component.html',
+             styleUrls  : ['./event-type-list.component.css']
+           })
 export class EventTypeListComponent implements OnInit, OnDestroy {
   eventTypes: UserEventType[] = []
   eventTypesSub: Subscription
@@ -37,7 +37,7 @@ export class EventTypeListComponent implements OnInit, OnDestroy {
 
   onCreateEventType() {
     const dialogRef = this.createDialog.open(EventTypeDetailsDialog, {
-      data: new EventTypeDetailsRequest(new UserEventType())
+      data: new EventTypeDetailsDialogRequest(new UserEventType())
     })
     this.dialogSub  = dialogRef.afterClosed().subscribe(
       createdEntity => {

@@ -83,6 +83,7 @@ export class EventTypeService {
 
   saveEventType(entity: UserEventType): Observable<UserEventType> {
     const options = {withCredentials: true};
+    // TODO: check for creation through context.isCreated
     return entity.id
            ? this.http.put<UserEventType>(this.url, entity, options)
            : this.http.post<UserEventType>(this.url, entity, options);

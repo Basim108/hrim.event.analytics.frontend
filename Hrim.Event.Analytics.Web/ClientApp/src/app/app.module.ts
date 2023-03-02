@@ -29,37 +29,43 @@ import {EventTypeItemComponent} from './event-type-item/event-type-item.componen
 import {EventTypeDetailsDialog} from './dialogs/event-type-details-dialog/event-type-details-dialog.component';
 import {ApiResponseInterceptor} from "./services/api-response-interceptor.service";
 import {ErrorMetadataService}   from "./services/error-metadata.service";
+import {MatMenuModule}          from "@angular/material/menu";
+import { EventDetailsDialog }   from './dialogs/event-details-dialog/event-details-dialog.component';
+import {MatSelectModule}        from "@angular/material/select";
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HeaderComponent,
-    FooterComponent,
-    YearViewComponent,
-    MonthViewComponent,
-    DayOfMonthComponent,
-    EventOfDayComponent,
-    MonthPagesComponent,
-    PageNotFoundComponent,
-    AuthMenuComponent,
-    LandingViewComponent,
-    EventTypeListComponent,
-    EventTypeItemComponent,
-    EventTypeDetailsDialog
+      AppComponent,
+      HeaderComponent,
+      FooterComponent,
+      YearViewComponent,
+      MonthViewComponent,
+      DayOfMonthComponent,
+      EventOfDayComponent,
+      MonthPagesComponent,
+      PageNotFoundComponent,
+      AuthMenuComponent,
+      LandingViewComponent,
+      EventTypeListComponent,
+      EventTypeItemComponent,
+      EventTypeDetailsDialog,
+      EventDetailsDialog
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    MatIconModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    NgxMatColorPickerModule,
-    ReactiveFormsModule,
-  ],
+            imports: [
+              BrowserModule,
+              BrowserAnimationsModule,
+              HttpClientModule,
+              AppRoutingModule,
+              MatIconModule,
+              MatButtonModule,
+              MatDialogModule,
+              MatFormFieldModule,
+              MatInputModule,
+              NgxMatColorPickerModule,
+              ReactiveFormsModule,
+              MatMenuModule,
+              MatSelectModule,
+            ],
   providers: [
     {provide: ErrorHandler, useClass: ErrorMetadataService},
     {provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS},

@@ -23,4 +23,10 @@ export class DurationEventSnakeModel
   extends BaseEventSnakeModel {
   started_at: string
   finished_at: string | null
+
+  constructor(model: DurationEventModel) {
+    super(model);
+    this.started_at = model.startedAt.toISO()
+    this.finished_at = model.finishedAt?.toISO() ?? null
+  }
 }

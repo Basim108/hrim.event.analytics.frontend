@@ -6,6 +6,7 @@
         'border-top': getTopBorderStyle()
       }"
      [title]="getEventInfo()">
+  <mat-icon *ngIf="isSelected">done</mat-icon>
   <div class="tool-bar">
     <button mat-icon-button class="edit-btn" color="primary" (click)="onEdit($event)">
       <mat-icon>edit</mat-icon>

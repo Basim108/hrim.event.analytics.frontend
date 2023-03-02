@@ -5,6 +5,9 @@ import {EventTypeService}                                          from "../../.
 import {Subscription}                                              from "rxjs";
 import {LogService}                                                from "../../../services/log.service";
 import {HrimEventService}                                          from "../../../services/hrim-event.service";
+import {EventDetailsDialog}                                        from "../../../dialogs/event-details-dialog/event-details-dialog.component";
+import {MatDialog}                                                 from "@angular/material/dialog";
+import {EventDetailsDialogRequest}                                 from "../../../shared/dialogs/event-details-dialog-request";
 
 @Component({
              selector   : 'app-event-of-day',
@@ -14,6 +17,7 @@ import {HrimEventService}                                          from "../../.
 export class EventOfDayComponent implements OnInit, OnDestroy {
   @Input() eventOfDay: SomeEventModel;
   @Input() totalEventCount: number;
+  @Input() isSelected: boolean;
   @Input() prevEventOfDay: SomeEventModel | null;
   @Output() delete: EventEmitter<SomeEventModel> = new EventEmitter<SomeEventModel>()
 
@@ -23,6 +27,7 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
 
   constructor(private eventTypeService: EventTypeService,
               private eventService: HrimEventService,
+              private detailsDialog: MatDialog,
               private logger: LogService) {
   }
 
@@ -47,19 +52,19 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
     return `${eventKind}: ${this.eventOfDay.eventType.name}\nid: ${this.eventOfDay.id}`
   }
 
-
   onEdit($event: any) {
     this.logger.debug('event-of-day edit clicked')
     $event.stopPropagation()
-    // const dialogRef = this.editDialog.open(EventTypeDetailsDialog, {
-    //   data: new EventDetailsRequest(this.eventOfDay, true)
-    // });
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.eventType = result;
-    //     this.eventTypeService.saveEventType(result);
-    //   }
-    // });
+    const dialogRef = this.detailsDialog.open(EventDetailsDialog, {
+      data: new EventDetailsDialogRequest(this.eventOfDay, true)
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const typeContext = this.eventTypeService.typeContexts[result.eventType.id]
+        this.isVisible    = typeContext.isSelected
+        this.eventOfDay   = result;
+      }
+    });
   }
 
   onDelete($event: any) {

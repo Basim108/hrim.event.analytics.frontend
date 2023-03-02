@@ -1,0 +1,25 @@
+<form [formGroup]="form" (ngSubmit)="onSave()">
+  <h2 mat-dialog-title>{{data.title}}</h2>
+  <mat-dialog-content>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Event Type</mat-label>
+        <mat-select [(value)]="selectedEventTypeId"
+                    (selectionChange)="checkFormChanges()">
+          <mat-option
+            *ngFor="let eventType of eventTypes"
+            value="{{eventType.id}}"
+            title="{{eventType.description}}"
+            [style.background-color]="eventType.color"
+          >
+            {{eventType.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="false" (click)="onCancel()">Cancel</button>
+    <button mat-button type="submit" [disabled]="isReadOnly || !isChanged || !form.valid">{{data.action}}</button>
+  </mat-dialog-actions>
+</form>

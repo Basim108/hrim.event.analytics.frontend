@@ -1,7 +1,21 @@
 <div [ngClass]="isToday ? 'today' : ''"
      [ngStyle]="{'height': '100%'}"
+     [matMenuTriggerFor]="appMenu"
 >
   <div class="day-title">{{dayModel.day}}</div>
+  <mat-menu #appMenu="matMenu" overlapTrigger>
+    <ng-template matMenuContent>
+      <button mat-menu-item (click)="createOccurrenceEvent()">
+        <mat-icon>event</mat-icon>
+        <span>New Occurrence</span>
+      </button>
+      <button mat-menu-item (click)="createDurationEvent()">
+        <mat-icon>date_range</mat-icon>
+        <span>New Duration</span>
+      </button>
+    </ng-template>
+  </mat-menu>
+
   <app-event-of-day [totalEventCount]="getTotalVisibleTypeCount(occurrenceEvents, durationEvents)"
                     [eventOfDay]="eventOfDay"
                     [prevEventOfDay]="i > 0 ? occurrenceEvents[i-1] : null"

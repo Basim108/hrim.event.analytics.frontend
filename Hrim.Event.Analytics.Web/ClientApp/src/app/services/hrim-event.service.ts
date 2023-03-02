@@ -1,4 +1,4 @@
-import {EventEmitter, Injectable}                        from '@angular/core'
+import {Injectable}                                      from '@angular/core'
 import {OccurrenceEventModel, OccurrenceEventSnakeModel} from '../shared/occurrence-event.model'
 import {map, Observable, Subject}                        from 'rxjs'
 import {LogService}                                      from './log.service'
@@ -27,15 +27,16 @@ export class HrimEventService {
     logger.logConstructor(this)
   }
 
-  createEvent(model: SomeEventModel): void {
+  createEvent(model: SomeEventModel): EntityState<SomeEventModel> {
     const entityState     = this.registerEventContext(model)
     entityState.isCreated = true
     entityState.isUnsaved = true
     if (model instanceof OccurrenceEventModel) {
       this.createOccurrenceEvent(model)
-      return
+    } else {
+      this.createDurationEvent(model)
     }
-    this.createDurationEvent(model)
+    return entityState
   }
 
   private createOccurrenceEvent(model: OccurrenceEventModel) {
@@ -50,7 +51,7 @@ export class HrimEventService {
         .post<OccurrenceEventSnakeModel>(this.occurrenceUrl, body, options)
         .subscribe({
                      next : createdEvent => {
-                       const event = new OccurrenceEventModel(createdEvent)
+                       const event     = new OccurrenceEventModel(createdEvent)
                        event.eventType = model.eventType
                        this.contextSaved(model, event)
                        this.createdOccurrences$.next(event)
@@ -72,7 +73,7 @@ export class HrimEventService {
         .post<DurationEventSnakeModel>(this.durationUrl, body, options)
         .subscribe({
                      next : createdEvent => {
-                       const event = new DurationEventModel(createdEvent)
+                       const event     = new DurationEventModel(createdEvent)
                        event.eventType = model.eventType
                        this.contextSaved(model, event)
                        this.createdDurations$.next(event)
@@ -157,5 +158,47 @@ export class HrimEventService {
     const params    = new HttpParams().set('entity_type', eventKind)
     const options   = {params, withCredentials: true}
     return this.http.delete<SomeEventModel>(this.entityUrl + entity.id, options)
+  }
+
+  save(model: SomeEventModel): Observable<SomeEventModel> {
+    const options      = {withCredentials: true};
+    const isOccurrence = model instanceof OccurrenceEventModel
+    const context      = this.eventContext[model.id]
+    const url          = isOccurrence ? this.occurrenceUrl : this.durationUrl
+    const body         = this.getSaveEventBody(model, context.isCreated)
+    return context.isCreated
+           ? this.http.post<SomeEventModel>(url, body, options)
+           : this.http.put<SomeEventModel>(url, body, options)
+  }
+
+  getSaveEventBody(model: SomeEventModel, isCreated: boolean) {
+    if (model instanceof OccurrenceEventModel) {
+      if (isCreated) {
+        return {
+          occurred_at  : model.occurredAt.toISO(),
+          event_type_id: model.eventType.id
+        }
+      }
+      return {
+        id              : model.id,
+        concurrent_token: model.concurrentToken,
+        occurred_at     : model.occurredAt.toISO(),
+        event_type_id   : model.eventType.id
+      }
+    }
+    if (isCreated) {
+      return {
+        started_at   : model.startedAt.toISO(),
+        finished_at  : model.finishedAt?.toISO() ?? undefined,
+        event_type_id: model.eventType.id
+      }
+    }
+    return {
+      id              : model.id,
+      concurrent_token: model.concurrentToken,
+      started_at      : model.startedAt.toISO(),
+      finished_at     : model.finishedAt?.toISO() ?? undefined,
+      event_type_id   : model.eventType.id
+    }
   }
 }

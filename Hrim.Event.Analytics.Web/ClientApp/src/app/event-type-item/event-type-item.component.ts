@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {LogService}                                     from "../services/log.service";
 import {MatDialog}                                      from "@angular/material/dialog";
-import {EventTypeDetailsDialog}                         from "../dialogs/event-type-details-dialog/event-type-details-dialog.component";
-import {EventTypeDetailsRequest}                        from "../dialogs/event-type-details-dialog/event-type-details-request";
-import {EventTypeService}                               from "../services/user-event-type.service";
+import {EventTypeDetailsDialog}        from "../dialogs/event-type-details-dialog/event-type-details-dialog.component";
+import {EventTypeDetailsDialogRequest} from "../shared/dialogs/event-type-details-dialog-request";
+import {EventTypeService}              from "../services/user-event-type.service";
 import {UserEventType}                                  from "../shared/event-type.model";
 
 @Component({
@@ -29,12 +29,11 @@ export class EventTypeItemComponent implements OnInit {
 
   onEditEventType() {
     const dialogRef = this.editDialog.open(EventTypeDetailsDialog, {
-      data: new EventTypeDetailsRequest(this.eventType, true)
+      data: new EventTypeDetailsDialogRequest(this.eventType, true)
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.eventType = result;
-        this.eventTypeService.saveEventType(result);
       }
     });
   }
