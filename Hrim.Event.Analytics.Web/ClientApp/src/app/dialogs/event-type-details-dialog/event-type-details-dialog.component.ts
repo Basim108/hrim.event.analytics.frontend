@@ -5,22 +5,20 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {EventTypeService}                                from "../../services/user-event-type.service";
 import {Color}                                           from "@angular-material-components/color-picker";
 import {debounceTime, Subscription}                      from "rxjs";
-import {UserEventType}                 from "../../shared/event-type.model";
-import {EventTypeDetailsDialogRequest} from "../../shared/dialogs/event-type-details-dialog-request";
+import {UserEventType}                                   from "../../shared/event-type.model";
+import {EventTypeDetailsDialogRequest}                   from "../../shared/dialogs/event-type-details-dialog-request";
 
 @Component({
-  selector: 'app-event-type-details-dialog',
-  templateUrl: './event-type-details-dialog.component.html',
-  styleUrls: ['./event-type-details-dialog.component.css']
-})
+             selector   : 'app-event-type-details-dialog',
+             templateUrl: './event-type-details-dialog.component.html',
+             styleUrls  : ['./event-type-details-dialog.component.css']
+           })
 export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   isReadOnly: boolean = false
-  isChanged: boolean = false
+  isChanged: boolean  = false
   form: FormGroup
 
   formValueChangeSub: Subscription
-  getDetailsSub: Subscription
-  saveEventTypeSub: Subscription
 
   private originalEventType: UserEventType;
 
@@ -35,28 +33,26 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.formValueChangeSub?.unsubscribe()
-    this.getDetailsSub?.unsubscribe()
-    this.saveEventTypeSub?.unsubscribe()
   }
 
   ngOnInit(): void {
     this.isReadOnly = !!this.data.model.id && !this.data.model.is_mine;
-    const color = this.getColorFromHex(this.data.model.color || '#83ee84');
-    this.form = this.formBuilder.group({
-      name: [this.data.model.name || '', [Validators.required]],
-      description: [this.data.model.description || ''],
-      color: new FormControl(color, [Validators.required])
-    });
+    const color     = this.getColorFromHex(this.data.model.color || '#83ee84');
+    this.form       = this.formBuilder.group({
+                                               name       : [this.data.model.name || '', [Validators.required]],
+                                               description: [this.data.model.description || ''],
+                                               color      : new FormControl(color, [Validators.required])
+                                             });
     if (this.data.model.id && this.data.model.is_mine) {
-      this.getDetailsSub = this.eventTypeService.getDetails(this.data.model.id)
-                               .subscribe({
-                                 next: loadedEventType => {
-                                   this.logger.debug('User event type details was successfully loaded: ', loadedEventType)
-                                   this.updateModelFromControls(loadedEventType);
-                                   this.data.model        = loadedEventType
-                                   this.originalEventType = {...loadedEventType};
-                                 }
-                               })
+      this.eventTypeService.getDetails(this.data.model.id)
+          .subscribe({
+                       next: loadedEventType => {
+                         this.logger.debug('User event type details was successfully loaded: ', loadedEventType)
+                         this.updateModelFromControls(loadedEventType);
+                         this.data.model        = loadedEventType
+                         this.originalEventType = {...loadedEventType};
+                       }
+                     })
     }
     this.formValueChangeSub = this.form.valueChanges
                                   .pipe(debounceTime(500))
@@ -71,35 +67,35 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   }
 
   updateModelFromControls(model: UserEventType) {
-    model.name = this.form.get('name')?.value;
-    model.color = '#' + this.form.get('color')?.value.hex;
+    model.name        = this.form.get('name')?.value;
+    model.color       = '#' + this.form.get('color')?.value.hex;
     model.description = this.form.get('description')?.value;
   }
 
   onSave() {
+    this.checkFormChanges()
+    if (!this.isChanged) {
+      this.logger.debug('model is not changed')
+      return
+    }
     this.updateModelFromControls(this.data.model);
-    this.saveEventTypeSub = this.eventTypeService.saveEventType(this.data.model)
-                                .subscribe({
-                                  next: () => {
-                                    this.dialogRef.close(this.data.model);
-                                  },
-                                  error: error => {
-                                    this.logger.error('failed to save a user event type: ', error)
-                                    this.dialogRef.disableClose = true;
-                                  }
-                                });
+    this.eventTypeService.save(this.data.model)
+        .subscribe({
+                     next : () => {
+                       this.dialogRef.close(this.data.model);
+                     },
+                     error: error => {
+                       this.logger.error('failed to save a user event type: ', error)
+                       this.dialogRef.disableClose = true;
+                     }
+                   });
     this.logger.debug('onSave clicked: ', this.data);
   }
 
-  onCancel() {
-    this.data.model = {...this.originalEventType};
-    this.logger.debug('onCanceled clicked: ', this.data);
-  }
-
   getColorFromHex(hex: string): Color {
-    const red = parseInt(hex.slice(1, 3), 16);
+    const red   = parseInt(hex.slice(1, 3), 16);
     const green = parseInt(hex.slice(3, 5), 16);
-    const blue = parseInt(hex.slice(5, 7), 16);
+    const blue  = parseInt(hex.slice(5, 7), 16);
     return new Color(red, green, blue);
   }
 

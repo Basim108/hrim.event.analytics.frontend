@@ -29,7 +29,7 @@ export class EventTypeItemComponent implements OnInit {
 
   onEditEventType() {
     const dialogRef = this.editDialog.open(EventTypeDetailsDialog, {
-      data: new EventTypeDetailsDialogRequest(this.eventType, true)
+      data: new EventTypeDetailsDialogRequest({...this.eventType}, true)
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -40,7 +40,7 @@ export class EventTypeItemComponent implements OnInit {
 
   onDeleteEventType() {
     this.eventTypeService
-        .deleteEventType(this.eventType)
+        .delete(this.eventType)
         .subscribe({
                      next: (deletedEventType) => {
                        if (deletedEventType.is_deleted) {

@@ -31,10 +31,10 @@ export class HrimEventService {
     const entityState     = this.registerEventContext(model)
     entityState.isCreated = true
     entityState.isUnsaved = true
-    if (model instanceof OccurrenceEventModel) {
-      this.createOccurrenceEvent(model)
+    if (model.isOccurrence) {
+      this.createOccurrenceEvent(model as OccurrenceEventModel)
     } else {
-      this.createDurationEvent(model)
+      this.createDurationEvent(model as DurationEventModel)
     }
     return entityState
   }
@@ -152,7 +152,7 @@ export class HrimEventService {
   }
 
   deleteEvent(entity: SomeEventModel): Observable<SomeEventModel> {
-    const eventKind = entity instanceof OccurrenceEventModel
+    const eventKind = entity.isOccurrence
                       ? 'occurrence_event'
                       : 'duration_event'
     const params    = new HttpParams().set('entity_type', eventKind)
@@ -161,11 +161,12 @@ export class HrimEventService {
   }
 
   save(model: SomeEventModel): Observable<SomeEventModel> {
-    const options      = {withCredentials: true};
-    const isOccurrence = model instanceof OccurrenceEventModel
-    const context      = this.eventContext[model.id]
-    const url          = isOccurrence ? this.occurrenceUrl : this.durationUrl
-    const body         = this.getSaveEventBody(model, context.isCreated)
+    const options = {withCredentials: true};
+    const context = this.eventContext[model.id]
+    const url     = model.isOccurrence
+                    ? this.occurrenceUrl
+                    : this.durationUrl
+    const body    = this.getSaveEventBody(model, context.isCreated)
     this.logger.debug('sending event save request', model, body)
     return context.isCreated
            ? this.http.post<SomeEventModel>(url, body, options)
@@ -173,32 +174,32 @@ export class HrimEventService {
   }
 
   getSaveEventBody(model: SomeEventModel, isCreated: boolean) {
-    if (model instanceof OccurrenceEventModel) {
+    if (model.isOccurrence) {
       if (isCreated) {
         return {
-          occurred_at  : model.occurredAt.toISO(),
+          occurred_at  : (model as OccurrenceEventModel).occurredAt.toISO(),
           event_type_id: model.eventType.id
         }
       }
       return {
         id              : model.id,
         concurrent_token: model.concurrentToken,
-        occurred_at     : model.occurredAt.toISO(),
+        occurred_at     : (model as OccurrenceEventModel).occurredAt.toISO(),
         event_type_id   : model.eventType.id
       }
     }
     if (isCreated) {
       return {
-        started_at   : model.startedAt.toISO(),
-        finished_at  : model.finishedAt?.toISO() ?? undefined,
+        started_at   : (model as DurationEventModel).startedAt.toISO(),
+        finished_at  : (model as DurationEventModel).finishedAt?.toISO() ?? undefined,
         event_type_id: model.eventType.id
       }
     }
     return {
       id              : model.id,
       concurrent_token: model.concurrentToken,
-      started_at      : model.startedAt.toISO(),
-      finished_at     : model.finishedAt?.toISO() ?? undefined,
+      started_at      : (model as DurationEventModel).startedAt.toISO(),
+      finished_at     : (model as DurationEventModel).finishedAt?.toISO() ?? undefined,
       event_type_id   : model.eventType.id
     }
   }

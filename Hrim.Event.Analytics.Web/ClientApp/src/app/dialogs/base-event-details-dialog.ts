@@ -26,7 +26,6 @@ export abstract class BaseEventDetailsDialog {
   form: FormGroup
 
   protected formValueChangeSub: Subscription
-  protected saveEventTypeSub: Subscription
 
   get eventTypes() {
     return Object.values(this.eventTypeService.typeContexts)
@@ -51,7 +50,6 @@ export abstract class BaseEventDetailsDialog {
 
   ngOnDestroy(): void {
     this.formValueChangeSub?.unsubscribe()
-    this.saveEventTypeSub?.unsubscribe()
   }
 
   ngOnInit(): void {
@@ -80,29 +78,31 @@ export abstract class BaseEventDetailsDialog {
   onSave() {
     this.checkFormChanges()
     if (!this.isChanged) {
-      this.logger.debug('event is not changed')
+      this.logger.debug('model is not changed')
       return
     }
     this.updateModelFromControls()
-    this.saveEventTypeSub = this.eventService
-                                .save(this.saveContext.model)
-                                .subscribe({
-                                             next : this.saveContext.next,
-                                             error: err => {
-                                               this.logger.error('failed to save an event: ', this.dialogRequest, err)
-                                               this.saveContext.error(err)
-                                             }
-                                           });
+    this.eventService
+        .save(this.saveContext.model)
+        .subscribe({
+                     next : this.saveContext.next,
+                     error: err => {
+                       this.logger.error('failed to save an event: ', this.dialogRequest, err)
+                       this.saveContext.error(err)
+                     }
+                   });
     this.logger.debug('Saving an event: ', this.dialogRequest);
   }
 
-  public isDateChanged(original: DateTime | null, fromControl: Date | null): boolean{
-    if (!original && fromControl || original && !fromControl)
+  public isDateChanged(original: DateTime | null, fromControl: Date | null): boolean {
+    if (!original && fromControl || original && !fromControl) {
       return true
-    if(!original && !fromControl)
+    }
+    if (!original && !fromControl) {
       return false
+    }
     const fromControlISO = DateTime.fromJSDate(fromControl!).toISO()
-    const originalISO =original!.toISO()
-    return  originalISO !== fromControlISO
+    const originalISO    = original!.toISO()
+    return originalISO !== fromControlISO
   }
 }

@@ -81,7 +81,7 @@ export class EventTypeService {
     }
   }
 
-  saveEventType(entity: UserEventType): Observable<UserEventType> {
+  save(entity: UserEventType): Observable<UserEventType> {
     const options = {withCredentials: true};
     // TODO: check for creation through context.isCreated
     return entity.id
@@ -95,7 +95,7 @@ export class EventTypeService {
     });
   }
 
-  deleteEventType(entity: UserEventType): Observable<UserEventType> {
+  delete(entity: UserEventType): Observable<UserEventType> {
     const params  = new HttpParams().set('entity_type', 'event_type')
     const options = {params, withCredentials: true}
     return this.http.delete<UserEventType>(this.entityUrl + entity.id, options);

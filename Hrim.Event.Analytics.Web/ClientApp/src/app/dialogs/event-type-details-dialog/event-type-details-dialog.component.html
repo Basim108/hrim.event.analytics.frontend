@@ -37,7 +37,7 @@
     </p>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="false" (click)="onCancel()">Cancel</button>
+    <button mat-button [mat-dialog-close]="false">Cancel</button>
     <button mat-button type="submit" [disabled]="isReadOnly || !isChanged || !form.valid">{{data.action}}</button>
   </mat-dialog-actions>
 </form>

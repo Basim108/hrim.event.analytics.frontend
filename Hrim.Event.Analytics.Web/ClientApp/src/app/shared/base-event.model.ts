@@ -4,6 +4,7 @@ import {EntityModel}   from "./entity.model";
 export abstract class BaseEventModel extends EntityModel {
   eventType: UserEventType
 
+  public isOccurrence: boolean = false
   protected constructor(model: BaseEventSnakeModel | null) {
     super(model?.id ?? '', model?.concurrent_token ?? -1)
     if (!model) {

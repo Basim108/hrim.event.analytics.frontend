@@ -7,6 +7,7 @@ export class OccurrenceEventModel extends BaseEventModel {
 
   constructor(model: OccurrenceEventSnakeModel | null) {
     super(model)
+    this.isOccurrence = true
     if (!model) return
     this.occurredAt = DateTime.fromISO(model.occurred_at)
     this.occurredOn = this.occurredAt.toISODate()

@@ -126,7 +126,7 @@ describe('EventTypeService', () => {
   })
 
   it('should soft delete an event type by id', (done) => {
-    service.deleteEventType(EVENT_TYPES["reading"])
+    service.delete(EVENT_TYPES["reading"])
            .subscribe(eventType => {
              expect(eventType).toBeTruthy()
              expect(eventType.id).toBe(EVENT_TYPES["reading"].id)
@@ -139,7 +139,7 @@ describe('EventTypeService', () => {
   })
 
   it('should update an existed event type by id', (done) => {
-    service.saveEventType({...EVENT_TYPES["reading"]})
+    service.save({...EVENT_TYPES["reading"]})
            .subscribe(eventType => {
              expect(eventType).toBeTruthy()
              done()
@@ -150,7 +150,7 @@ describe('EventTypeService', () => {
   })
 
   it('should create a new event type', (done) => {
-    service.saveEventType({...EVENT_TYPES["reading"], id: ''})
+    service.save({...EVENT_TYPES["reading"], id: ''})
            .subscribe(eventType => {
              expect(eventType).toBeTruthy()
              done()

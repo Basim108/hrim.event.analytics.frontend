@@ -1,17 +1,23 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {EventOfDayComponent}     from './event-of-day.component';
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {LogService}              from "../../../services/log.service";
-import {EventTypeService}        from "../../../services/user-event-type.service";
-import {EVENT_TYPES}             from "../../../../test_data/event-types";
-import {OCCURRENCE_EVENTS}       from "../../../../test_data/events";
-import {By}                      from "@angular/platform-browser";
-import {MatIconModule}           from "@angular/material/icon";
-import {MatButtonModule}         from "@angular/material/button";
-import {HrimEventService}        from "../../../services/hrim-event.service";
-import {Observable, of}          from "rxjs";
-import {SomeEventModel}          from "../../../shared/some-event.model";
+import {HttpClientTestingModule}                                                    from "@angular/common/http/testing";
+import {LogService}                                                                 from "../../../services/log.service";
+import {EventTypeService}                                                           from "../../../services/user-event-type.service";
+import {EVENT_TYPES}                                                                from "../../../../test_data/event-types";
+import {OCCURRENCE_EVENTS}                                                          from "../../../../test_data/events";
+import {By}                                                                         from "@angular/platform-browser";
+import {MatIconModule}                                                              from "@angular/material/icon";
+import {MatButtonModule}                                                            from "@angular/material/button";
+import {HrimEventService}                                                           from "../../../services/hrim-event.service";
+import {Observable, of}                                                             from "rxjs";
+import {SomeEventModel}                                                             from "../../../shared/some-event.model";
+import {MatInputModule}                                                             from "@angular/material/input";
+import {MatDialogModule}                                                            from "@angular/material/dialog";
+import {MatSelectModule}                                                            from "@angular/material/select";
+import {MatDatepickerModule}                                                        from "@angular/material/datepicker";
+import {NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule} from "@angular-material-components/datetime-picker";
+import {NoopAnimationsModule}                                                       from "@angular/platform-browser/animations";
 
 describe('EventOfDayComponent', () => {
   let component: EventOfDayComponent;
@@ -25,7 +31,15 @@ describe('EventOfDayComponent', () => {
                                            imports     : [
                                              HttpClientTestingModule,
                                              MatIconModule,
+                                             MatInputModule,
                                              MatButtonModule,
+                                             MatDialogModule,
+                                             MatSelectModule,
+                                             MatDatepickerModule,
+                                             NgxMatDatetimePickerModule,
+                                             NgxMatTimepickerModule,
+                                             NgxMatNativeDateModule,
+                                             NoopAnimationsModule
                                            ],
                                            providers   : [LogService, EventTypeService, HrimEventService]
                                          })

@@ -45,17 +45,17 @@ describe('EventTypeItemComponent', () => {
   })
 
   it('onDeleteEventType should send delete request', () => {
-    spyOn(eventTypeService, 'deleteEventType').and.returnValue(of({...EVENT_TYPES['reading'], is_deleted: true}))
+    spyOn(eventTypeService, 'delete').and.returnValue(of({...EVENT_TYPES['reading'], is_deleted: true}))
 
     component.onDeleteEventType()
 
-    expect(eventTypeService.deleteEventType).toHaveBeenCalledWith(jasmine.objectContaining({
+    expect(eventTypeService.delete).toHaveBeenCalledWith(jasmine.objectContaining({
                                                                                              id: EVENT_TYPES['reading'].id
                                                                                            }))
   })
 
   it('onDeleteEventType should emit delete event', () => {
-    spyOn(eventTypeService, 'deleteEventType').and.returnValue(of({...EVENT_TYPES['reading'], is_deleted: true}))
+    spyOn(eventTypeService, 'delete').and.returnValue(of({...EVENT_TYPES['reading'], is_deleted: true}))
     spyOn(component.delete, 'emit')
 
     component.onDeleteEventType()
@@ -65,32 +65,17 @@ describe('EventTypeItemComponent', () => {
                                                                                 }))
   })
 
-  it('onEditEventType should send save request', () => {
-    let dialogRefSpyObj = jasmine.createSpyObj({
-                                                 afterClosed: of<UserEventType>({...EVENT_TYPES['reading']}),
-                                                 close      : null
-                                               })
-    spyOn(TestBed.inject(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
-    spyOn(eventTypeService, 'saveEventType')
-
-    component.onEditEventType()
-
-    expect(eventTypeService.saveEventType).toHaveBeenCalledWith(jasmine.objectContaining({
-                                                                                           id: EVENT_TYPES['reading'].id
-                                                                                         }))
-  })
-
   it('onEditEventType when dialog canceled should not send save request', () => {
     let dialogRefSpyObj = jasmine.createSpyObj({
                                                  afterClosed: of<boolean>(false),
                                                  close      : null
                                                })
     spyOn(TestBed.inject(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
-    spyOn(eventTypeService, 'saveEventType')
+    spyOn(eventTypeService, 'save')
 
     component.onEditEventType()
 
-    expect(eventTypeService.saveEventType).not.toHaveBeenCalled()
+    expect(eventTypeService.save).not.toHaveBeenCalled()
   })
 
   it('after initialization should update selected status from event-type-service', () => {
