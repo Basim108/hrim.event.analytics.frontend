@@ -5,9 +5,11 @@ import {EventTypeService}                                          from "../../.
 import {Subscription}                                              from "rxjs";
 import {LogService}                                                from "../../../services/log.service";
 import {HrimEventService}                                          from "../../../services/hrim-event.service";
-import {EventDetailsDialog}                                        from "../../../dialogs/event-details-dialog/event-details-dialog.component";
+import {OccurrenceEventDetailsDialog}                              from "../../../dialogs/occurrence-event-details-dialog/occurrence-event-details-dialog";
 import {MatDialog}                                                 from "@angular/material/dialog";
-import {EventDetailsDialogRequest}                                 from "../../../shared/dialogs/event-details-dialog-request";
+import {OccurrenceEventDetailsDialogRequest}                       from "../../../shared/dialogs/occurrence-event-details-dialog-request";
+import {DurationEventDetailsDialog}                                from "../../../dialogs/duration-event-details-dialog/duration-event-details-dialog";
+import {DurationEventDetailsDialogRequest}                         from "../../../shared/dialogs/duration-event-details-dialog-request";
 
 @Component({
              selector   : 'app-event-of-day',
@@ -55,9 +57,13 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   onEdit($event: any) {
     this.logger.debug('event-of-day edit clicked')
     $event.stopPropagation()
-    const dialogRef = this.detailsDialog.open(EventDetailsDialog, {
-      data: new EventDetailsDialogRequest(this.eventOfDay, true)
-    });
+    const dialogRef = this.eventOfDay instanceof OccurrenceEventModel
+                      ? this.detailsDialog.open(OccurrenceEventDetailsDialog, {
+        data: new OccurrenceEventDetailsDialogRequest({...this.eventOfDay}, true)
+      })
+                      : this.detailsDialog.open(DurationEventDetailsDialog, {
+        data: new DurationEventDetailsDialogRequest({...this.eventOfDay}, true)
+      })
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         const typeContext = this.eventTypeService.typeContexts[result.eventType.id]

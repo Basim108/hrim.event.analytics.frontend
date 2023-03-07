@@ -166,6 +166,7 @@ export class HrimEventService {
     const context      = this.eventContext[model.id]
     const url          = isOccurrence ? this.occurrenceUrl : this.durationUrl
     const body         = this.getSaveEventBody(model, context.isCreated)
+    this.logger.debug('sending event save request', model, body)
     return context.isCreated
            ? this.http.post<SomeEventModel>(url, body, options)
            : this.http.put<SomeEventModel>(url, body, options)

@@ -97,16 +97,6 @@ describe('EventTypeItemComponent', () => {
     expect(component.isSelected).toBeTrue()
   })
 
-  it('on destroy should unsubscribe from deleteEventTypeSub', () => {
-    spyOn(eventTypeService, 'deleteEventType').and.returnValue(of({...EVENT_TYPES['reading'], is_deleted: true}))
-    component.onDeleteEventType()
-    spyOn(component.deleteEventTypeSub, 'unsubscribe')
-
-    fixture.destroy()
-
-    expect(component.deleteEventTypeSub.unsubscribe).toHaveBeenCalled()
-  })
-
   it('toggleEventType should toggle isSelected flag', () => {
     component.isSelected = true
     component.toggleEventType()

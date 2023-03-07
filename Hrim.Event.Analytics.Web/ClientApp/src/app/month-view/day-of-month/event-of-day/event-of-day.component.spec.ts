@@ -91,7 +91,9 @@ describe('EventOfDayComponent', () => {
     const deletionPipe = of(component.eventOfDay)
     spyOn(eventService, 'deleteEvent').and.returnValue(deletionPipe)
 
-    component.onDelete()
+    const event$ = { stopPropagation(){}}
+    spyOn(event$, 'stopPropagation')
+    component.onDelete(event$)
 
     expect(component.delete.emit).toHaveBeenCalledWith(component.eventOfDay)
     done()
@@ -103,8 +105,9 @@ describe('EventOfDayComponent', () => {
       observer.error('failed to delete an event')
     })
     spyOn(eventService, 'deleteEvent').and.returnValue(deletionPipe)
-
-    component.onDelete()
+    const event$ = { stopPropagation(){}}
+    spyOn(event$, 'stopPropagation')
+    component.onDelete(event$)
 
     expect(component.delete.emit).not.toHaveBeenCalled()
     const eventContext = eventService.eventContext[component.eventOfDay.id]
@@ -114,6 +117,8 @@ describe('EventOfDayComponent', () => {
     expect(eventContext.isModified).toBeFalse()
     expect(eventContext.entity).toBeTruthy()
     expect(eventContext.entity).toEqual(component.eventOfDay)
+
+    expect(event$.stopPropagation).toHaveBeenCalled()
     done()
   });
 });
