@@ -20,7 +20,7 @@ export class OccurrenceEventDetailsDialog extends BaseEventDetailsDialog impleme
   private readonly originalModel: OccurrenceEventModel;
 
   constructor(@Inject(MAT_DIALOG_DATA) public override dialogRequest: OccurrenceEventDetailsDialogRequest,
-              private dialogRef: MatDialogRef<OccurrenceEventDetailsDialog>,
+              public dialogRef: MatDialogRef<OccurrenceEventDetailsDialog>,
               formBuilder: FormBuilder,
               eventTypeService: EventTypeService,
               eventService: HrimEventService,

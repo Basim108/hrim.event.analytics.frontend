@@ -30,9 +30,7 @@ export class DurationEventDetailsDialog extends BaseEventDetailsDialog implement
     this.saveContext         = {
       model: this.dialogRequest.model,
       next : () => this.dialogRef.close(this.dialogRequest.model),
-      error: () => {
-        this.dialogRef.disableClose = true
-      }
+      error: () => {this.dialogRef.disableClose = true}
     }
     this.selectedEventTypeId = this.dialogRequest.model.eventType.id
     this.originalModel       = {...this.dialogRequest.model}

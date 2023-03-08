@@ -94,14 +94,16 @@ export abstract class BaseEventDetailsDialog {
     this.logger.debug('Saving an event: ', this.dialogRequest);
   }
 
-  public isDateChanged(original: DateTime | null, fromControl: Date | null): boolean {
+  public isDateChanged(original: DateTime | null, fromControl: Date | string | null): boolean {
     if (!original && fromControl || original && !fromControl) {
       return true
     }
     if (!original && !fromControl) {
       return false
     }
-    const fromControlISO = DateTime.fromJSDate(fromControl!).toISO()
+    const fromControlISO = typeof(fromControl) === 'string'
+                           ? fromControl
+                           : DateTime.fromJSDate(fromControl!).toISO()
     const originalISO    = original!.toISO()
     return originalISO !== fromControlISO
   }

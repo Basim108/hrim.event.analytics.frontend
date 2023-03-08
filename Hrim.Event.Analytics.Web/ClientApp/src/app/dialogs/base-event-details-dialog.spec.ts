@@ -7,7 +7,6 @@ import {HttpClientTestingModule}                                                
 import {MatIconModule}                                                              from "@angular/material/icon";
 import {MatButtonModule}                                                            from "@angular/material/button";
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef}                             from "@angular/material/dialog";
-import {EventTypeItemComponent}                                                     from "../event-type-item/event-type-item.component";
 import {EventTypeService}                                                           from "../services/user-event-type.service";
 import {MatSelectModule}                                                            from "@angular/material/select";
 import {MatDatepickerModule}                                                        from "@angular/material/datepicker";
