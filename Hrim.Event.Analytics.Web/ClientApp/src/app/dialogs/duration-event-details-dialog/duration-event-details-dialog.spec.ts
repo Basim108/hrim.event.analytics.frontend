@@ -77,8 +77,8 @@ describe('DurationEventDetailsDialog', () => {
   })
 
   it('updateModelFromControls should update model', () => {
-    const expectedFrom = '2023-03-08T12:04:43.317+04:00'
-    const expectedTo   = '2023-03-09T12:04:43.317+04:00'
+    const expectedFrom = '2023-03-08T12:04:43.317'
+    const expectedTo   = '2023-03-09T12:04:43.317'
     component.form.controls['from'].setValue(new Date(expectedFrom))
     component.form.controls['to'].setValue(new Date(expectedTo))
     component.form.controls['eventType'].setValue(testEventTypes.yogaPractice.id)
@@ -86,9 +86,10 @@ describe('DurationEventDetailsDialog', () => {
 
     component.updateModelFromControls()
 
-    expect(dialogRequest.model.startedAt.toISO()).toEqual(expectedFrom)
+    // note: when running test in ci environment. actual timezone sets to UTC, so ignore it
+    expect(dialogRequest.model.startedAt.toISO().slice(0, -6)).toEqual(expectedFrom)
     expect(dialogRequest.model.finishedAt).toBeTruthy()
-    expect(dialogRequest.model.finishedAt!.toISO()).toEqual(expectedTo)
+    expect(dialogRequest.model.finishedAt!.toISO().slice(0, -6)).toEqual(expectedTo)
     expect(dialogRequest.model.eventType).toBeTruthy()
     expect(dialogRequest.model.eventType.id).toEqual(testEventTypes.yogaPractice.id)
   });

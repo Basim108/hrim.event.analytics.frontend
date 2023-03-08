@@ -82,14 +82,15 @@ describe('OccurrenceEventDetailsDialog', () => {
   });
 
   it('updateModelFromControls should update model', () => {
-    const expectedFrom = '2023-03-08T12:04:43.317+04:00'
+    const expectedFrom = '2023-03-08T12:04:43.317'
     component.form.controls['from'].setValue(new Date(expectedFrom))
     component.form.controls['eventType'].setValue(testEventTypes.yogaPractice.id)
     component.selectedEventTypeId = testEventTypes.yogaPractice.id
 
     component.updateModelFromControls()
 
-    expect(dialogRequest.model.occurredAt.toISO()).toEqual(expectedFrom)
+    // note: when running test in ci environment. actual timezone sets to UTC, so ignore it
+    expect(dialogRequest.model.occurredAt.toISO().slice(0, -6)).toEqual(expectedFrom)
     expect(dialogRequest.model.eventType).toBeTruthy()
     expect(dialogRequest.model.eventType.id).toEqual(testEventTypes.yogaPractice.id)
   });
