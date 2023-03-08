@@ -14,19 +14,20 @@ import {NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModu
 import {OccurrenceEventDetailsDialogRequest}                                        from "../shared/dialogs/occurrence-event-details-dialog-request";
 import {HrimEventService}                                                           from "../services/hrim-event.service";
 import {LogService}                                                                 from "../services/log.service";
-import {OCCURRENCE_EVENTS}                                                          from "../../test_data/events";
 import {FormBuilder}                                                                from "@angular/forms";
 import {MatInputModule}                                                             from "@angular/material/input";
 import {NoopAnimationsModule}                                                       from "@angular/platform-browser/animations";
+import {OccurrenceTestData}                                                         from "../../test_data/events";
+import {EventTypeTestData}                                                          from "../../test_data/event-types";
 
 
 describe('BaseEventDetailsDialog', () => {
   let component: OccurrenceEventDetailsDialog;
   let fixture: ComponentFixture<OccurrenceEventDetailsDialog>;
 
-  const dialogRequest = new OccurrenceEventDetailsDialogRequest(OCCURRENCE_EVENTS['reading_1'])
-
   beforeEach(async () => {
+    const testData      = new OccurrenceTestData(new EventTypeTestData())
+    const dialogRequest = new OccurrenceEventDetailsDialogRequest(testData.reading_1)
     await TestBed.configureTestingModule({
                                            imports     : [
                                              HttpClientTestingModule,
@@ -50,7 +51,7 @@ describe('BaseEventDetailsDialog', () => {
                                                useValue: dialogRequest
                                              },
                                              {
-                                               provide: MatDialogRef,
+                                               provide : MatDialogRef,
                                                useValue: {}
                                              },
                                            ]

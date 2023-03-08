@@ -7,9 +7,9 @@ import {LogService}                                                             
 import {HrimEventService}                                                           from "../../services/hrim-event.service";
 import {DayModel}                                                                   from "../../shared/day.model";
 import {DateTime}                                                                   from "luxon";
-import {DURATION_EVENTS, OCCURRENCE_EVENTS}                                         from "../../../test_data/events";
+import {DurationTestData, OccurrenceTestData}                                       from "../../../test_data/events";
 import {EventTypeService}                                                           from "../../services/user-event-type.service";
-import {EVENT_TYPES}                                                                from "../../../test_data/event-types";
+import {EventTypeTestData}                                                          from "../../../test_data/event-types";
 import {MatMenuModule}                                                              from "@angular/material/menu";
 import {MatIconModule}                                                              from "@angular/material/icon";
 import {MatInputModule}                                                             from "@angular/material/input";
@@ -24,8 +24,15 @@ describe('DayOfMonthComponent', () => {
   let component: DayOfMonthComponent;
   let fixture: ComponentFixture<DayOfMonthComponent>;
   let eventTypeService: EventTypeService
+  let testOccurrences: OccurrenceTestData
+  let testDurations: DurationTestData
+  let testEventTypes: EventTypeTestData
 
   beforeEach(async () => {
+    testEventTypes = new EventTypeTestData()
+    testOccurrences = new OccurrenceTestData(testEventTypes)
+    testDurations = new DurationTestData(testEventTypes)
+
     await TestBed.configureTestingModule({
                                            declarations: [DayOfMonthComponent, EventOfDayComponent],
                                            imports     : [
@@ -62,8 +69,8 @@ describe('DayOfMonthComponent', () => {
   });
 
   it('getTotalVisibleTypeCount should exclude occurrence events which event types are not selected', () => {
-    component.occurrenceEvents = [OCCURRENCE_EVENTS['reading_1'], OCCURRENCE_EVENTS['yoga_practice_1']]
-    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true, false)
+    component.occurrenceEvents = [testOccurrences.reading_1, testOccurrences.yoga_practice_1]
+    eventTypeService.updateTypeContext(testEventTypes.reading, true, false)
     fixture.detectChanges();
 
     const actualCount = component.getTotalVisibleTypeCount(component.occurrenceEvents, component.durationEvents)
@@ -71,8 +78,8 @@ describe('DayOfMonthComponent', () => {
   });
 
   it('getTotalVisibleTypeCount should exclude duration events which event types are not selected', () => {
-    component.durationEvents = [DURATION_EVENTS['reading_1'], DURATION_EVENTS['yoga_practice_1']]
-    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true, false)
+    component.durationEvents = [testDurations.reading_1, testDurations.yoga_practice_1]
+    eventTypeService.updateTypeContext(testEventTypes.reading, true, false)
     fixture.detectChanges();
 
     const actualCount = component.getTotalVisibleTypeCount(component.occurrenceEvents, component.durationEvents)
@@ -80,9 +87,9 @@ describe('DayOfMonthComponent', () => {
   });
 
   it('getTotalVisibleTypeCount should exclude durations & occurrence events which event types are not selected', () => {
-    component.durationEvents = [DURATION_EVENTS['reading_1'], DURATION_EVENTS['yoga_practice_1']]
-    component.occurrenceEvents = [OCCURRENCE_EVENTS['reading_1'], OCCURRENCE_EVENTS['yoga_practice_1']]
-    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true, false)
+    component.durationEvents = [testDurations.reading_1, testDurations.yoga_practice_1]
+    component.occurrenceEvents = [testOccurrences.reading_1, testOccurrences.yoga_practice_1]
+    eventTypeService.updateTypeContext(testEventTypes.reading, true, false)
     fixture.detectChanges();
 
     const actualCount = component.getTotalVisibleTypeCount(component.occurrenceEvents, component.durationEvents)

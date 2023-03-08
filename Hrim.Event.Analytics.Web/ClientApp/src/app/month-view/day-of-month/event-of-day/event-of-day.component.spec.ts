@@ -1,11 +1,11 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {EventOfDayComponent}     from './event-of-day.component';
+import {EventOfDayComponent}                                                        from './event-of-day.component';
 import {HttpClientTestingModule}                                                    from "@angular/common/http/testing";
 import {LogService}                                                                 from "../../../services/log.service";
 import {EventTypeService}                                                           from "../../../services/user-event-type.service";
-import {EVENT_TYPES}                                                                from "../../../../test_data/event-types";
-import {OCCURRENCE_EVENTS}                                                          from "../../../../test_data/events";
+import {EventTypeTestData}                                                          from "../../../../test_data/event-types";
+import {OccurrenceTestData}                                                         from "../../../../test_data/events";
 import {By}                                                                         from "@angular/platform-browser";
 import {MatIconModule}                                                              from "@angular/material/icon";
 import {MatButtonModule}                                                            from "@angular/material/button";
@@ -24,8 +24,12 @@ describe('EventOfDayComponent', () => {
   let fixture: ComponentFixture<EventOfDayComponent>;
   let eventTypeService: EventTypeService
   let eventService: HrimEventService
+  let testOccurrences: OccurrenceTestData
+  let testEventTypes: EventTypeTestData
 
   beforeEach(async () => {
+    testEventTypes = new EventTypeTestData()
+    testOccurrences = new OccurrenceTestData(testEventTypes)
     await TestBed.configureTestingModule({
                                            declarations: [EventOfDayComponent],
                                            imports     : [
@@ -49,11 +53,11 @@ describe('EventOfDayComponent', () => {
 
     fixture              = TestBed.createComponent(EventOfDayComponent);
     component            = fixture.componentInstance;
-    component.eventOfDay = OCCURRENCE_EVENTS['reading_1']
+    component.eventOfDay = testOccurrences.reading_1
     component.isVisible  = true
 
     eventService.registerEventContext(component.eventOfDay)
-    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true)
+    eventTypeService.updateTypeContext(testEventTypes.reading, true)
     fixture.detectChanges();
   });
 
@@ -62,20 +66,20 @@ describe('EventOfDayComponent', () => {
   });
 
   it('given selected event type should display its event', () => {
-    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true)
+    eventTypeService.updateTypeContext(testEventTypes.reading, true)
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.event-of-day'))).not.toBeNull()
   });
 
   it('given no selected event type should hide its event', () => {
-    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], false)
+    eventTypeService.updateTypeContext(testEventTypes.reading, false)
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.event-of-day'))).toBeNull()
   });
 
   it('given prevEvent with the same color should dash its own top border', () => {
-    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true)
-    component.prevEventOfDay = OCCURRENCE_EVENTS['reading_1']
+    eventTypeService.updateTypeContext(testEventTypes.reading, true)
+    component.prevEventOfDay = testOccurrences.reading_1
     fixture.detectChanges();
 
     const style = fixture.debugElement.parent?.nativeElement.querySelector('.event-of-day').getAttribute('style')
@@ -83,8 +87,8 @@ describe('EventOfDayComponent', () => {
   });
 
   it('given prevEvent with the different color should dash its own top border', () => {
-    eventTypeService.updateTypeContext(EVENT_TYPES['reading'], true)
-    component.prevEventOfDay = OCCURRENCE_EVENTS['yoga_practice_1']
+    eventTypeService.updateTypeContext(testEventTypes.reading, true)
+    component.prevEventOfDay = testOccurrences.yoga_practice_1
     fixture.detectChanges();
 
     const style = fixture.debugElement.parent?.nativeElement.querySelector('.event-of-day').getAttribute('style')

@@ -1,22 +1,28 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing'
 
-import {EventTypeItemComponent}     from './event-type-item.component'
-import {EventTypeService}           from '../services/user-event-type.service'
-import {HttpClientTestingModule}    from '@angular/common/http/testing'
-import {MatIconModule}              from '@angular/material/icon'
-import {MatButtonModule}            from '@angular/material/button'
-import {MatDialog, MatDialogModule} from '@angular/material/dialog'
-import {EVENT_TYPES}                from '../../test_data/event-types'
-import {of}                         from 'rxjs'
-import {UserEventType}              from '../shared/event-type.model'
-import {EntityState}                from "../shared/entity-state";
+import {EventTypeItemComponent}        from './event-type-item.component'
+import {EventTypeService}              from '../services/user-event-type.service'
+import {HttpClientTestingModule}       from '@angular/common/http/testing'
+import {MatIconModule}                 from '@angular/material/icon'
+import {MatButtonModule}                          from '@angular/material/button'
+import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog'
+import {EventTypeTestData}                        from '../../test_data/event-types'
+import {of}                            from 'rxjs'
+import {UserEventType}                 from '../shared/event-type.model'
+import {EntityState}                   from "../shared/entity-state";
 
 describe('EventTypeItemComponent', () => {
   let component: EventTypeItemComponent
   let fixture: ComponentFixture<EventTypeItemComponent>
   let eventTypeService: EventTypeService
+  let testEventTypes: EventTypeTestData
 
   beforeEach(async () => {
+    testEventTypes = new EventTypeTestData()
+    const dialogRef = {
+      afterClosed: of<boolean>(false),
+      close      : null
+    }
     await TestBed.configureTestingModule({
                                            imports     : [
                                              HttpClientTestingModule,
@@ -25,18 +31,19 @@ describe('EventTypeItemComponent', () => {
                                              MatDialogModule
                                            ],
                                            declarations: [EventTypeItemComponent],
-                                           providers   : [EventTypeService]
+                                           providers   : [EventTypeService,
+                                                          { provide: MatDialogRef, useValue: dialogRef}]
                                          })
                  .compileComponents()
     eventTypeService    = TestBed.inject(EventTypeService)
     fixture             = TestBed.createComponent(EventTypeItemComponent)
     component           = fixture.componentInstance
-    component.eventType = EVENT_TYPES['reading']
+    component.eventType = testEventTypes.reading
 
     const typeContext = new EntityState<UserEventType>()
     typeContext.isSelected = true
-    typeContext.entity = EVENT_TYPES['reading']
-    eventTypeService.typeContexts[EVENT_TYPES['reading'].id] = typeContext
+    typeContext.entity = testEventTypes.reading
+    eventTypeService.typeContexts[testEventTypes.reading.id] = typeContext
     fixture.detectChanges()
   })
 
@@ -45,23 +52,23 @@ describe('EventTypeItemComponent', () => {
   })
 
   it('onDeleteEventType should send delete request', () => {
-    spyOn(eventTypeService, 'delete').and.returnValue(of({...EVENT_TYPES['reading'], is_deleted: true}))
+    spyOn(eventTypeService, 'delete').and.returnValue(of({...testEventTypes.reading, is_deleted: true}))
 
     component.onDeleteEventType()
 
     expect(eventTypeService.delete).toHaveBeenCalledWith(jasmine.objectContaining({
-                                                                                             id: EVENT_TYPES['reading'].id
+                                                                                             id: testEventTypes.reading.id
                                                                                            }))
   })
 
   it('onDeleteEventType should emit delete event', () => {
-    spyOn(eventTypeService, 'delete').and.returnValue(of({...EVENT_TYPES['reading'], is_deleted: true}))
+    spyOn(eventTypeService, 'delete').and.returnValue(of({...testEventTypes.reading, is_deleted: true}))
     spyOn(component.delete, 'emit')
 
     component.onDeleteEventType()
 
     expect(component.delete.emit).toHaveBeenCalledWith(jasmine.objectContaining({
-                                                                                  id: EVENT_TYPES['reading'].id
+                                                                                  id: testEventTypes.reading.id
                                                                                 }))
   })
 

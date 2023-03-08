@@ -1,33 +1,31 @@
-import {ComponentFixture, TestBed}                                                  from '@angular/core/testing';
-import {EventTypeDetailsDialog}                                                     from './event-type-details-dialog.component';
-import {HttpClientTestingModule}                                                    from "@angular/common/http/testing";
-import {MatIconModule}                                                              from "@angular/material/icon";
-import {MatInputModule}                                                             from "@angular/material/input";
-import {MatButtonModule}                                                            from "@angular/material/button";
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef}                             from "@angular/material/dialog";
-import {MatSelectModule}                                                            from "@angular/material/select";
-import {MatDatepickerModule}                                                        from "@angular/material/datepicker";
-import {NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule} from "@angular-material-components/datetime-picker";
-import {NoopAnimationsModule}                                                       from "@angular/platform-browser/animations";
-import {OccurrenceEventDetailsDialogRequest}                                        from "../../shared/dialogs/occurrence-event-details-dialog-request";
-import {OCCURRENCE_EVENTS}                                                          from "../../../test_data/events";
-import {EventTypeDetailsDialogRequest}                                              from "../../shared/dialogs/event-type-details-dialog-request";
-import {EVENT_TYPES}                                                                from "../../../test_data/event-types";
-import {EventTypeService}                                                           from "../../services/user-event-type.service";
-import {HrimEventService}                                                           from "../../services/hrim-event.service";
-import {LogService}                                                                 from "../../services/log.service";
-import {FormBuilder}                                                                from "@angular/forms";
-import {MAT_COLOR_FORMATS, NGX_MAT_COLOR_FORMATS, NgxMatColorPickerModule}          from "@angular-material-components/color-picker";
-import {UserEventType}                                                              from "../../shared/event-type.model";
+import {ComponentFixture, TestBed}                                         from '@angular/core/testing';
+import {EventTypeDetailsDialog}                                            from './event-type-details-dialog.component';
+import {HttpClientTestingModule}                                           from "@angular/common/http/testing";
+import {MatIconModule}                                                     from "@angular/material/icon";
+import {MatInputModule}                                                    from "@angular/material/input";
+import {MatButtonModule}                                                   from "@angular/material/button";
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef}                    from "@angular/material/dialog";
+import {MatSelectModule}                                                   from "@angular/material/select";
+import {MatDatepickerModule}                                               from "@angular/material/datepicker";
+import {NgxMatNativeDateModule, NgxMatTimepickerModule}                    from "@angular-material-components/datetime-picker";
+import {NoopAnimationsModule}                                              from "@angular/platform-browser/animations";
+import {EventTypeDetailsDialogRequest}                                     from "../../shared/dialogs/event-type-details-dialog-request";
+import {EventTypeTestData}                                                 from "../../../test_data/event-types";
+import {EventTypeService}                                                  from "../../services/user-event-type.service";
+import {LogService}                                                        from "../../services/log.service";
+import {FormBuilder}                                                       from "@angular/forms";
+import {MAT_COLOR_FORMATS, NGX_MAT_COLOR_FORMATS, NgxMatColorPickerModule} from "@angular-material-components/color-picker";
+import {UserEventType}                                                     from "../../shared/event-type.model";
 
 describe('EventTypeDetailsDialogComponent', () => {
   let component: EventTypeDetailsDialog;
   let fixture: ComponentFixture<EventTypeDetailsDialog>;
   let eventTypeService: EventTypeService
-
-  const dialogRequest = new EventTypeDetailsDialogRequest(EVENT_TYPES['reading'])
+  let testEventTypes: EventTypeTestData
 
   beforeEach(async () => {
+    testEventTypes      = new EventTypeTestData()
+    const dialogRequest = new EventTypeDetailsDialogRequest(testEventTypes.reading)
     await TestBed.configureTestingModule({
                                            declarations: [EventTypeDetailsDialog],
                                            imports     : [
@@ -58,6 +56,10 @@ describe('EventTypeDetailsDialogComponent', () => {
     component        = fixture.componentInstance;
     fixture.detectChanges();
   });
+
+  afterEach(() => {
+    eventTypeService.typeContexts = {}
+  })
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -125,6 +127,6 @@ describe('EventTypeDetailsDialogComponent', () => {
 
     component.onSave()
 
-    expect(eventTypeService.save).toHaveBeenCalledWith(jasmine.objectContaining({id: EVENT_TYPES['reading'].id}))
+    expect(eventTypeService.save).toHaveBeenCalledWith(jasmine.objectContaining({id: testEventTypes.reading.id}))
   });
 });

@@ -1,27 +1,28 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 
-import {RouteService} from './route.service';
-import {Location} from "@angular/common";
-import {Router} from "@angular/router";
-import {AppComponent} from "../app.component";
+import {RouteService}                from './route.service';
+import {Location}                    from "@angular/common";
+import {Router}                      from "@angular/router";
+import {AppComponent}                from "../app.component";
 import {appRoutes, AppRoutingModule} from "../app-routing.module";
-import {RouterTestingModule} from "@angular/router/testing";
-import {MonthViewComponent} from "../month-view/month-view.component";
-import {YearViewComponent} from "../year-view/year-view.component";
-import {LandingViewComponent} from "../landing-view/landing-view.component";
-import {PageNotFoundComponent} from "../pages/page-not-found/page-not-found.component";
-import {MonthViewRouteModel} from "../shared/month-view-route.model";
-import {DateTime} from "luxon";
-import {AuthService} from "./auth.service";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {USERS} from "../../test_data/users";
+import {RouterTestingModule}         from "@angular/router/testing";
+import {MonthViewComponent}          from "../month-view/month-view.component";
+import {YearViewComponent}           from "../year-view/year-view.component";
+import {LandingViewComponent}        from "../landing-view/landing-view.component";
+import {PageNotFoundComponent}       from "../pages/page-not-found/page-not-found.component";
+import {DateTime}                    from "luxon";
+import {AuthService}                 from "./auth.service";
+import {HttpClientTestingModule}     from "@angular/common/http/testing";
+import {TestUsers}                   from "../../test_data/users";
 
 describe('RouteService', () => {
   let service: RouteService;
   let location: Location
   let router: Router
+  let testUsers: TestUsers
 
   beforeEach(() => {
+    testUsers = new TestUsers()
     TestBed.configureTestingModule({
       imports: [
         AppRoutingModule,
@@ -41,7 +42,7 @@ describe('RouteService', () => {
     router.initialNavigation()
     service = TestBed.inject(RouteService)
     const authService = TestBed.inject(AuthService)
-    authService.user$.next({...USERS["john_doe"]});
+    authService.user$.next({...testUsers.john_doe});
   });
 
   it('should be created', () => {

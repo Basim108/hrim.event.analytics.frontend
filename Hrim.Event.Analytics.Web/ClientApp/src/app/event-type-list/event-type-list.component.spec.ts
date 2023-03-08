@@ -7,7 +7,7 @@ import {MatButtonModule}            from '@angular/material/button'
 import {MatDialog, MatDialogModule} from '@angular/material/dialog'
 import {MatInputModule}             from '@angular/material/input'
 import {EventTypeService}           from '../services/user-event-type.service'
-import {EVENT_TYPES}                from '../../test_data/event-types'
+import {EventTypeTestData}          from '../../test_data/event-types'
 import {EventTypeItemComponent}     from '../event-type-item/event-type-item.component'
 import {of}                         from 'rxjs'
 import {UserEventType}              from '../shared/event-type.model'
@@ -16,8 +16,10 @@ describe('EventTypeListComponent', () => {
   let component: EventTypeListComponent
   let fixture: ComponentFixture<EventTypeListComponent>
   let eventTypeService: EventTypeService
+  let testEventTypes: EventTypeTestData
 
   beforeEach(async () => {
+    testEventTypes = new EventTypeTestData()
     await TestBed.configureTestingModule({
                    imports:      [
                      HttpClientTestingModule,
@@ -42,7 +44,7 @@ describe('EventTypeListComponent', () => {
   })
 
   it('should set event-type-item border color from event-type-item settings', () => {
-    eventTypeService.eventTypes$.next([EVENT_TYPES['reading']])
+    eventTypeService.eventTypes$.next([testEventTypes.reading])
     fixture.detectChanges()
     const eventTypeItem = fixture.debugElement.nativeElement.querySelector('.event-type-item')
     expect(eventTypeItem).not.toBeNull()
@@ -50,7 +52,7 @@ describe('EventTypeListComponent', () => {
   })
 
   it('should render all event type items that are emitted by service', () => {
-    eventTypeService.eventTypes$.next([EVENT_TYPES['reading'], EVENT_TYPES['badSleep']])
+    eventTypeService.eventTypes$.next([testEventTypes.reading, testEventTypes.badSleep])
     fixture.detectChanges()
     const eventTypeItems = fixture.debugElement.nativeElement.querySelectorAll('.event-type-item')
     expect(eventTypeItems).not.toBeNull()
@@ -62,9 +64,9 @@ describe('EventTypeListComponent', () => {
     let readingFound  = false
     let badSleepFound = false
     titles.forEach(node => {
-      if (node.textContent === EVENT_TYPES['reading'].name)
+      if (node.textContent === testEventTypes.reading.name)
         readingFound = true
-      if (node.textContent === EVENT_TYPES['badSleep'].name)
+      if (node.textContent === testEventTypes.badSleep.name)
         badSleepFound = true
     })
     expect(readingFound).toBeTrue()
@@ -72,14 +74,14 @@ describe('EventTypeListComponent', () => {
   })
 
   it('onDeleteEventType should emit types without deleted one', done => {
-    eventTypeService.eventTypes$.next([EVENT_TYPES['reading'], EVENT_TYPES['badSleep']])
+    eventTypeService.eventTypes$.next([testEventTypes.reading, testEventTypes.badSleep])
     fixture.detectChanges()
     eventTypeService.eventTypes$.subscribe(types => {
       expect(types.length).toEqual(1)
-      expect(types[0].id).toEqual(EVENT_TYPES['reading'].id)
+      expect(types[0].id).toEqual(testEventTypes.reading.id)
       done()
     })
-    component.onDeleteEventType(EVENT_TYPES['badSleep'])
+    component.onDeleteEventType(testEventTypes.badSleep)
   })
 
   it('onCreateEventType when dialog canceled should not emit new event-type', () => {
