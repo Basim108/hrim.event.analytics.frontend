@@ -2,6 +2,15 @@
   font-weight: bold;
 }
 
+/*.item-container:first-child{*/
+/*  border-top: none;*/
+/*}*/
+/*.item-container :not(:first-child){*/
+/*  border-top-style: dashed;*/
+/*  border-top-width: 1px;*/
+/*  border-top-color: black;*/
+/*}*/
+
 :host {
   display: block !important;
   width: 100%;

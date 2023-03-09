@@ -1,22 +1,20 @@
-import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {LogService} from "../services/log.service";
-import {MatDialog} from "@angular/material/dialog";
-import {EventTypeDetailsDialog} from "../event-type-details-dialog/event-type-details-dialog.component";
-import {EventTypeDetailsRequest} from "../event-type-details-dialog/event-type-details-request";
-import {EventTypeService} from "../services/user-event-type.service";
-import {UserEventType} from "./event-type.model";
-import {Subscription} from "rxjs";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {LogService}                                     from "../services/log.service";
+import {MatDialog}                                      from "@angular/material/dialog";
+import {EventTypeDetailsDialog}        from "../dialogs/event-type-details-dialog/event-type-details-dialog.component";
+import {EventTypeDetailsDialogRequest} from "../shared/dialogs/event-type-details-dialog-request";
+import {EventTypeService}              from "../services/user-event-type.service";
+import {UserEventType}                                  from "../shared/event-type.model";
 
 @Component({
-  selector: 'app-event-type-item',
-  templateUrl: './event-type-item.component.html',
-  styleUrls: ['./event-type-item.component.css']
-})
-export class EventTypeItemComponent implements OnDestroy {
+             selector   : 'app-event-type-item',
+             templateUrl: './event-type-item.component.html',
+             styleUrls  : ['./event-type-item.component.css']
+           })
+export class EventTypeItemComponent implements OnInit {
   @Input('eventType') eventType: UserEventType;
-  @Output() delete = new EventEmitter<UserEventType>;
-
-  deleteEventTypeSub: Subscription;
+  @Output() delete    = new EventEmitter<UserEventType>;
+  isSelected: boolean = false
 
   constructor(public editDialog: MatDialog,
               private eventTypeService: EventTypeService,
@@ -24,28 +22,36 @@ export class EventTypeItemComponent implements OnDestroy {
     logger.logConstructor(this)
   }
 
-  ngOnDestroy(): void {
-    this.deleteEventTypeSub?.unsubscribe();
+  ngOnInit() {
+    this.logger.debug('event-type-item initialization')
+    this.isSelected = this.eventTypeService.typeContexts[this.eventType.id]?.isSelected ?? false
   }
 
   onEditEventType() {
     const dialogRef = this.editDialog.open(EventTypeDetailsDialog, {
-      data: new EventTypeDetailsRequest(this.eventType, true)
+      data: new EventTypeDetailsDialogRequest({...this.eventType}, true)
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.eventType = result;
-        this.eventTypeService.saveEventType(result);
       }
     });
   }
 
   onDeleteEventType() {
-    this.deleteEventTypeSub = this.eventTypeService.deleteEventType(this.eventType).subscribe({
-      next: (deletedEventType) => {
-        if (deletedEventType.is_deleted)
-          this.delete.emit(this.eventType)
-      }
-    });
+    this.eventTypeService
+        .delete(this.eventType)
+        .subscribe({
+                     next: (deletedEventType) => {
+                       if (deletedEventType.is_deleted) {
+                         this.delete.emit(this.eventType)
+                       }
+                     }
+                   });
+  }
+
+  toggleEventType() {
+    this.isSelected = !this.isSelected
+    this.eventTypeService.updateTypeContext(this.eventType, this.isSelected)
   }
 }

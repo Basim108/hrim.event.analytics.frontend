@@ -1,2 +1,18 @@
-<div [ngStyle]="{'background-color': eventOfDay.color, 'height': getEventHeight()}"
-    [title]="eventOfDay.name">&nbsp;</div>
+<div class="event-of-day"
+     *ngIf="isVisible"
+     [ngStyle]="{
+        'background-color': eventOfDay.eventType.color,
+        'height': getEventHeight(),
+        'border-top': getTopBorderStyle()
+      }"
+     [title]="getEventInfo()">
+  <mat-icon *ngIf="isSelected">done</mat-icon>
+  <div class="tool-bar">
+    <button mat-icon-button class="edit-btn" color="primary" (click)="onEdit($event)">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button class="delete-btn" color="primary" (click)="onDelete($event)">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</div>

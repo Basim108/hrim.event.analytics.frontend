@@ -2,19 +2,27 @@
   <app-month-pages [currentMonth]="currentMonth"></app-month-pages>
   <app-event-type-list></app-event-type-list>
   <div class="row text-center" [ngStyle]="{'margin-bottom': '5px' }">
-    <div class="col-md">Sunday</div>
-    <div class="col-md">Monday</div>
-    <div class="col-md">Tuesday</div>
-    <div class="col-md">Wednesday</div>
-    <div class="col-md">Thursday</div>
-    <div class="col-md">Friday</div>
-    <div class="col-md">Saturday</div>
+    <div class="col-lg">Sunday</div>
+    <div class="col-lg">Monday</div>
+    <div class="col-lg">Tuesday</div>
+    <div class="col-lg">Wednesday</div>
+    <div class="col-lg">Thursday</div>
+    <div class="col-lg">Friday</div>
+    <div class="col-lg">Saturday</div>
   </div>
   <div class="row text-center"
        *ngFor="let week of weeks; index as weekIndex">
-    <div class="col-md"
+    <div class="col-lg"
          *ngFor="let day of week.days; index as i">
-      <app-day-of-month [currentMonth]="currentMonth" [day]="day" [isLastWeek]="weekIndex === weeks.length-1"></app-day-of-month>
+      <app-day-of-month [currentMonth]="currentMonth"
+                        [day]="day"
+                        [isLastWeek]="weekIndex === weeks.length-1"
+                        [occurrenceEvents]="getOccurrences(day)"
+                        [durationEvents]="getDurations(day)"
+                        (deleteEvent)="onEventDeleted($event)"
+                        (changeEvent)="onEventChanged($event)"
+      >
+      </app-day-of-month>
     </div>
   </div>
 </div>

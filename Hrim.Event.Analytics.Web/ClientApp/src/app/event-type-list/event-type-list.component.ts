@@ -1,17 +1,17 @@
 import {Component, OnDestroy, OnInit} from '@angular/core'
-import {LogService} from '../services/log.service'
-import {EventTypeService} from '../services/user-event-type.service'
-import {Subscription} from 'rxjs'
-import {MatDialog} from '@angular/material/dialog'
-import {EventTypeDetailsDialog} from '../event-type-details-dialog/event-type-details-dialog.component'
-import {EventTypeDetailsRequest} from '../event-type-details-dialog/event-type-details-request'
-import {UserEventType} from '../event-type-item/event-type.model'
+import {LogService}                   from '../services/log.service'
+import {EventTypeService}             from '../services/user-event-type.service'
+import {Subscription}                 from 'rxjs'
+import {MatDialog}                    from '@angular/material/dialog'
+import {EventTypeDetailsDialog}        from '../dialogs/event-type-details-dialog/event-type-details-dialog.component'
+import {EventTypeDetailsDialogRequest} from "../shared/dialogs/event-type-details-dialog-request";
+import {UserEventType}                 from '../shared/event-type.model'
 
 @Component({
-  selector:    'app-event-type-list',
-  templateUrl: './event-type-list.component.html',
-  styleUrls:   ['./event-type-list.component.css']
-})
+             selector   : 'app-event-type-list',
+             templateUrl: './event-type-list.component.html',
+             styleUrls  : ['./event-type-list.component.css']
+           })
 export class EventTypeListComponent implements OnInit, OnDestroy {
   eventTypes: UserEventType[] = []
   eventTypesSub: Subscription
@@ -24,18 +24,20 @@ export class EventTypeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.logger.debug('event-type-list destroy')
     this.eventTypesSub?.unsubscribe()
     this.dialogSub?.unsubscribe()
   }
 
   ngOnInit(): void {
+    this.logger.debug('event-type-list initialization')
     this.eventTypesSub = this.eventTypeService.eventTypes$.subscribe(eventTypes => this.eventTypes = eventTypes)
     this.eventTypeService.load()
   }
 
   onCreateEventType() {
     const dialogRef = this.createDialog.open(EventTypeDetailsDialog, {
-      data: new EventTypeDetailsRequest(new UserEventType())
+      data: new EventTypeDetailsDialogRequest(new UserEventType())
     })
     this.dialogSub  = dialogRef.afterClosed().subscribe(
       createdEntity => {

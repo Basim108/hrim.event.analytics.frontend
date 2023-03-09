@@ -5,8 +5,8 @@
       <mat-form-field appearance="standard">
         <mat-label>Event Type Name</mat-label>
         <input matInput
-               id="name" name="name" formControlName="name"
-               [value]="data.eventType.name ? data.eventType.name : ''">
+               formControlName="name"
+               [value]="data.model.name ? data.model.name : ''">
         <mat-hint>e.g. headache</mat-hint>
       </mat-form-field>
     </p>
@@ -14,8 +14,8 @@
       <mat-form-field appearance="standard">
         <mat-label>Event Type Description</mat-label>
         <textarea matInput
-                  id="description" name="description" formControlName="description"
-                  [value]="data.eventType.description ? data.eventType.description : ''"></textarea>
+                  formControlName="description"
+                  [value]="data.model.description ? data.model.description : ''"></textarea>
         <mat-hint>e.g. all times I had a headache</mat-hint>
       </mat-form-field>
     </p>
@@ -25,7 +25,7 @@
         <input matInput
                [ngxMatColorPicker]="picker"
                [style.display]="'none'"
-               id="color" name="color" formControlName="color"
+               formControlName="color"
                [disabled]="isReadOnly">
         <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
         <ngx-mat-color-picker #picker [touchUi]="false" [color]="'primary'"></ngx-mat-color-picker>
@@ -37,7 +37,7 @@
     </p>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="false" (click)="onCancel()">Cancel</button>
+    <button mat-button [mat-dialog-close]="false">Cancel</button>
     <button mat-button type="submit" [disabled]="isReadOnly || !isChanged || !form.valid">{{data.action}}</button>
   </mat-dialog-actions>
 </form>

@@ -1,0 +1,22 @@
+.tool-bar {
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: end;
+  vertical-align: center;
+}
+
+button > mat-icon {
+  font-size: 16px;
+}
+
+.event-of-day:hover > .tool-bar {
+  display: flex;
+}
+
+.event-of-day {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+}

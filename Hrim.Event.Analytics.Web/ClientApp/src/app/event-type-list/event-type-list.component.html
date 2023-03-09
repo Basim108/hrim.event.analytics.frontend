@@ -7,7 +7,8 @@
   <div class="col col-md-11 event-types-container">
     <div class="event-type-item"
          *ngFor="let eventType of eventTypes"
-         [ngStyle]="{ borderColor: eventType.color}">
+         [ngStyle]="{ borderColor: eventType.color}"
+    >
       <app-event-type-item [eventType]="eventType"
                            (delete)="onDeleteEventType($event)"></app-event-type-item>
     </div>

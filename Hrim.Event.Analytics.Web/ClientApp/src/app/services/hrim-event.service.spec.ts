@@ -1,46 +1,125 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { HrimEventService } from './hrim-event.service';
-import {HrimEventModel} from "../shared/hrim-event.model";
-import {EVENTS} from "../../test_data/events";
+import {HrimEventService}                               from './hrim-event.service';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing'
+import {LogService}                                     from './log.service'
+import {environment}                                    from "../../environments/environment";
+import {DurationTestData, OccurrenceTestData}           from "../../test_data/events";
+import {EventTypeTestData}                              from "../../test_data/event-types";
 
 describe('HrimEventService', () => {
   let service: HrimEventService;
+  let httpTestingController: HttpTestingController
+  const occurrenceUrl = `${environment.apiUrl}/v1/event/occurrence`
+  const durationUrl   = `${environment.apiUrl}/v1/event/duration`
+  const entityUrl     = `${environment.apiUrl}/v1/entity/`;
+  let testOccurrences: OccurrenceTestData
+  let testDurations: DurationTestData
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(HrimEventService);
+    const testEventTypes = new EventTypeTestData()
+    testOccurrences = new OccurrenceTestData(testEventTypes)
+    testDurations = new DurationTestData(testEventTypes)
+    TestBed.configureTestingModule({
+                                     imports  : [HttpClientTestingModule],
+                                     providers: [LogService]
+                                   })
+    service               = TestBed.inject(HrimEventService);
+    httpTestingController = TestBed.inject(HttpTestingController)
   });
+
+  afterEach(() => {
+    httpTestingController.verify()
+  })
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('createEvent should set event id', () => {
-    const event = new HrimEventModel();
-    service.createEvent(event);
-    expect(event.id).not.toBeFalsy();
-  });
-
   it('createEvent should emit created event', done => {
-    const testEvent = {...EVENTS["eventOfDay_1"], id: ''}
-    service.hrimEvents$.subscribe(createdEvent => {
+    const testEvent = {...testOccurrences.reading_1, id: ''}
+    service.createdOccurrences$.subscribe(createdEvent => {
       expect(createdEvent.id).toBeTruthy()
-      expect(createdEvent.color).toBe(testEvent.color)
+      expect(createdEvent.eventType).toBeTruthy()
       done()
     })
+
     service.createEvent(testEvent);
+
+    const req = httpTestingController.expectOne(occurrenceUrl)
+    expect(req.request.method).toEqual('POST')
+    req.flush(testOccurrences.reading_1)
   })
 
-  it('new subscriber should get all previously emitted events', done => {
-    const testEvent = {...EVENTS["eventOfDay_1"], id: ''}
-    service.hrimEvents$.subscribe(() => {
-    })
+  it('given occurrence createEvent should call occurrence endpoint', done => {
+    const testEvent = {...testOccurrences.reading_1, id: ''}
+
     service.createEvent(testEvent);
-    service.hrimEvents$.subscribe(createdEvent => {
-      expect(createdEvent.id).toBeTruthy()
-      expect(createdEvent.color).toBe(testEvent.color)
+
+    const req = httpTestingController.expectOne(occurrenceUrl)
+    expect(req.request.method).toEqual('POST')
+    done()
+  })
+
+  it('given occurrence createEvent should emit into occurrence subject', done => {
+    const testEvent = {...testOccurrences.reading_1, id: ''}
+    service.createdOccurrences$.subscribe(createdEvent => {
+      expect(createdEvent.id).toEqual(testOccurrences.reading_1.id)
       done()
     })
+    service.createEvent(testEvent);
+
+    const req = httpTestingController.expectOne(occurrenceUrl)
+    expect(req.request.method).toEqual('POST')
+    req.flush(testOccurrences.reading_1)
+  })
+
+  it('given duration createEvent should call duration endpoint', done => {
+    const testEvent = {...testDurations.reading_1, id: ''}
+
+    service.createEvent(testEvent);
+
+    const req = httpTestingController.expectOne(durationUrl)
+    expect(req.request.method).toEqual('POST')
+    done()
+  })
+
+  it('given duration createEvent should emit into duration subject', done => {
+    const testEvent = {...testDurations.reading_1, id: ''}
+    service.createdDurations$.subscribe(createdEvent => {
+      expect(createdEvent.id).toEqual(testDurations.reading_1.id)
+      done()
+    })
+    service.createEvent(testEvent);
+
+    const req = httpTestingController.expectOne(durationUrl)
+    expect(req.request.method).toEqual('POST')
+    req.flush(testDurations.reading_1)
+  })
+
+  it('should soft delete an occurrence event type by id', (done) => {
+    service.deleteEvent({...testOccurrences.reading_1})
+           .subscribe(entity => {
+             expect(entity).toBeTruthy()
+             expect(entity.id).toEqual(testOccurrences.reading_1.id)
+             done()
+           })
+    const deleteUrl = `${entityUrl}${testOccurrences.reading_1.id}?entity_type=occurrence_event`
+    const req       = httpTestingController.expectOne(deleteUrl)
+    expect(req.request.method).toEqual('DELETE')
+    req.flush({...testOccurrences.reading_1})
+  })
+
+  it('should soft delete an occurrence event type by id', (done) => {
+    service.deleteEvent({...testDurations.reading_1})
+           .subscribe(entity => {
+             expect(entity).toBeTruthy()
+             expect(entity.id).toEqual(testDurations.reading_1.id)
+             done()
+           })
+    const deleteUrl = `${entityUrl}${testDurations.reading_1.id}?entity_type=duration_event`
+    const req       = httpTestingController.expectOne(deleteUrl)
+    expect(req.request.method).toEqual('DELETE')
+    req.flush({...testDurations.reading_1})
   })
 });
