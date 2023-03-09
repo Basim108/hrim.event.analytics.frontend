@@ -30,7 +30,9 @@ export class OccurrenceEventDetailsDialog extends BaseEventDetailsDialog impleme
     this.saveContext         = {
       model: this.dialogRequest.model,
       next : () => this.dialogRef.close(this.dialogRequest.model),
-      error: () => { this.dialogRef.disableClose = true }
+      error: () => {
+        this.dialogRef.disableClose = true
+      }
     }
     this.selectedEventTypeId = this.dialogRequest.model.eventType.id
     this.originalModel       = {...this.dialogRequest.model}
@@ -50,8 +52,10 @@ export class OccurrenceEventDetailsDialog extends BaseEventDetailsDialog impleme
   }
 
   protected customUpdateModelFromControls(): void {
-    const from                 = this.form.get('from')?.value
-    this.dialogRequest.model.occurredAt = DateTime.fromJSDate(from)
+    const from                          = this.form.get('from')?.value
+    this.dialogRequest.model.occurredAt = typeof (from) === 'string'
+                                          ? DateTime.fromISO(from)
+                                          : DateTime.fromJSDate(from)
     this.dialogRequest.model.occurredOn = this.dialogRequest.model.occurredAt.toISODate()
   }
 }

@@ -20,6 +20,7 @@
                         [occurrenceEvents]="getOccurrences(day)"
                         [durationEvents]="getDurations(day)"
                         (deleteEvent)="onEventDeleted($event)"
+                        (changeEvent)="onEventChanged($event)"
       >
       </app-day-of-month>
     </div>

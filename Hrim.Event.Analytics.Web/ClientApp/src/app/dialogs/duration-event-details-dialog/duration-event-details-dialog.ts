@@ -55,10 +55,14 @@ export class DurationEventDetailsDialog extends BaseEventDetailsDialog implement
   protected customUpdateModelFromControls(): void {
     const startedAt                    = this.form.get('from')?.value
     const finishedAt                   = this.form.get('to')?.value
-    this.dialogRequest.model.startedAt = DateTime.fromJSDate(startedAt)
+    this.dialogRequest.model.startedAt = typeof (startedAt) === 'string'
+                                          ? DateTime.fromISO(startedAt)
+                                          : DateTime.fromJSDate(startedAt)
     this.dialogRequest.model.startedOn = this.dialogRequest.model.startedAt.toISODate()
     if (finishedAt) {
-      this.dialogRequest.model.finishedAt = DateTime.fromJSDate(finishedAt)
+      this.dialogRequest.model.finishedAt = typeof (finishedAt) === 'string'
+                                           ? DateTime.fromISO(finishedAt)
+                                           : DateTime.fromJSDate(finishedAt)
       this.dialogRequest.model.finishedOn = this.dialogRequest.model.finishedAt.toISODate()
     } else {
       this.dialogRequest.model.finishedAt = null

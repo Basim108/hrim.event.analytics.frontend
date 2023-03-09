@@ -20,6 +20,7 @@ export class DayOfMonthComponent implements OnInit {
   @Input() occurrenceEvents: OccurrenceEventModel[]
   @Input() durationEvents: DurationEventModel[]
   @Output() deleteEvent: EventEmitter<SomeEventModel> = new EventEmitter<SomeEventModel>()
+  @Output() changeEvent: EventEmitter<SomeEventModel> = new EventEmitter<SomeEventModel>()
 
   isOutOfMonth: boolean
   isToday: boolean

@@ -117,7 +117,7 @@ export class MonthViewComponent implements OnInit, OnDestroy {
   }
 
   onEventDeleted($event: SomeEventModel) {
-    if ($event instanceof OccurrenceEventModel) {
+    if ($event.isOccurrence) {
       this.occurrenceEvents = this.occurrenceEvents.filter(x => x.id !== $event.id)
       this.logger.debug('month-view event removed from occurrences', $event)
     } else {
@@ -127,12 +127,25 @@ export class MonthViewComponent implements OnInit, OnDestroy {
   }
 
   onEventCreated($event: SomeEventModel) {
-    if ($event instanceof OccurrenceEventModel) {
-      this.occurrenceEvents = [...this.occurrenceEvents, $event]
+    if ($event.isOccurrence) {
+      this.occurrenceEvents = [...this.occurrenceEvents, $event as OccurrenceEventModel]
       this.logger.debug('month-view event added to occurrences', $event)
     } else {
-      this.durationEvents = [...this.durationEvents, $event]
+      this.durationEvents = [...this.durationEvents, $event as DurationEventModel]
       this.logger.debug('month-view event added to durations', $event)
+    }
+    setTimeout(() => this.eventTypeService.selectedTypesInfo$.next())
+  }
+
+  onEventChanged($event: SomeEventModel) {
+    if ($event.isOccurrence) {
+      this.occurrenceEvents = this.occurrenceEvents.filter(x => x.id !== $event.id)
+      this.occurrenceEvents.push($event as OccurrenceEventModel)
+      this.logger.debug('month-view occurrences updated', $event)
+    } else {
+      this.durationEvents = this.durationEvents.filter(x => x.id !== $event.id)
+      this.durationEvents.push($event as DurationEventModel)
+      this.logger.debug('month-view durations updated', $event)
     }
     setTimeout(() => this.eventTypeService.selectedTypesInfo$.next())
   }

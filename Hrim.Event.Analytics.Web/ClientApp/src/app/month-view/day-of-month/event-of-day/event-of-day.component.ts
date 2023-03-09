@@ -22,6 +22,7 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   @Input() isSelected: boolean;
   @Input() prevEventOfDay: SomeEventModel | null;
   @Output() delete: EventEmitter<SomeEventModel> = new EventEmitter<SomeEventModel>()
+  @Output() changed: EventEmitter<SomeEventModel> = new EventEmitter<SomeEventModel>()
 
   isVisible = false
 
@@ -55,7 +56,6 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   }
 
   onEdit($event: any) {
-    this.logger.debug('event-of-day edit clicked')
     $event.stopPropagation()
     const dialogRef = this.eventOfDay instanceof OccurrenceEventModel
                       ? this.detailsDialog.open(OccurrenceEventDetailsDialog, {
@@ -69,12 +69,12 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
         const typeContext = this.eventTypeService.typeContexts[result.eventType.id]
         this.isVisible    = typeContext.isSelected
         this.eventOfDay   = result;
+        this.changed.emit(result)
       }
     });
   }
 
   onDelete($event: any) {
-    this.logger.debug('event-of-day delete clicked')
     $event.stopPropagation()
     this.eventService
         .deleteEvent(this.eventOfDay)
@@ -101,10 +101,5 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   private eventTypeSelectionChanged() {
     const typeInfo = this.eventTypeService.typeContexts[this.eventOfDay.eventType.id]
     this.isVisible = typeInfo?.isSelected ?? false
-  }
-
-  onClick($event: any) {
-    $event.stopPropagation()
-    this.logger.debug('event-of-day clicked')
   }
 }
