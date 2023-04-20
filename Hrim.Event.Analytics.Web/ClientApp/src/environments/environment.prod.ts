@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   environmentName: "production",
-  apiUrl: "/api",
+  apiUrl: "https://api.events.hrimsoft.com",
 };
