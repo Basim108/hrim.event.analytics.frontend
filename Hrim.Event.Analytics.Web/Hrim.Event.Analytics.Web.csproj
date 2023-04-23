@@ -15,7 +15,11 @@
     <ItemGroup>
         <PackageReference Include="Hrimsoft.Core" Version="0.0.11" />
         <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.3" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+        <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.2.0" />
+        <PackageReference Include="Hrimsoft.Core" Version="0.0.11" />
+        <PackageReference Include="Hrimsoft.StringCases" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -30,11 +34,6 @@
         <Content Update="appsettings.Staging.json">
           <DependentUpon>appsettings.json</DependentUpon>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Controllers" />
-      <Folder Include="Models" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

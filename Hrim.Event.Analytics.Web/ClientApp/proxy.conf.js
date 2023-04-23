@@ -1,16 +1,18 @@
 const {env} = require('process');
 
+const target = 'https://localhost:7009';
+
 const PROXY_CONFIG = [
     {
-        context: ['/api'],
-        target: env.EVENT_ANALYTICS_API && "http://localhost:60242",
+        context: [
+            "/account/**"
+        ],
+        target: target,
         secure: false,
-        changeOrigin: true,
         headers: {
             Connection: 'Keep-Alive'
         }
     }
-
 ]
 
 module.exports = PROXY_CONFIG;

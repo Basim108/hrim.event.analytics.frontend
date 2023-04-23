@@ -4,8 +4,12 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers()
+       .AddHrimsoftJsonOptions();
 builder.Services.AddHealthChecks();
 builder.Services.AddControllersWithViews();
+builder.Services.AddEventAnalyticsAuthentication(builder.Configuration);
+builder.Services.ConfigureSameSiteNoneCookies();
 
 var app = builder.Build();
 
@@ -16,7 +20,8 @@ if (!app.Environment.IsDevelopment()) {
 app.UseEventAnalyticsCors(builder.Configuration);
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapHealthChecks("/health", new HealthCheckOptions
 {
     AllowCachingResponses = false
