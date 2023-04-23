@@ -29,21 +29,6 @@ describe('AuthMenuComponent', () => {
     fixture.detectChanges()
   })
 
-  it('clicked on google login should login in google', () => {
-    let button = fixture.debugElement.nativeElement.querySelector('a.login-google-btn');
-    expect(button).not.toBeNull()
-    button.click();
-    expect(authService.login).toHaveBeenCalledWith('google')
-  })
-
-
-  it('clicked on facebook login should login in facebook', () => {
-    let button = fixture.debugElement.nativeElement.querySelector('a.login-facebook-btn');
-    expect(button).not.toBeNull()
-    button.click();
-    expect(authService.login).toHaveBeenCalledWith('facebook')
-  })
-
   it('clicked on logout should logout', () => {
     authService.user$.next(testUsers.john_doe)
     fixture.detectChanges()

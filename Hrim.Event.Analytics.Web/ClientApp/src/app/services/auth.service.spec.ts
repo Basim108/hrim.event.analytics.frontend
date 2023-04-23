@@ -2,11 +2,10 @@ import {TestBed}                                        from '@angular/core/test
 import {AuthService}                                    from './auth.service'
 import {LogService}                                     from './log.service'
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing'
-import {environment}                                    from '../../environments/environment'
 import {skip, take}                                     from 'rxjs'
 import {TestUsers}                                      from "../../test_data/users";
 
-const USER_PROFILE_URL = `${environment.apiUrl}/v1/user-profile/me`
+const USER_PROFILE_URL = '/account/profile/me'
 
 describe('AuthService', () => {
   let service: AuthService
