@@ -4,6 +4,13 @@ using Microsoft.AspNetCore.CookiePolicy;
 
 namespace Hrim.Event.Analytics.Web.Extensions;
 
+// TODO: bind event handler to authentication process
+// TODO: check that in CRUD api auth events does not handle with bearer authorization
+// TODO: get userinfo from social providers: email, external_user_id
+// TODO: build & call CRUD api to register user profile 
+// TODO: clean crud api from Auth events and controller
+// TODO: design kafka topic for registring user actions. 
+// TODO: for kafka: have in mind to make postponed dependent actions: such as registering a new user, creating its event types and events, while registration has been failed. so later we can fix registration and then re-play all dependent actions.
 public static class ServiceCollectionExtensions
 {
     public static void AddEventAnalyticsAuthentication(this IServiceCollection services, IConfiguration appConfig) {
