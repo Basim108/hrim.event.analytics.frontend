@@ -1,5 +1,6 @@
 using Hrim.Event.Analytics.Web.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,13 +11,15 @@ builder.Services.AddHealthChecks();
 builder.Services.AddControllersWithViews();
 builder.Services.AddEventAnalyticsAuthentication(builder.Configuration);
 builder.Services.ConfigureSameSiteNoneCookies();
+builder.Services.Configure<ForwardedHeadersOptions>(options => {
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment()) {
-    app.UseHsts();
-}
+app.UseForwardedHeaders();
 
+app.UseHttpsRedirection();
 app.UseEventAnalyticsCors(builder.Configuration);
 app.UseStaticFiles();
 app.UseRouting();

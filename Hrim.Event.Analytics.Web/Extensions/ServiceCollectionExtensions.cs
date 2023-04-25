@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
             options.ClientId     = clientId;
             options.ClientSecret = clientSecret;
             options.CallbackPath = "/account/callback";
+            
             options.Scope        = "openid profile crud-api event-analytics-crud-api";
         }).WithAccessToken(options => {
             options.Audience         = "event-analytics-crud-api";
