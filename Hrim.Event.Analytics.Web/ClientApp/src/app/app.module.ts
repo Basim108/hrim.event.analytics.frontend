@@ -34,6 +34,7 @@ import {OccurrenceEventDetailsDialog} from './dialogs/occurrence-event-details-d
 import {DurationEventDetailsDialog}   from './dialogs/duration-event-details-dialog/duration-event-details-dialog';
 import {MatSelectModule}              from "@angular/material/select";
 import {MatDatepickerModule}          from "@angular/material/datepicker";
+import {ApiRequestInterceptor}        from "./services/api-request-interceptor.service";
 
 @NgModule({
             declarations: [
@@ -77,6 +78,7 @@ import {MatDatepickerModule}          from "@angular/material/datepicker";
               {provide: ErrorHandler, useClass: ErrorMetadataService},
               {provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS},
               {provide: HTTP_INTERCEPTORS, useClass: ApiResponseInterceptor, multi: true},
+              {provide: HTTP_INTERCEPTORS, useClass: ApiRequestInterceptor, multi: true},
             ],
             bootstrap   : [AppComponent]
           })

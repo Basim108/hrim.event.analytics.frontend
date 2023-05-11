@@ -1,6 +1,5 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0-alpine AS base
 ARG IMAGE_VER
-ARG CERT_PASSWORD
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
@@ -17,17 +16,10 @@ COPY . .
 RUN dotnet restore 
 RUN dotnet build -c Release --no-restore -o /app/build
 RUN dotnet publish -c Release --no-restore -o /app/publish
-RUN dotnet dev-certs https -ep /https/aspnetapp.pfx -p ${CERT_PASSWORD}
-RUN dotnet dev-certs https --trust
 
 FROM base AS final
-WORKDIR /https
-COPY --from=publish /https . 
 WORKDIR /app
 COPY --from=publish /app/publish .
 RUN echo "Docker image tag: ${IMAGE_VER}"
 ENV DOCKER_IMAGE_TAG="${IMAGE_VER}"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-ENV ASPNETCORE_URLS=https://+;http://+
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
 ENTRYPOINT ["dotnet", "Hrim.Event.Analytics.Web.dll"]

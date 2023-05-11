@@ -1,14 +1,15 @@
+using Hrim.Event.Analytics.Web.Authorization;
 using Hrim.Event.Analytics.Web.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers()
-       .AddHrimsoftJsonOptions();
+builder.Services.AddControllers().AddHrimsoftJsonOptions();
+builder.Services.AddEventAnalyticsServices(builder.Configuration);
 builder.Services.AddHealthChecks();
 builder.Services.AddControllersWithViews();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddEventAnalyticsAuthentication(builder.Configuration);
 builder.Services.ConfigureSameSiteNoneCookies();
 builder.Services.Configure<ForwardedHeadersOptions>(options => {
@@ -19,7 +20,6 @@ var app = builder.Build();
 
 app.UseForwardedHeaders();
 
-app.UseHttpsRedirection();
 app.UseEventAnalyticsCors(builder.Configuration);
 app.UseStaticFiles();
 app.UseRouting();

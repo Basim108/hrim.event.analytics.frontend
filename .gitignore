@@ -7,6 +7,14 @@
 /bazel-out
 TESTS-*.xml
 
+bin
+obj
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
 # Node
 /node_modules
 npm-debug.log

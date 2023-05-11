@@ -6,7 +6,7 @@ import {UserProfileModel} from "../shared/user-profile.model";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-    user$        = new BehaviorSubject<UserProfileModel | null>(null);
+    user$ = new BehaviorSubject<UserProfileModel | null>(null);
 
     constructor(private logger: LogService, private http: HttpClient) {
         logger.logConstructor(this);
@@ -14,6 +14,14 @@ export class AuthService {
     }
 
     checkAuthentication() {
+        this.http
+            .get<string>('/account/token', {
+                withCredentials: true
+            })
+            .subscribe({
+                           next : accessToken => localStorage.setItem('accessToken', accessToken),
+                           error: error => this.logger.error(`failed to get access token: (${error.status}) ${error.message}`, error)
+                       })
         this.http
             .get<UserProfileModel>('/account/profile/me', {
                 withCredentials: true
@@ -30,7 +38,7 @@ export class AuthService {
                                        this.user$.next(null);
                                        break;
                                    default:
-                                       this.logger.error(`failed get user profile request: (${error.status}) ${error.message}`, error)
+                                       this.logger.error(`failed to get user profile request: (${error.status}) ${error.message}`, error)
                                }
                            }
                        })
