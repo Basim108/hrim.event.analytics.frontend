@@ -15,17 +15,13 @@ export class AuthService {
 
     checkAuthentication() {
         this.http
-            .get<string>('/account/token', {
-                withCredentials: true
-            })
+            .get<string>('/account/token', {withCredentials: true})
             .subscribe({
                            next : accessToken => localStorage.setItem('accessToken', accessToken),
                            error: error => this.logger.error(`failed to get access token: (${error.status}) ${error.message}`, error)
                        })
         this.http
-            .get<UserProfileModel>('/account/profile/me', {
-                withCredentials: true
-            })
+            .get<UserProfileModel>('/account/profile/me', {withCredentials: true})
             .subscribe({
                            next : userProfile => {
                                this.logger.debug('User is authenticated.', userProfile)
