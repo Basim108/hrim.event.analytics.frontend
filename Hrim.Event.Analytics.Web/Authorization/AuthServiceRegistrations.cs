@@ -10,33 +10,6 @@ namespace Hrim.Event.Analytics.Web.Authorization;
 public static class AuthServiceRegistrations
 {
     public static void AddEventAnalyticsAuthentication(this IServiceCollection services, IConfiguration appConfig, IHostEnvironment env) {
-        // services.AddAuth0WebAppAuthentication(options => {
-        //              var domain = appConfig[Envs.AUTH0_DOMAIN];
-        //              if (string.IsNullOrWhiteSpace(domain))
-        //                  throw new ConfigurationException(null, Envs.AUTH0_DOMAIN);
-        //              var clientId = appConfig[Envs.AUTH0_CLIENT_ID];
-        //              if (string.IsNullOrWhiteSpace(clientId))
-        //                  throw new ConfigurationException(null, Envs.AUTH0_CLIENT_ID);
-        //              var clientSecret = appConfig[Envs.AUTH0_CLIENT_SECRET];
-        //              if (string.IsNullOrWhiteSpace(clientSecret))
-        //                  throw new ConfigurationException(null, Envs.AUTH0_CLIENT_SECRET);
-        //
-        //              options.Domain       = domain;
-        //              options.ClientId     = clientId;
-        //              options.ClientSecret = clientSecret;
-        //              options.CallbackPath = env.IsDevelopment()
-        //                                         ? "/account/callback"
-        //                                         : "/callback";
-        //              options.Scope                          = "openid profile crud-api event-analytics-crud-api";
-        //              options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-        //              options.NonceCookie.SecurePolicy       = CookieSecurePolicy.Always;
-        //              options.SaveTokens                     = false;
-        //
-        //          })
-        //         .WithAccessToken(options => {
-        //              options.Audience = "event-analytics-crud-api";
-        //          });
-
         services.AddAuthentication(options => {
                      options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                      options.DefaultSignInScheme       = CookieAuthenticationDefaults.AuthenticationScheme;

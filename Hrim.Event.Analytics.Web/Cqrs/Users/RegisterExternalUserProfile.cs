@@ -8,9 +8,23 @@ public record RegisterExternalUserProfile(ExternalUserProfile Profile, string Jw
 
 public class RegisterExternalUserProfileHandler: IRequestHandler<RegisterExternalUserProfile>
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<RegisterExternalUserProfileHandler> _logger;
+    private readonly IHttpClientFactory                          _httpClientFactory;
 
-    public RegisterExternalUserProfileHandler(IHttpClientFactory httpClientFactory) { _httpClientFactory = httpClientFactory; }
+    public RegisterExternalUserProfileHandler(ILogger<RegisterExternalUserProfileHandler> logger,
+                                              IHttpClientFactory                          httpClientFactory) {
+        _logger            = logger;
+        _httpClientFactory = httpClientFactory;
+    }
+
+    private async Task HandleAsync(RegisterExternalUserProfile request, CancellationToken cancellationToken) {
+        var httpClient = _httpClientFactory.CreateClient(WebConsts.CRUD_API);
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", request.JwtAccessToken);
+        _logger.LogDebug("jwt: " + request.JwtAccessToken);
+        var response = await httpClient.PostAsJsonAsync("/v1/user-profile/me", request.Profile, cancellationToken);
+        response.EnsureSuccessStatusCode();
+        await response.Content.ReadAsStringAsync(cancellationToken);
+    }
 
     public Task Handle(RegisterExternalUserProfile request, CancellationToken cancellationToken) {
         if (request.Profile == null)
@@ -19,13 +33,5 @@ public class RegisterExternalUserProfileHandler: IRequestHandler<RegisterExterna
             throw new ArgumentNullException(nameof(request), nameof(request.JwtAccessToken));
 
         return HandleAsync(request, cancellationToken);
-    }
-
-    private async Task HandleAsync(RegisterExternalUserProfile request, CancellationToken cancellationToken) {
-        var httpClient = _httpClientFactory.CreateClient(WebConsts.CRUD_API);
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",request.JwtAccessToken);
-        var response   = await httpClient.PostAsJsonAsync("/v1/user-profile/me", request.Profile, cancellationToken);
-        response.EnsureSuccessStatusCode();
-        await response.Content.ReadAsStringAsync(cancellationToken);
     }
 }

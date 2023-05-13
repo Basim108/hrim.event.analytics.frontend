@@ -1,11 +1,8 @@
-using System;
 using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Hrim.Event.Analytics.Web.Cqrs.Users;
 using Hrim.Event.Analytics.Web.Tests.TestData;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moq.Protected;
 
@@ -23,7 +20,7 @@ public class RegisterExternalUserProfileTests
         _httpClient             = new HttpClient(_mockHttpMsgHandler.Object);
         _httpClient.BaseAddress = new Uri("https://tests.com");
         mockFactory.Setup(_ => _.CreateClient(It.Is<string>(name => name == WebConsts.CRUD_API))).Returns(_httpClient);
-        _handler = new RegisterExternalUserProfileHandler(mockFactory.Object);
+        _handler = new RegisterExternalUserProfileHandler(NullLogger<RegisterExternalUserProfileHandler>.Instance, mockFactory.Object);
     }
 
     [Fact]
