@@ -13,9 +13,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 
 WORKDIR /src
 COPY . .
-RUN dotnet restore 
-RUN dotnet build -c Release --no-restore -o /app/build
-RUN dotnet publish -c Release --no-restore -o /app/publish
+RUN dotnet restore Hrim.Event.Analytics.Web.sln
+RUN dotnet build Hrim.Event.Analytics.Web.sln -c Release --no-restore -o /app/build
+RUN dotnet publish Hrim.Event.Analytics.Web.sln -c Release --no-restore -o /app/publish
 
 FROM base AS final
 WORKDIR /app
