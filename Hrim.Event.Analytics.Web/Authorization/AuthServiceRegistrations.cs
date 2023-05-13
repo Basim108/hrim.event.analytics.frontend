@@ -1,52 +1,103 @@
 using Auth0.AspNetCore.Authentication;
 using Hrimsoft.Core.Exceptions;
-using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Hrim.Event.Analytics.Web.Authorization;
 
 public static class AuthServiceRegistrations
 {
-    public static void AddEventAnalyticsAuthentication(this IServiceCollection services, IConfiguration appConfig) {
-        services.AddAuth0WebAppAuthentication(options => {
-                     var domain = appConfig[Envs.AUTH0_DOMAIN];
-                     if (string.IsNullOrWhiteSpace(domain))
-                         throw new ConfigurationException(null, Envs.AUTH0_DOMAIN);
-                     var clientId = appConfig[Envs.AUTH0_CLIENT_ID];
-                     if (string.IsNullOrWhiteSpace(clientId))
-                         throw new ConfigurationException(null, Envs.AUTH0_CLIENT_ID);
-                     var clientSecret = appConfig[Envs.AUTH0_CLIENT_SECRET];
-                     if (string.IsNullOrWhiteSpace(clientSecret))
-                         throw new ConfigurationException(null, Envs.AUTH0_CLIENT_SECRET);
+    public static void AddEventAnalyticsAuthentication(this IServiceCollection services, IConfiguration appConfig, IHostEnvironment env) {
+        // services.AddAuth0WebAppAuthentication(options => {
+        //              var domain = appConfig[Envs.AUTH0_DOMAIN];
+        //              if (string.IsNullOrWhiteSpace(domain))
+        //                  throw new ConfigurationException(null, Envs.AUTH0_DOMAIN);
+        //              var clientId = appConfig[Envs.AUTH0_CLIENT_ID];
+        //              if (string.IsNullOrWhiteSpace(clientId))
+        //                  throw new ConfigurationException(null, Envs.AUTH0_CLIENT_ID);
+        //              var clientSecret = appConfig[Envs.AUTH0_CLIENT_SECRET];
+        //              if (string.IsNullOrWhiteSpace(clientSecret))
+        //                  throw new ConfigurationException(null, Envs.AUTH0_CLIENT_SECRET);
+        //
+        //              options.Domain       = domain;
+        //              options.ClientId     = clientId;
+        //              options.ClientSecret = clientSecret;
+        //              options.CallbackPath = env.IsDevelopment()
+        //                                         ? "/account/callback"
+        //                                         : "/callback";
+        //              options.Scope                          = "openid profile crud-api event-analytics-crud-api";
+        //              options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+        //              options.NonceCookie.SecurePolicy       = CookieSecurePolicy.Always;
+        //              options.SaveTokens                     = false;
+        //
+        //          })
+        //         .WithAccessToken(options => {
+        //              options.Audience = "event-analytics-crud-api";
+        //          });
 
-                     options.Domain       = domain;
-                     options.ClientId     = clientId;
-                     options.ClientSecret = clientSecret;
-                     options.CallbackPath = "/account/callback";
-                     options.Scope        = "openid profile crud-api event-analytics-crud-api";
+        services.AddAuthentication(options => {
+                     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                     options.DefaultSignInScheme       = CookieAuthenticationDefaults.AuthenticationScheme;
+                     options.DefaultChallengeScheme    = CookieAuthenticationDefaults.AuthenticationScheme;
                  })
-                .WithAccessToken(options => {
-                     options.Audience = "event-analytics-crud-api";
-                 });
-    }
+                .AddCookie(options => {
+                     options.Cookie.Name = "EventAnalytics";
+                 })
+                .AddOpenIdConnect("Auth0",
+                                  options => {
+                                      var domain = appConfig[Envs.AUTH0_DOMAIN];
+                                      if (string.IsNullOrWhiteSpace(domain))
+                                          throw new ConfigurationException(null, Envs.AUTH0_DOMAIN);
 
-    public static IServiceCollection ConfigureSameSiteNoneCookies(this IServiceCollection services) {
-        services.Configure<CookiePolicyOptions>(options => {
-            options.MinimumSameSitePolicy = SameSiteMode.Strict;
-            options.HttpOnly              = HttpOnlyPolicy.Always;
+                                      var clientId = appConfig[Envs.AUTH0_CLIENT_ID];
+                                      if (string.IsNullOrWhiteSpace(clientId))
+                                          throw new ConfigurationException(null, Envs.AUTH0_CLIENT_ID);
 
-            options.OnAppendCookie = cookieContext => CheckSameSite(cookieContext.CookieOptions);
-            options.OnDeleteCookie = cookieContext => CheckSameSite(cookieContext.CookieOptions);
-        });
+                                      var clientSecret = appConfig[Envs.AUTH0_CLIENT_SECRET];
+                                      if (string.IsNullOrWhiteSpace(clientSecret))
+                                          throw new ConfigurationException(null, Envs.AUTH0_CLIENT_SECRET);
 
-        return services;
-    }
+                                      options.Authority    = $"https://{domain}";
+                                      options.ClientId     = clientId;
+                                      options.ClientSecret = clientSecret;
+                                      options.CallbackPath = env.IsDevelopment()
+                                                                 ? "/account/callback"
+                                                                 : "/callback";
+                                      options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+                                      options.NonceCookie.SecurePolicy       = CookieSecurePolicy.Always;
+                                      options.SaveTokens                     = true;
+                                      options.ResponseType                   = OpenIdConnectResponseType.Code;
+                                      options.Scope.Clear();
+                                      options.Scope.Add("openid");
+                                      options.Scope.Add("profile");
+                                      options.TokenValidationParameters = new TokenValidationParameters {
+                                          NameClaimType = "name"
+                                      };
+                                      options.Events = new OpenIdConnectEvents {
+                                          OnRedirectToIdentityProviderForSignOut = (context) => {
+                                              var logoutUri     = $"https://{domain}/v2/logout?client_id={clientId}";
+                                              var postLogoutUri = context.Properties.RedirectUri;
+                                              if (!string.IsNullOrEmpty(postLogoutUri)) {
+                                                  if (postLogoutUri.StartsWith("/")) {
+                                                      // transform to absolute
+                                                      var request = context.Request;
+                                                      postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
+                                                  }
+                                                  logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
+                                              }
+                                              context.Response.Redirect(logoutUri);
+                                              context.HandleResponse();
 
-    private static void CheckSameSite(CookieOptions options) {
-        if (options is {
-                SameSite: SameSiteMode.None,
-                Secure  : false
-            }) {
-            options.SameSite = SameSiteMode.Unspecified;
-        }
+                                              return Task.CompletedTask;
+                                          },
+                                          OnRedirectToIdentityProvider = context =>
+                                          {
+                                              context.ProtocolMessage.SetParameter("audience", "event-analytics-crud-api");
+                                              return Task.FromResult(0);
+                                          }
+                                      };
+                                  });
     }
 }

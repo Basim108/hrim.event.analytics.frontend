@@ -10,10 +10,9 @@ builder.Services.AddEventAnalyticsServices(builder.Configuration);
 builder.Services.AddHealthChecks();
 builder.Services.AddControllersWithViews();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-builder.Services.AddEventAnalyticsAuthentication(builder.Configuration);
-builder.Services.ConfigureSameSiteNoneCookies();
+builder.Services.AddEventAnalyticsAuthentication(builder.Configuration, builder.Environment);
 builder.Services.Configure<ForwardedHeadersOptions>(options => {
-    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.ForwardedHeaders = ForwardedHeaders.All;
 });
 
 var app = builder.Build();
