@@ -2,7 +2,10 @@ namespace Hrim.Event.Analytics.Web;
 
 public static class WebConsts
 {
-    public const string CRUD_API = "CrudApi";
+    public const string CRUD_API        = "CrudApi";
+    public const string COMMAND         = "CqrsCommand={CqrsCommand}";
+    public const string START_HANDLING  = "Start handling";
+    public const string FINISH_HANDLING = "Finish handling";
 }
 
 public static class Envs
