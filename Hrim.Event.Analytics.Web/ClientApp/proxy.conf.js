@@ -10,7 +10,8 @@ console.log('proxing to target: ' + target)
 const PROXY_CONFIG = [
     {
         context: [
-            "/account/**"
+            "/account/**",
+            "/backend/**"
         ],
         target: target,
         secure: false,

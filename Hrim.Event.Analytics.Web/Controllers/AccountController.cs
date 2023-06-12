@@ -16,13 +16,9 @@ namespace Hrim.Event.Analytics.Web.Controllers;
 [Route("[controller]")]
 public class AccountController: Controller
 {
-    private readonly IMediator    _mediator;
-    private readonly IMemoryCache _memoryCache;
+    private readonly IMediator _mediator;
 
-    public AccountController(IMediator mediator, IMemoryCache memoryCache) {
-        _mediator    = mediator;
-        _memoryCache = memoryCache;
-    }
+    public AccountController(IMediator mediator) { _mediator = mediator; }
 
     /// <summary> Authenticate with the Facebook </summary>
     [HttpGet("login")]
@@ -59,7 +55,7 @@ public class AccountController: Controller
             return Unauthorized("cannot get access token");
         }
         var userProfile = await _mediator.Send(new ExternalUserProfileBuild(User.Claims), cancellationToken);
-        
+
         await _mediator.Send(new RegisterExternalUserProfile(userProfile, jwt), cancellationToken);
         // OPTIMIZATION: put email into memory cache in order to optimize registration calls
         return new JsonResult(jwt);

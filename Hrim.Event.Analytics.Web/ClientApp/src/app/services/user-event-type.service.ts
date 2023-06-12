@@ -1,10 +1,10 @@
-import {Injectable}             from "@angular/core";
-import {LogService}             from "./log.service";
-import {Observable, Subject}    from "rxjs";
+import {Injectable} from "@angular/core";
+import {LogService} from "./log.service";
+import {Observable, Subject} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {environment}            from "../../environments/environment";
-import {UserEventType}          from "../shared/event-type.model";
-import {EntityState}            from "../shared/entity-state";
+import {UserEventType} from "../shared/event-type.model";
+import {EntityState} from "../shared/entity-state";
+import {BackendUrlService} from "./backend-url.service";
 
 @Injectable({providedIn: 'root'})
 export class EventTypeService {
@@ -13,16 +13,17 @@ export class EventTypeService {
 
   typeContexts: { [eventTypeId: string]: EntityState<UserEventType> } = {}
 
-  url       = `${environment.apiUrl}/v1/event-type/`;
-  entityUrl = `${environment.apiUrl}/v1/entity/`;
+  eventTypeUrl       = 'v1/event-type'
+  entityUrl = 'v1/entity'
 
   constructor(private logger: LogService,
+              private urlService: BackendUrlService,
               private http: HttpClient) {
     logger.logConstructor(this);
   }
 
   load() {
-    this.http.get<UserEventType[]>(this.url, {withCredentials: true})
+    this.http.get<UserEventType[]>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}`, {withCredentials: true})
         .subscribe({
                      next: userEventTypes => {
                        this.logger.debug('User event types loaded from server:', userEventTypes)
@@ -85,12 +86,12 @@ export class EventTypeService {
     const options = {withCredentials: true};
     // TODO: check for creation through context.isCreated
     return entity.id
-           ? this.http.put<UserEventType>(this.url, entity, options)
-           : this.http.post<UserEventType>(this.url, entity, options);
+           ? this.http.put<UserEventType>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}`, entity, options)
+           : this.http.post<UserEventType>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}`, entity, options);
   }
 
   getDetails(entityId: string): Observable<UserEventType> {
-    return this.http.get<UserEventType>(this.url + entityId, {
+    return this.http.get<UserEventType>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}/${entityId}`, {
       withCredentials: true
     });
   }
@@ -98,6 +99,6 @@ export class EventTypeService {
   delete(entity: UserEventType): Observable<UserEventType> {
     const params  = new HttpParams().set('entity_type', 'event_type')
     const options = {params, withCredentials: true}
-    return this.http.delete<UserEventType>(this.entityUrl + entity.id, options);
+    return this.http.delete<UserEventType>(`${this.urlService.crudApiUrl}/${this.entityUrl}/${entity.id}`, options);
   }
 }

@@ -23,6 +23,8 @@ describe('AuthService', () => {
         httpTestingController = TestBed.inject(HttpTestingController)
         const reqAccessToken = httpTestingController.expectOne(ACCESS_TOKEN_URL)
         reqAccessToken.flush('jwt', {status: 200, statusText: 'Ok'})
+        const reqCrudApi = httpTestingController.expectOne('/backend/crud')
+        reqCrudApi.flush('https://crud.api', {status: 200, statusText: 'Ok'})
     })
     
     afterEach(() => {
