@@ -25,7 +25,7 @@ describe('EventTypeService', () => {
         service = TestBed.inject(EventTypeService)
         httpTestingController = TestBed.inject(HttpTestingController)
         const reqCrudApi = httpTestingController.expectOne('/backend/crud')
-        reqCrudApi.flush(crudApiUrl, {status: 200, statusText: 'Ok'})
+        reqCrudApi.flush(`"${crudApiUrl}"`, {status: 200, statusText: 'Ok'})
     })
 
     afterEach(() => {

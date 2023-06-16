@@ -18,7 +18,7 @@ describe('BackendUrlAccessorService', () => {
         service               = TestBed.inject(BackendUrlService)
         httpTestingController = TestBed.inject(HttpTestingController)
         const reqAccessToken = httpTestingController.expectOne('/backend/crud')
-        reqAccessToken.flush('https://crud.api', {status: 200, statusText: 'Ok'})
+        reqAccessToken.flush('"https://crud.api"', {status: 200, statusText: 'Ok'})
     })
     
     afterEach(() => {
