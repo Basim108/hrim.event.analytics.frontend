@@ -1,5 +1,6 @@
 using Hrimsoft.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Hrim.Event.Analytics.Web.Controllers;
 
@@ -19,6 +20,6 @@ public class BackendController: Controller
         var apiUrl = _appConfig[Envs.EVENT_ANALYTICS_CRUD_API_URL];
         if (string.IsNullOrWhiteSpace(apiUrl))
             throw new ConfigurationException(null, Envs.EVENT_ANALYTICS_CRUD_API_URL);
-        return apiUrl;
+        return JsonConvert.SerializeObject(apiUrl);
     }
 }

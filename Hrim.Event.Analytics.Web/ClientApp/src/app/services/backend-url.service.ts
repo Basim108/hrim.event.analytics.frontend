@@ -16,7 +16,7 @@ export class BackendUrlService {
                 error: error => this.logger.error(`failed to get crudApiUrl: (${error.status}) ${error.message}`, error)
             })
     }
-    
+
     get crudApiUrl(): string {
         return localStorage.getItem('crudApiUrl') || ''
     }
