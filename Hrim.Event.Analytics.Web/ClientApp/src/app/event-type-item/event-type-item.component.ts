@@ -27,7 +27,8 @@ export class EventTypeItemComponent implements OnInit {
     this.isSelected = this.eventTypeService.typeContexts[this.eventType.id]?.isSelected ?? false
   }
 
-  onEditEventType() {
+  onEditEventType(event: any) {
+    event.stopPropagation()
     const dialogRef = this.editDialog.open(EventTypeDetailsDialog, {
       data: new EventTypeDetailsDialogRequest({...this.eventType}, true)
     });
@@ -38,7 +39,8 @@ export class EventTypeItemComponent implements OnInit {
     });
   }
 
-  onDeleteEventType() {
+  onDeleteEventType(event: any) {
+    event.stopPropagation()
     this.eventTypeService
         .delete(this.eventType)
         .subscribe({

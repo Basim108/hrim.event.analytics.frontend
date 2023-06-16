@@ -8,7 +8,7 @@ import {EventTypeService} from "./services/user-event-type.service";
 describe('AppComponent', () => {
     let httpTestingController: HttpTestingController
 
-    const crudApiUrl = 'https://crud.api'
+    const crudApiUrl = '"https://crud.api"'
     
     beforeEach(() => {
         TestBed.configureTestingModule({

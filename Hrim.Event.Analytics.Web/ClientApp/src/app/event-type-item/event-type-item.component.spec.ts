@@ -16,7 +16,8 @@ describe('EventTypeItemComponent', () => {
   let fixture: ComponentFixture<EventTypeItemComponent>
   let eventTypeService: EventTypeService
   let testEventTypes: EventTypeTestData
-
+  let eventArg  = new Event('click');
+  
   beforeEach(async () => {
     testEventTypes = new EventTypeTestData()
     const dialogRef = {
@@ -39,7 +40,7 @@ describe('EventTypeItemComponent', () => {
     fixture             = TestBed.createComponent(EventTypeItemComponent)
     component           = fixture.componentInstance
     component.eventType = testEventTypes.reading
-
+    
     const typeContext = new EntityState<UserEventType>()
     typeContext.isSelected = true
     typeContext.entity = testEventTypes.reading
@@ -53,23 +54,22 @@ describe('EventTypeItemComponent', () => {
 
   it('onDeleteEventType should send delete request', () => {
     spyOn(eventTypeService, 'delete').and.returnValue(of({...testEventTypes.reading, is_deleted: true}))
+    spyOn(eventArg, 'stopPropagation')
+    component.onDeleteEventType(eventArg)
 
-    component.onDeleteEventType()
-
-    expect(eventTypeService.delete).toHaveBeenCalledWith(jasmine.objectContaining({
-                                                                                             id: testEventTypes.reading.id
-                                                                                           }))
+    expect(eventTypeService.delete).toHaveBeenCalledWith(jasmine.objectContaining({id: testEventTypes.reading.id}))
+    expect(eventArg.stopPropagation).toHaveBeenCalled()
   })
 
   it('onDeleteEventType should emit delete event', () => {
     spyOn(eventTypeService, 'delete').and.returnValue(of({...testEventTypes.reading, is_deleted: true}))
     spyOn(component.delete, 'emit')
 
-    component.onDeleteEventType()
+    spyOn(eventArg, 'stopPropagation')
+    component.onDeleteEventType(eventArg)
 
-    expect(component.delete.emit).toHaveBeenCalledWith(jasmine.objectContaining({
-                                                                                  id: testEventTypes.reading.id
-                                                                                }))
+    expect(component.delete.emit).toHaveBeenCalledWith(jasmine.objectContaining({id: testEventTypes.reading.id}))
+    expect(eventArg.stopPropagation).toHaveBeenCalled()
   })
 
   it('onEditEventType when dialog canceled should not send save request', () => {
@@ -79,10 +79,12 @@ describe('EventTypeItemComponent', () => {
                                                })
     spyOn(TestBed.inject(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
     spyOn(eventTypeService, 'save')
-
-    component.onEditEventType()
+    spyOn(eventArg, 'stopPropagation')
+    
+    component.onEditEventType(eventArg)
 
     expect(eventTypeService.save).not.toHaveBeenCalled()
+    expect(eventArg.stopPropagation).toHaveBeenCalled()
   })
 
   it('after initialization should update selected status from event-type-service', () => {

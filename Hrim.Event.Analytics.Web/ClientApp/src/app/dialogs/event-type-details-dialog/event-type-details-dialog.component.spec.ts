@@ -16,11 +16,13 @@ import {LogService}                                                        from 
 import {FormBuilder}                                                       from "@angular/forms";
 import {MAT_COLOR_FORMATS, NGX_MAT_COLOR_FORMATS, NgxMatColorPickerModule} from "@angular-material-components/color-picker";
 import {UserEventType}                                                     from "../../shared/event-type.model";
+import {HrimEventService} from "../../services/hrim-event.service";
 
 describe('EventTypeDetailsDialogComponent', () => {
   let component: EventTypeDetailsDialog;
   let fixture: ComponentFixture<EventTypeDetailsDialog>;
   let eventTypeService: EventTypeService
+  let eventService: HrimEventService
   let testEventTypes: EventTypeTestData
 
   beforeEach(async () => {
@@ -43,6 +45,7 @@ describe('EventTypeDetailsDialogComponent', () => {
                                            ],
                                            providers   : [
                                              EventTypeService, LogService,
+                                             HrimEventService,
                                              FormBuilder,
                                              {provide: MAT_DIALOG_DATA, useValue: dialogRequest},
                                              {provide: MatDialogRef, useValue: {}},
@@ -52,6 +55,7 @@ describe('EventTypeDetailsDialogComponent', () => {
                  .compileComponents();
 
     eventTypeService = TestBed.inject(EventTypeService)
+    eventService     = TestBed.inject(HrimEventService)
     fixture          = TestBed.createComponent(EventTypeDetailsDialog);
     component        = fixture.componentInstance;
     fixture.detectChanges();

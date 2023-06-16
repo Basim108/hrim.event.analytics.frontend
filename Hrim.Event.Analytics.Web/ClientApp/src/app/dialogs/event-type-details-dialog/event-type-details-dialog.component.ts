@@ -7,6 +7,7 @@ import {Color}                                           from "@angular-material
 import {debounceTime, Subscription}                      from "rxjs";
 import {UserEventType}                                   from "../../shared/event-type.model";
 import {EventTypeDetailsDialogRequest}                   from "../../shared/dialogs/event-type-details-dialog-request";
+import {HrimEventService} from "../../services/hrim-event.service";
 
 @Component({
              selector   : 'app-event-type-details-dialog',
@@ -25,6 +26,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   constructor(@Inject(MAT_DIALOG_DATA) public data: EventTypeDetailsDialogRequest,
               private dialogRef: MatDialogRef<EventTypeDetailsDialog>,
               private formBuilder: FormBuilder,
+              private eventService: HrimEventService,
               private eventTypeService: EventTypeService,
               private logger: LogService) {
     logger.logConstructor(this);
@@ -83,6 +85,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
         .subscribe({
                      next : () => {
                        this.dialogRef.close(this.data.model);
+                       this.eventService.updateEventTypesForEvents(this.data.model)
                      },
                      error: error => {
                        this.logger.error('failed to save a user event type: ', error)

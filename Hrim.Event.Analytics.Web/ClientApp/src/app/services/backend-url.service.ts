@@ -12,7 +12,7 @@ export class BackendUrlService {
         this.http
             .get<string>('/backend/crud', {withCredentials: true})
             .subscribe({
-                next: crudApiUrl => localStorage.setItem('crudApiUrl', crudApiUrl),
+                next: crudApiUrl => localStorage.setItem('crudApiUrl', JSON.parse(crudApiUrl)),
                 error: error => this.logger.error(`failed to get crudApiUrl: (${error.status}) ${error.message}`, error)
             })
     }

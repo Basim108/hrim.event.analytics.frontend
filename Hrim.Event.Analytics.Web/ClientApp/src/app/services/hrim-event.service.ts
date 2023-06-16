@@ -10,6 +10,7 @@ import {DurationEventModel, DurationEventSnakeModel} from '../shared/duration-ev
 import {SomeEventModel} from "../shared/some-event.model";
 import {EntityState} from "../shared/entity-state";
 import {BackendUrlService} from "./backend-url.service";
+import {UserEventType} from "../shared/event-type.model";
 
 @Injectable({providedIn: 'root'})
 export class HrimEventService {
@@ -83,6 +84,12 @@ export class HrimEventService {
                    })
   }
 
+    updateEventTypesForEvents(changedEventType: UserEventType) {
+        let eventInfoList = Object.values(this.eventContext)
+            .filter(info => info.entity.eventType.id == changedEventType.id)
+        eventInfoList.forEach(info => info.entity.eventType = changedEventType)
+    }
+  
   private contextSaved(modelCandidate: SomeEventModel, savedModel: SomeEventModel) {
     let eventContext = Object.values(this.eventContext).find(x => x.entity.id === modelCandidate.id)
     if (eventContext) {

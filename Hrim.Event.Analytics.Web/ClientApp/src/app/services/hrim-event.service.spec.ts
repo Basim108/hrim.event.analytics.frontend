@@ -5,6 +5,9 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import {LogService} from './log.service'
 import {DurationTestData, OccurrenceTestData} from "../../test_data/events";
 import {EventTypeTestData} from "../../test_data/event-types";
+import {EntityState} from "../shared/entity-state";
+import {SomeEventModel} from "../shared/some-event.model";
+import {OccurrenceEventModel} from "../shared/occurrence-event.model";
 
 describe('HrimEventService', () => {
     let service: HrimEventService;
@@ -13,11 +16,12 @@ describe('HrimEventService', () => {
     const occurrenceUrl = `${crudApiUrl}/v1/event/occurrence`
     const durationUrl = `${crudApiUrl}/v1/event/duration`
     const entityUrl = `${crudApiUrl}/v1/entity/`
+    let testEventTypes: EventTypeTestData
     let testOccurrences: OccurrenceTestData
     let testDurations: DurationTestData
 
     beforeEach(() => {
-        const testEventTypes = new EventTypeTestData()
+        testEventTypes = new EventTypeTestData()
         testOccurrences = new OccurrenceTestData(testEventTypes)
         testDurations = new DurationTestData(testEventTypes)
         TestBed.configureTestingModule({
@@ -27,7 +31,7 @@ describe('HrimEventService', () => {
         service = TestBed.inject(HrimEventService);
         httpTestingController = TestBed.inject(HttpTestingController)
         const reqCrudApi = httpTestingController.expectOne('/backend/crud')
-        reqCrudApi.flush(crudApiUrl, {status: 200, statusText: 'Ok'})
+        reqCrudApi.flush(`"${crudApiUrl}"`, {status: 200, statusText: 'Ok'})
     });
 
     afterEach(() => {
@@ -123,5 +127,17 @@ describe('HrimEventService', () => {
         const req = httpTestingController.expectOne(deleteUrl)
         expect(req.request.method).toEqual('DELETE')
         req.flush({...testDurations.reading_1})
+    })
+
+    it('should update event types for events when event-type is changed', (done) => {
+        service.registerEventContext(testOccurrences.reading_1)
+        service.registerEventContext(testOccurrences.yoga_practice_1)
+        expect(Object.values(service.eventContext).length).toBe(2)
+        const changedReading = {...testEventTypes.reading, color: 'new_color' }
+        
+        service.updateEventTypesForEvents(changedReading)
+        
+        expect(testOccurrences.reading_1.eventType.color).toBe('new_color')
+        done()
     })
 });

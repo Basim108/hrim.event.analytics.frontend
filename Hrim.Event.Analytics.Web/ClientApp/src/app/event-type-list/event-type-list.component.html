@@ -1,16 +1,12 @@
 <div class="row justify-content-md-center">
-  <div class="col col-md-1">
-    <button mat-icon-button color="primary" (click)="onCreateEventType()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-  <div class="col col-md-11 event-types-container">
-    <div class="event-type-item"
-         *ngFor="let eventType of eventTypes"
-         [ngStyle]="{ borderColor: eventType.color}"
-    >
-      <app-event-type-item [eventType]="eventType"
-                           (delete)="onDeleteEventType($event)"></app-event-type-item>
+    <div class="col col-md-1">
+        <button mat-icon-button color="primary" (click)="onCreateEventType()">
+            <mat-icon>add</mat-icon>
+        </button>
     </div>
-  </div>
+    <div class="col col-md-11 event-types-container">
+        <app-event-type-item *ngFor="let eventType of eventTypes"
+                             [eventType]="eventType"
+                             (delete)="onDeleteEventType($event)"></app-event-type-item>
+    </div>
 </div>
