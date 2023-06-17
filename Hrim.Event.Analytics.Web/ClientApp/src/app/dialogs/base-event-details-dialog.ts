@@ -11,7 +11,7 @@ import {DateTime}                           from "luxon";
 
 export type EventSaveContext = {
   model: SomeEventModel,
-  next: () => void | null,
+  next: (savedEvent: SomeEventModel) => void | null,
   error: (err: any) => void | null
 }
 

@@ -29,7 +29,9 @@ export class OccurrenceEventDetailsDialog extends BaseEventDetailsDialog impleme
     logger.logConstructor(this)
     this.saveContext         = {
       model: this.dialogRequest.model,
-      next : () => this.dialogRef.close(this.dialogRequest.model),
+      next : savedEvent => {
+        this.dialogRef.close(savedEvent)
+      },
       error: () => {
         this.dialogRef.disableClose = true
       }

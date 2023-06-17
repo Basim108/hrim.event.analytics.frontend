@@ -29,7 +29,9 @@ export class DurationEventDetailsDialog extends BaseEventDetailsDialog implement
     logger.logConstructor(this)
     this.saveContext         = {
       model: this.dialogRequest.model,
-      next : () => this.dialogRef.close(this.dialogRequest.model),
+      next: savedEvent => {
+        this.dialogRef.close(savedEvent)
+      },
       error: () => {this.dialogRef.disableClose = true}
     }
     this.selectedEventTypeId = this.dialogRequest.model.eventType.id
