@@ -101,4 +101,23 @@ export class EventTypeService {
     const options = {params, withCredentials: true}
     return this.http.delete<UserEventType>(`${this.urlService.crudApiUrl}/${this.entityUrl}/${entity.id}`, options);
   }
+
+  getEventType(eventTypeId: string): UserEventType {
+    const info = this.typeContexts[eventTypeId]
+    if(!info){
+      this.logger.error(`Cannot find event in context by id: "${eventTypeId}"`, this.typeContexts)
+    }
+    return info.entity
+  }
+  registerEventType(eventType: UserEventType): EntityState<UserEventType>{
+    let info = this.typeContexts[eventType.id]
+    if (info) {
+      info.entity = eventType
+    } else {
+      info = new EntityState<UserEventType>()
+      info.entity = eventType
+      this.typeContexts[eventType.id] = info
+    }
+    return info
+  }
 }

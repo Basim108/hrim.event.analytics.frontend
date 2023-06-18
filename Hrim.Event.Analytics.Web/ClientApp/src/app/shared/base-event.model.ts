@@ -1,29 +1,33 @@
 import {UserEventType} from "./event-type.model";
-import {EntityModel}   from "./entity.model";
+import {EntityModel} from "./entity.model";
 
 export abstract class BaseEventModel extends EntityModel {
   eventType: UserEventType
 
   public isOccurrence: boolean = false
-  protected constructor(model: BaseEventSnakeModel | null) {
-    super(model?.id ?? '', model?.concurrent_token ?? -1)
-    if (!model) {
-      return;
+
+  protected constructor(snakeModel: BaseEventSnakeModel | null, eventType: UserEventType | null) {
+    super(snakeModel?.id ?? '', snakeModel?.concurrent_token ?? -1)
+    if (!snakeModel) {
+      return
     }
-    this.eventType = model.event_type
+    if(!snakeModel.event_type && !eventType){
+      throw new Error('eventType property is falsy')
+    }
+    this.eventType = snakeModel.event_type || eventType!
   }
 }
 
 export abstract class BaseEventSnakeModel {
   id: string
-  event_type: UserEventType
+  event_type: UserEventType | null
   event_type_id: string
   concurrent_token: number
 
   protected constructor(model: BaseEventModel) {
-    this.id               = model.id
-    this.event_type       = model.eventType
-    this.event_type_id    = model.eventType.id
+    this.id = model.id
+    this.event_type = model.eventType
+    this.event_type_id = model.eventType.id
     this.concurrent_token = model.concurrentToken
   }
 }

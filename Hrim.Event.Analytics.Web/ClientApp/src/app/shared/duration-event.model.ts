@@ -1,5 +1,6 @@
 import {DateTime} from 'luxon'
 import {BaseEventModel, BaseEventSnakeModel} from './base-event.model'
+import {UserEventType} from "./event-type.model";
 
 export class DurationEventModel extends BaseEventModel {
   startedAt: DateTime
@@ -7,8 +8,8 @@ export class DurationEventModel extends BaseEventModel {
   finishedAt: DateTime | null
   finishedOn: string | null
 
-  constructor(model: DurationEventSnakeModel | null) {
-    super(model)
+  constructor(model: DurationEventSnakeModel | null, eventType: UserEventType | null) {
+    super(model, eventType)
     if (!model) return
     this.startedAt = DateTime.fromISO(model.started_at)
     this.startedOn = this.startedAt.toISODate()
