@@ -1,4 +1,5 @@
 import {UserEventType} from "../app/shared/event-type.model";
+import {EventTypeService} from "../app/services/user-event-type.service";
 
 export class EventTypeTestData {
   public readonly reading: UserEventType
@@ -43,6 +44,13 @@ export class EventTypeTestData {
       concurrent_token: 1,
       "is_mine"       : true
     }
+  }
+
+  register(service: EventTypeService) {
+    service.registerEventType(this.reading)
+    service.registerEventType(this.yogaPractice)
+    service.registerEventType(this.successfulTroubleshooting)
+    service.registerEventType(this.badSleep)
   }
 }
 

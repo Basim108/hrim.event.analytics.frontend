@@ -51,7 +51,7 @@ export class DayOfMonthComponent implements OnInit {
       return
     }
     const selectedTypeContext = eventTypeContexts.find(x => x.isSelected) ?? eventTypeContexts[0]
-    const createdEvent        = new OccurrenceEventModel(null)
+    const createdEvent        = new OccurrenceEventModel(null, null)
     createdEvent.id           = crypto.randomUUID() // important to match this event in the context after saving it.
     createdEvent.occurredOn   = this.dayModel.dateTime.toISODate() + 'T' + DateTime.now().toISOTime()
     createdEvent.occurredAt   = DateTime.fromISO(createdEvent.occurredOn)
@@ -67,7 +67,7 @@ export class DayOfMonthComponent implements OnInit {
       return
     }
     const selectedTypeContext = eventTypeContexts.find(x => x.isSelected) ?? eventTypeContexts[0]
-    const createdEvent        = new DurationEventModel(null)
+    const createdEvent        = new DurationEventModel(null, null)
     createdEvent.id           = crypto.randomUUID() // important to match this event in the context after saving it.
     createdEvent.startedOn    = this.dayModel.dateTime.toISODate() + 'T' + DateTime.now().toISOTime()
     createdEvent.startedAt    = DateTime.fromISO(createdEvent.startedOn)

@@ -11,6 +11,7 @@ import {SomeEventModel} from "../shared/some-event.model";
 import {EntityState} from "../shared/entity-state";
 import {BackendUrlService} from "./backend-url.service";
 import {UserEventType} from "../shared/event-type.model";
+import {EventTypeService} from "./user-event-type.service";
 
 @Injectable({providedIn: 'root'})
 export class HrimEventService {
@@ -25,6 +26,7 @@ export class HrimEventService {
 
   constructor(private logger: LogService,
               private urlService: BackendUrlService,
+              private eventTypeService: EventTypeService,
               private http: HttpClient) {
     logger.logConstructor(this)
   }
@@ -53,8 +55,7 @@ export class HrimEventService {
       .post<OccurrenceEventSnakeModel>(`${this.urlService.crudApiUrl}/${this.occurrenceUrl}`, body, options)
       .subscribe({
         next: createdEvent => {
-          const event = new OccurrenceEventModel(createdEvent)
-          event.eventType = model.eventType
+          const event = new OccurrenceEventModel(createdEvent, model.eventType)
           this.contextSaved(model, event)
           this.createdOccurrences$.next(event)
         },
@@ -75,8 +76,7 @@ export class HrimEventService {
       .post<DurationEventSnakeModel>(`${this.urlService.crudApiUrl}/${this.durationUrl}`, body, options)
       .subscribe({
         next: createdEvent => {
-          const event = new DurationEventModel(createdEvent)
-          event.eventType = model.eventType
+          const event = new DurationEventModel(createdEvent, model.eventType)
           this.contextSaved(model, event)
           this.createdDurations$.next(event)
         },
@@ -125,7 +125,7 @@ export class HrimEventService {
       .pipe(
         tap(responseModel => this.logger.debug('occurence events loaded from the cloud:', responseModel)),
         map(responseModel => responseModel.occurrences.map(x => {
-          const event = new OccurrenceEventModel(x)
+          const event = new OccurrenceEventModel(x, null)
           this.registerEventContext(event)
           return event
         })),
@@ -143,7 +143,7 @@ export class HrimEventService {
       .pipe(
         tap(responseModel => this.logger.debug('duration events loaded from the cloud:', responseModel)),
         map(responseModel => responseModel.durations.map(x => {
-          const event = new DurationEventModel(x)
+          const event = new DurationEventModel(x, null)
           this.registerEventContext(event)
           return event
         })),
@@ -198,14 +198,14 @@ export class HrimEventService {
   }
 
   private processOccurrenceSaveResponse(snakeModel: OccurrenceEventSnakeModel, beforeSaveModel: SomeEventModel):OccurrenceEventModel {
-    const event = new OccurrenceEventModel(snakeModel)
+    const event = new OccurrenceEventModel(snakeModel, this.eventTypeService.getEventType(snakeModel.event_type_id))
     event.eventType = beforeSaveModel.eventType
     this.contextSaved(beforeSaveModel, event)
     return event
   }
 
   private processDurationSaveResponse(snakeModel: DurationEventSnakeModel, beforeSaveModel: SomeEventModel):DurationEventModel {
-    const event = new DurationEventModel(snakeModel)
+    const event = new DurationEventModel(snakeModel, this.eventTypeService.getEventType(snakeModel.event_type_id))
     event.eventType = beforeSaveModel.eventType
     this.contextSaved(beforeSaveModel, event)
     return event
