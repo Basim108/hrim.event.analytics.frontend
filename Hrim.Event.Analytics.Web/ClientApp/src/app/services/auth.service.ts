@@ -1,9 +1,10 @@
-import {Injectable}       from "@angular/core";
-import {HttpClient}       from "@angular/common/http";
-import {BehaviorSubject}  from "rxjs";
-import {LogService}       from "./log.service";
+import {Injectable} from "@angular/core";
+import {HttpClient} from "@angular/common/http";
+import {BehaviorSubject} from "rxjs";
+import {LogService} from "./log.service";
 import {UserProfileModel} from "../shared/user-profile.model";
 import {BackendUrlService} from "./backend-url.service";
+import {Router} from "@angular/router";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -11,6 +12,7 @@ export class AuthService {
 
     constructor(private logger: LogService,
                 private urlService: BackendUrlService,
+                private router: Router,
                 private http: HttpClient) {
         logger.logConstructor(this);
         logger.debug(urlService.crudApiUrl)
@@ -27,9 +29,15 @@ export class AuthService {
         this.http
             .get<UserProfileModel>('/account/profile/me', {withCredentials: true})
             .subscribe({
-                           next : userProfile => {
+                           next : async userProfile => {
                                this.logger.debug('User is authenticated.', userProfile)
                                this.user$.next(userProfile)
+                               const unauthorizedUrlRequest = localStorage.getItem('unauthorized-url-request')
+                               if (unauthorizedUrlRequest) {
+                                 this.logger.debug('redirecting to previously requested url', unauthorizedUrlRequest)
+                                 await this.router.navigate([unauthorizedUrlRequest])
+                                 localStorage.removeItem('unauthorized-url-request')
+                               }
                            },
                            error: error => {
                                switch (error.status) {
@@ -45,10 +53,12 @@ export class AuthService {
     }
 
     login() {
+        localStorage.removeItem('unauthorized-url-request')
         window.location.href = `/account/login?returnUri=${encodeURIComponent(window.location.href)}`
     }
 
     logout() {
+        localStorage.removeItem('unauthorized-url-request')
         window.location.href = `/account/logout?returnUri=/`
     }
 }
