@@ -15,14 +15,16 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot,
               state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return this.authService.user$.pipe(
-        take(1),
-        map(user => {
-          if (user) {
-            this.logger.debug('auth guard passes the route for the user')
-            return true;
-          }
-          this.logger.warn('auth guard blocks the route for the user')
-          return this.router.createUrlTree(['/']);
-        }));
+      take(1),
+      map(user => {
+        this.logger.debug('route state', state.url)
+        if (user) {
+          this.logger.debug('auth guard passes the route for the user')
+          return true;
+        }
+        this.logger.warn('auth guard blocks the route for the user')
+        localStorage.setItem('unauthorized-url-request', state.url)
+        return this.router.createUrlTree(['/']);
+      }));
   }
 }
