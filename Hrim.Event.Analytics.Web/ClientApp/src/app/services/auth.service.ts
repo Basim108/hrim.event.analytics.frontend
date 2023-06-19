@@ -49,6 +49,6 @@ export class AuthService {
     }
 
     logout() {
-        window.location.href = `/account/logout?returnUri=${encodeURIComponent(window.location.href)}`
+        window.location.href = `/account/logout?returnUri=/`
     }
 }
