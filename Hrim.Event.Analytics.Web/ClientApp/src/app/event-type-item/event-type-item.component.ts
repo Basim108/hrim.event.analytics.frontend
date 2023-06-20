@@ -41,15 +41,17 @@ export class EventTypeItemComponent implements OnInit {
 
   onDeleteEventType(event: any) {
     event.stopPropagation()
-    this.eventTypeService
+    if(window.confirm(`Are sure you want to delete "${this.eventType.name}"?`)){
+      this.eventTypeService
         .delete(this.eventType)
         .subscribe({
-                     next: (deletedEventType) => {
-                       if (deletedEventType.is_deleted) {
-                         this.delete.emit(this.eventType)
-                       }
-                     }
-                   });
+          next: (deletedEventType) => {
+            if (deletedEventType.is_deleted) {
+              this.delete.emit(this.eventType)
+            }
+          }
+        });
+    }
   }
 
   toggleEventType() {
