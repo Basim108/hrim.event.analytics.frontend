@@ -76,20 +76,23 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
 
   onDelete($event: any) {
     $event.stopPropagation()
-    this.eventService
+    const eventKind = this.eventOfDay.isOccurrence ? 'occurrence' : 'duration'
+    if(window.confirm(`Are sure you want to delete "${this.eventOfDay.eventType.name}" ${eventKind}?`)) {
+      this.eventService
         .deleteEvent(this.eventOfDay)
         .subscribe({
-                     next : () => {
-                       delete this.eventService.eventContext[this.eventOfDay.id]
-                       this.delete.emit(this.eventOfDay)
-                     },
-                     error: err => {
-                       const eventContext     = this.eventService.eventContext[this.eventOfDay.id]
-                       eventContext.isDeleted = true
-                       eventContext.isUnsaved = true
-                       this.logger.error('Failed to delete event: ' + err, this.eventOfDay, eventContext)
-                     }
-                   });
+          next: () => {
+            delete this.eventService.eventContext[this.eventOfDay.id]
+            this.delete.emit(this.eventOfDay)
+          },
+          error: err => {
+            const eventContext = this.eventService.eventContext[this.eventOfDay.id]
+            eventContext.isDeleted = true
+            eventContext.isUnsaved = true
+            this.logger.error('Failed to delete event: ' + err, this.eventOfDay, eventContext)
+          }
+        });
+    }
   }
 
   getTopBorderStyle() {

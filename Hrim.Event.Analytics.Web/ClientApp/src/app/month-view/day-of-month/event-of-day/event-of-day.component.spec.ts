@@ -97,6 +97,7 @@ describe('EventOfDayComponent', () => {
 
   it('click on delete btn should call initiate deletion on backend', () => {
     spyOn(eventService, 'deleteEvent')
+    spyOn(window, 'confirm').and.returnValue(true)
     const deleteBtn = fixture.debugElement.nativeElement.querySelector('.delete-btn')
     expect(deleteBtn).toBeTruthy()
     deleteBtn.click()
@@ -106,6 +107,7 @@ describe('EventOfDayComponent', () => {
 
   it('event deletion should emit delete event on successful pipe', (done) => {
     spyOn(component.delete, 'emit')
+    spyOn(window, 'confirm').and.returnValue(true)
     const deletionPipe = of(component.eventOfDay)
     spyOn(eventService, 'deleteEvent').and.returnValue(deletionPipe)
 
@@ -119,6 +121,7 @@ describe('EventOfDayComponent', () => {
 
   it('event deletion when on failure should not emit delete event and set unsaved state', (done) => {
     spyOn(component.delete, 'emit')
+    spyOn(window, 'confirm').and.returnValue(true)
     const deletionPipe = new Observable<SomeEventModel>((observer) => {
       observer.error('failed to delete an event')
     })
@@ -138,5 +141,25 @@ describe('EventOfDayComponent', () => {
 
     expect(event$.stopPropagation).toHaveBeenCalled()
     done()
+  });
+
+  it('event deletion should ask confirmation before deleting an event', () => {
+    spyOn(component.delete, 'emit')
+    spyOn(window, 'confirm')
+
+    const event$ = { stopPropagation(){}}
+    component.onDelete(event$)
+
+    expect(window.confirm).toHaveBeenCalled()
+  });
+
+  it('event deletion should not delete when no confirmation received', () => {
+    spyOn(eventService, 'deleteEvent')
+    spyOn(window, 'confirm').and.returnValue(false)
+
+    const event$ = { stopPropagation(){}}
+    component.onDelete(event$)
+
+    expect(eventService.deleteEvent).not.toHaveBeenCalled()
   });
 });
