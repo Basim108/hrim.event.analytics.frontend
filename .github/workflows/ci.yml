@@ -16,7 +16,6 @@ jobs:
     strategy:
       matrix:
         node-version: [18.14.2]
-
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -36,7 +35,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18.14.2]
-
+    needs: build
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -54,6 +53,7 @@ jobs:
     defaults:
       run:
         working-directory: 'Hrim.Event.Analytics.Web/ClientApp'
+    needs: tests
     steps:
       - uses: actions/checkout@v2
         with:
