@@ -175,14 +175,16 @@ export class HrimEventService {
         id: model.id,
         concurrent_token: model.concurrentToken,
         occurred_at: (model as OccurrenceEventModel).occurredAt.toISO(),
-        event_type_id: model.eventType.id
+        event_type_id: model.eventType.id,
+        props : model.props
       }
       : {
         id: model.id,
         concurrent_token: model.concurrentToken,
         started_at: (model as DurationEventModel).startedAt.toISO(),
         finished_at: (model as DurationEventModel).finishedAt?.toISO() ?? undefined,
-        event_type_id: model.eventType.id
+        event_type_id: model.eventType.id,
+        props : model.props
       }
     return model.isOccurrence
       ? this.http.put<OccurrenceEventSnakeModel>(`${this.urlService.crudApiUrl}/${this.occurrenceUrl}`, body, options)

@@ -32,6 +32,15 @@
         </ngx-mat-datetime-picker>
       </mat-form-field>
     </p>
+    <p>
+      <mat-form-field appearance="standard">
+        <mat-label>Note</mat-label>
+        <textarea matInput
+                  formControlName="note"
+                  [value]="this.dialogRequest.model.props.note"></textarea>
+        <mat-hint>some follow up information</mat-hint>
+      </mat-form-field>
+    </p>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button [mat-dialog-close]="false">Cancel</button>
