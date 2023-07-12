@@ -55,6 +55,7 @@ export abstract class BaseEventDetailsDialog {
   ngOnInit(): void {
     let controls = {
       eventType: [this.selectedEventTypeId || '', [Validators.required]],
+      note: [this.saveContext.model.props.note || '']
     }
     this.addCustomFormControls(controls)
     this.form               = this.formBuilder.group(controls);
@@ -63,13 +64,16 @@ export abstract class BaseEventDetailsDialog {
   }
 
   checkFormChanges() {
+    const note = this.form.get('note')?.value
     this.isChanged = this.originalBaseEvent.eventType.id !== this.selectedEventTypeId ||
-      this.customFormChangesCheck()
+                     note !== this.originalBaseEvent.props.note ||
+                     this.customFormChangesCheck()
 
     this.logger.debug(`${this.dialogRequest.title.toLowerCase()} form is changed: `, this.isChanged)
   }
 
   updateModelFromControls() {
+    this.saveContext.model.props.note = this.form.get('note')?.value
     const eventTypeContext           = this.eventTypeService.typeContexts[this.selectedEventTypeId]
     this.saveContext.model.eventType = eventTypeContext.entity
     this.customUpdateModelFromControls()

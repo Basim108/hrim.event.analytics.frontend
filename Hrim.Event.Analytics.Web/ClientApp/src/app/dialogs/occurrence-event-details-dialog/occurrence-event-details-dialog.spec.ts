@@ -95,6 +95,16 @@ describe('OccurrenceEventDetailsDialog', () => {
     expect(dialogRequest.model.eventType.id).toEqual(testEventTypes.yogaPractice.id)
   });
 
+  it('changing note field should set isChanged', () => {
+    const fromCtrl = component.form.controls['note']
+    expect(fromCtrl).toBeTruthy()
+    expect(component.isChanged).toBeFalse()
+    fromCtrl.setValue('new value')
+    component.checkFormChanges()
+
+    expect(component.isChanged).toBeTrue()
+  });
+
   it('changing from field should set isChanged', () => {
     const fromCtrl = component.form.controls['from']
     expect(fromCtrl).toBeTruthy()
