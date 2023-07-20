@@ -61,6 +61,7 @@ export class EventTypeAnalysisSettingsComponent implements OnInit, OnDestroy {
 
     const countFeature = features.find(x => x.code == 'count')
     this.updateFeature(countFeature, this.countSettings)
+    this.logger.debug('setup analysis features and descriptions', this.gapSettings, this.countSettings)
   }
 
   updateFeature(feature: AnalysisFeatureModel | undefined, settings: AnyEventTypeAnalysisSettings | null){

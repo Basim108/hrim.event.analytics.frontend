@@ -15,8 +15,8 @@ export class LogService {
   }
 
   debug(msg: any, ...params: any[]) {
-    if (isDevMode())
-      console.debug(msg, ...params)
+    // if (isDevMode())
+    console.debug(msg, ...params)
   }
 
   info(msg: any, ...params: any[]) {
