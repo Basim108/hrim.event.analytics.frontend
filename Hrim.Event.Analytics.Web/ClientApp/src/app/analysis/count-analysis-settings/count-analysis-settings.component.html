@@ -1,0 +1,13 @@
+<mat-expansion-panel hideToggle [disabled]="analysisInfo.is_disabled">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <span class="analysis-title">{{analysisInfo.analysis_code}}</span>
+    </mat-panel-title>
+    <mat-panel-description>
+      <mat-slide-toggle [(ngModel)]="analysisInfo.is_on" (change)="onToggle($event)">On</mat-slide-toggle>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <div class="feature-description">
+    <mat-card-content>{{analysisInfo.description}}</mat-card-content>
+  </div>
+</mat-expansion-panel>

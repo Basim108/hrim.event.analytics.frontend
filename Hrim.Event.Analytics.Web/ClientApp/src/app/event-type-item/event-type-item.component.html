@@ -1,7 +1,7 @@
 <div class="event-type-item" [ngStyle]="{ borderColor: eventType.color}">
     <div class="item-container"
          (click)="toggleEventType()">
-        <mat-icon *ngIf="isSelected">done</mat-icon>
+        <mat-icon [attr.data-is-selected]="isSelected">done</mat-icon>
         <span class="event-type-title">{{eventType.name}}</span>
         <div class="tool-bar">
             <button mat-icon-button class="edit-btn" color="primary" (click)="onEditEventType($event)">

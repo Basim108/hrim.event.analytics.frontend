@@ -1,43 +1,58 @@
 <form [formGroup]="form" (ngSubmit)="onSave()">
   <h2 mat-dialog-title>{{data.title}}</h2>
   <mat-dialog-content>
-    <p>
-      <mat-form-field appearance="standard">
-        <mat-label>Event Type Name</mat-label>
-        <input matInput
-               formControlName="name"
-               [value]="data.model.name ? data.model.name : ''">
-        <mat-hint>e.g. headache</mat-hint>
-      </mat-form-field>
-    </p>
-    <p>
-      <mat-form-field appearance="standard">
-        <mat-label>Event Type Description</mat-label>
-        <textarea matInput
-                  formControlName="description"
-                  [value]="data.model.description ? data.model.description : ''"></textarea>
-        <mat-hint>e.g. all times I had a headache</mat-hint>
-      </mat-form-field>
-    </p>
-    <p>
-      <mat-form-field appearance="standard">
-        <mat-label>Color</mat-label>
-        <input matInput
-               [ngxMatColorPicker]="picker"
-               [style.display]="'none'"
-               formControlName="color"
-               [disabled]="isReadOnly">
-        <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
-        <ngx-mat-color-picker #picker [touchUi]="false" [color]="'primary'"></ngx-mat-color-picker>
-        <mat-hint>color that each event of this type will be colored with.</mat-hint>
-      </mat-form-field>
-    </p>
-    <p [style.background-color]="getColorInputBackground()"
-       [style.color]="getColorInputBackground()">&nbsp;
-    </p>
+    <mat-tab-group preserveContent>
+      <mat-tab label="Event Type">
+        <p>
+          <mat-form-field appearance="standard">
+            <mat-label>Event Type Name</mat-label>
+            <input matInput
+                   formControlName="name"
+                   [value]="data.model.name ? data.model.name : ''">
+            <mat-hint>e.g. headache</mat-hint>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="standard">
+            <mat-label>Event Type Description</mat-label>
+            <textarea matInput
+                      formControlName="description"
+                      [value]="data.model.description ? data.model.description : ''"></textarea>
+            <mat-hint>e.g. all times I had a headache</mat-hint>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="standard">
+            <mat-label>Color</mat-label>
+            <input matInput
+                   [ngxMatColorPicker]="picker"
+                   [style.display]="'none'"
+                   formControlName="color"
+                   [disabled]="isReadOnly">
+            <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
+            <ngx-mat-color-picker #picker [touchUi]="false" [color]="'primary'"></ngx-mat-color-picker>
+            <mat-hint>color that each event of this type will be colored with.</mat-hint>
+          </mat-form-field>
+        </p>
+        <p [style.background-color]="getColorInputBackground()"
+           [style.color]="getColorInputBackground()">&nbsp;
+        </p>
+      </mat-tab>
+      <mat-tab label="Analysis Settings" [disabled]="analysisSettings.length === 0">
+        <event-type-analysis-settings *ngIf="analysisSettings.length > 0"
+                                      [eventTypeId]="data.model.id"
+                                      [settings]="analysisSettings"
+                                      (changed)="onAnalysisSettingsChanged($event)">
+        </event-type-analysis-settings>
+      </mat-tab>
+    </mat-tab-group>
+
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button [mat-dialog-close]="false">Cancel</button>
-    <button mat-button type="submit" [disabled]="isReadOnly || !isChanged || !form.valid">{{data.action}}</button>
+    <button mat-button type="submit"
+            [disabled]="isReadOnly || !isChanged || !form.valid">
+      {{data.action}}
+    </button>
   </mat-dialog-actions>
 </form>
