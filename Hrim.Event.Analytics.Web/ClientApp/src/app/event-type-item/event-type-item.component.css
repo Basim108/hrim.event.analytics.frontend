@@ -6,6 +6,10 @@
   align-items: center;
 }
 
+.mat-icon[data-is-selected="false"] {
+  visibility: hidden;
+}
+
 .tool-bar {
   display: flex;
   flex-direction: row;

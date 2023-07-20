@@ -8,7 +8,7 @@ import {AppRoutingModule}                    from "./app-routing.module";
 import {MatDialogModule}                     from "@angular/material/dialog";
 import {MatFormFieldModule}                  from "@angular/material/form-field";
 import {MatInputModule}                      from "@angular/material/input";
-import {ReactiveFormsModule}                 from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 import {NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule} from "@angular-material-components/datetime-picker";
 import {MAT_COLOR_FORMATS, NGX_MAT_COLOR_FORMATS, NgxMatColorPickerModule}          from '@angular-material-components/color-picker'
@@ -35,6 +35,14 @@ import {DurationEventDetailsDialog}   from './dialogs/duration-event-details-dia
 import {MatSelectModule}              from "@angular/material/select";
 import {MatDatepickerModule}          from "@angular/material/datepicker";
 import {ApiRequestInterceptor}        from "./services/api-request-interceptor.service";
+import { EventTypeAnalysisSettingsComponent } from './analysis/event-type-analysis-settings/event-type-analysis-settings.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import { GapAnalysisSettingsComponent } from './analysis/gap-analysis-settings/gap-analysis-settings.component';
+import { CountAnalysisSettingsComponent } from './analysis/count-analysis-settings/count-analysis-settings.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatListModule} from "@angular/material/list";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
             declarations: [
@@ -53,27 +61,36 @@ import {ApiRequestInterceptor}        from "./services/api-request-interceptor.s
               EventTypeItemComponent,
               EventTypeDetailsDialog,
               OccurrenceEventDetailsDialog,
-              DurationEventDetailsDialog
+              DurationEventDetailsDialog,
+              EventTypeAnalysisSettingsComponent,
+              GapAnalysisSettingsComponent,
+              CountAnalysisSettingsComponent
             ],
-            imports     : [
-              BrowserModule,
-              BrowserAnimationsModule,
-              HttpClientModule,
-              AppRoutingModule,
-              MatIconModule,
-              MatButtonModule,
-              MatDialogModule,
-              MatFormFieldModule,
-              MatInputModule,
-              NgxMatColorPickerModule,
-              ReactiveFormsModule,
-              MatMenuModule,
-              MatSelectModule,
-              MatDatepickerModule,
-              NgxMatDatetimePickerModule,
-              NgxMatTimepickerModule,
-              NgxMatNativeDateModule,
-            ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgxMatColorPickerModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule,
+    MatTabsModule,
+    MatSlideToggleModule,
+    MatExpansionModule,
+    FormsModule,
+    MatListModule,
+    MatCardModule,
+  ],
             providers   : [
               {provide: ErrorHandler, useClass: ErrorMetadataService},
               {provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS},

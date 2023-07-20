@@ -1,0 +1,14 @@
+<mat-expansion-panel hideToggle>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <span class="analysis-title">{{analysisInfo.analysis_code}}</span>
+    </mat-panel-title>
+    <mat-panel-description>
+      <mat-slide-toggle [(ngModel)]="analysisInfo.is_on" (change)="onToggle($event)">On</mat-slide-toggle>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <mat-form-field>
+    <mat-label>Minimal Gap</mat-label>
+    <input matInput [(ngModel)]="analysisInfo.settings.minimal_gap_length" (ngModelChange)="minimalGap$.next($event)">
+  </mat-form-field>
+</mat-expansion-panel>
