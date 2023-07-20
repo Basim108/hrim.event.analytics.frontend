@@ -1,12 +1,9 @@
 import {Injectable} from "@angular/core";
 import {LogService} from "./log.service";
 import {Observable, Subject} from "rxjs";
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {UserEventType} from "../shared/event-type.model";
-import {EntityState} from "../shared/entity-state";
+import {HttpClient} from "@angular/common/http";
 import {BackendUrlService} from "./backend-url.service";
 import {AnyEventTypeAnalysisSettings} from "../shared/event-type-analysis-settings";
-import {EventTypeService} from "./user-event-type.service";
 import {AnalysisFeatureModel} from "../shared/analysis-feature.model";
 
 @Injectable({providedIn: 'root'})

@@ -68,9 +68,12 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
     this.analysisSettingService
         .get(this.data.model.id)
         .subscribe({
-          next : settings => this.analysisSettings = settings,
+          next : settings => {
+            this.analysisSettings = settings
+          },
           error: err => this.logger.error(`Failed to load analysis settings for event type id ${this.data.model.id}`, err)
         })
+    this.analysisSettingService.loadAvailable()
   }
 
   checkFormChanges() {
@@ -87,7 +90,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
     model.description = this.form.get('description')?.value;
   }
 
-  onAnalysisSettingsChanged(isChanged: boolean){
+  onAnalysisSettingsChanged(isChanged: boolean) {
     this.logger.debug(`analysis settings changed ${isChanged}`, this.data.model.id)
     this.isAnalysisSettingsChanged = isChanged
     this.checkFormChanges()
@@ -112,7 +115,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
             this.dialogRef.disableClose = true;
           }
         });
-    if(this.isAnalysisSettingsChanged)
+    if (this.isAnalysisSettingsChanged)
       this.analysisSettingService.save(this.data.model.id, this.analysisSettings)
     this.logger.debug('onSave clicked: ', this.data);
   }

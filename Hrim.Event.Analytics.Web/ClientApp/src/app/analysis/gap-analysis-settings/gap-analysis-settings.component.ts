@@ -3,6 +3,7 @@ import {EventTypeGapAnalysisSettings} from "../../shared/event-type-analysis-set
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {debounceTime, distinctUntilChanged, Subject} from "rxjs";
 import {tap} from "rxjs/operators";
+import {LogService} from "../../services/log.service";
 
 @Component({
   selector   : 'gap-analysis-settings',
@@ -17,7 +18,8 @@ export class GapAnalysisSettingsComponent implements OnInit {
 
   originalSettings: EventTypeGapAnalysisSettings
 
-  constructor() {
+  constructor(private logger: LogService) {
+    logger.logConstructor(this)
   }
 
   ngOnInit(): void {
