@@ -1,8 +1,8 @@
 <mat-accordion>
     <count-analysis-settings *ngIf="countSettings"
-                             [analysisInfo]="countSettings"
+                             [settings]="countSettings"
                              (changed)="onCountChanged($event)"></count-analysis-settings>
     <gap-analysis-settings *ngIf="gapSettings"
-                           [analysisInfo]="gapSettings"
+                           [settings]="gapSettings"
                            (changed)="onGapChanged($event)"></gap-analysis-settings>
 </mat-accordion>
