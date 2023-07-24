@@ -23,7 +23,7 @@ export class CalendarService {
     const completeLastWeekDays = lastMonthDay.weekday < 7
       ? 7 - lastMonthDay.weekday - 1
       : 6;
-    const allReportDays = now.daysInMonth + firstMonthDay.weekday + completeLastWeekDays;
+    const allReportDays = (now.daysInMonth || 30) + firstMonthDay.weekday + completeLastWeekDays;
     const result = [];
     let weekIndex = firstMonthDay.weekNumber;
     let firstReportDay = firstMonthDay.minus({days: firstMonthDay.weekday});

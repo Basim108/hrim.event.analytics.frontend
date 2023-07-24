@@ -58,6 +58,6 @@ export class OccurrenceEventDetailsDialog extends BaseEventDetailsDialog impleme
     this.dialogRequest.model.occurredAt = typeof (from) === 'string'
                                           ? DateTime.fromISO(from)
                                           : DateTime.fromJSDate(from)
-    this.dialogRequest.model.occurredOn = this.dialogRequest.model.occurredAt.toISODate()
+    this.dialogRequest.model.occurredOn = this.dialogRequest.model.occurredAt.toISODate() ?? ''
   }
 }

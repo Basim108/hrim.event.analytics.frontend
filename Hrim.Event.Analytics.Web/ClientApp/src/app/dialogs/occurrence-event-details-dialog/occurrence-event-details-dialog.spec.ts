@@ -90,7 +90,7 @@ describe('OccurrenceEventDetailsDialog', () => {
     component.updateModelFromControls()
 
     // note: when running test in ci environment. actual timezone sets to UTC, so ignore it
-    expect(dialogRequest.model.occurredAt.toISO().slice(0, -6)).toEqual(expectedFrom)
+    expect(dialogRequest.model.occurredAt.toISO()!.slice(0, -6)).toEqual(expectedFrom)
     expect(dialogRequest.model.eventType).toBeTruthy()
     expect(dialogRequest.model.eventType.id).toEqual(testEventTypes.yogaPractice.id)
   });

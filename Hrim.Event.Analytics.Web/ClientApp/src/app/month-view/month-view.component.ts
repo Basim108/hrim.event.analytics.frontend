@@ -109,7 +109,7 @@ export class MonthViewComponent implements OnInit, OnDestroy {
   }
 
   getDurations(day: DayModel): DurationEventModel[] {
-    const date         = day.dateTime.toISODate()
+    const date         = day.dateTime.toISODate() ?? ''
     const resultEvents = this.durationEvents.filter(x => x.finishedOn
                                                          ? date >= x.startedOn && date <= x.finishedOn
                                                          : date === x.startedOn)
