@@ -12,9 +12,9 @@ export class AnalysisReports {
     const incomingGap = analysisResults.find(x => x.code === GAP_ANALYSIS_CODE)
     const incomingCount = analysisResults.find(x => x.code === COUNT_ANALYSIS_CODE)
     if (incomingCount)
-      this.countReport = new CountAnalysisReport(incomingCount!)
+      this.countReport = new CountAnalysisReport(incomingCount)
     if (incomingGap)
-      this.gapReport = new GapAnalysisReport(incomingGap!)
+      this.gapReport = new GapAnalysisReport(incomingGap)
   }
 }
 

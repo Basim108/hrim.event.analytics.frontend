@@ -14,8 +14,6 @@ export class GapAnalysisReportComponent implements OnInit {
   displayedColumns: string[] = ['name', 'value'];
   dataSource: {name:string, value: string}[] = []
 
-  constructor() { }
-
   ngOnInit(): void {
     this.dataSource.push({name: 'The shortest gap', value: this.report?.minGap.toHuman(DURATION_OPTION)!})
     this.dataSource.push({name: 'The date of the shortest gap', value: this.report?.minGapDate.toISODate()!})

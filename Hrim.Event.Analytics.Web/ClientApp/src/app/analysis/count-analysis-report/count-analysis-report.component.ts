@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {CountAnalysisReport, GapAnalysisReport} from "../../shared/analysis-report.model";
+import {CountAnalysisReport} from "../../shared/analysis-report.model";
 import {ToHumanDurationOptions} from "luxon";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
@@ -15,7 +15,6 @@ export class CountAnalysisReportComponent implements OnInit {
   @Input() report: CountAnalysisReport | null
   displayedColumns: string[] = ['name', 'value'];
   dataSource: MatTableDataSource<{name:string, value: string}> = new MatTableDataSource<{name: string; value: string}>([])
-  constructor() { }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 

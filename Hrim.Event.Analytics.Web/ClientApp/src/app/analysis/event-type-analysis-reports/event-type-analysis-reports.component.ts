@@ -49,7 +49,7 @@ export class EventTypeAnalysisReportsComponent implements OnInit, OnDestroy {
 
   getSelectedAnalysisDescription(): string {
     const feature = this.availableAnalysis.find(x => x.code === this.selectedAnalysisCode)
-    return feature?.description || feature?.code || 'unknown feature'
+    return feature?.description ?? feature?.code ?? 'unknown feature'
   }
 
   selectedAnalysisChanged({value}: { value: string }) {

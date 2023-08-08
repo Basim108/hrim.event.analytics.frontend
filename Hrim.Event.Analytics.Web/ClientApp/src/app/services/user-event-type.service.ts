@@ -5,7 +5,6 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {UserEventType} from "../shared/event-type.model";
 import {EntityState} from "../shared/entity-state";
 import {BackendUrlService} from "./backend-url.service";
-import {DateTime} from "luxon";
 import {tap} from "rxjs/operators";
 import {AnalysisReports} from "../shared/analysis-report.model";
 

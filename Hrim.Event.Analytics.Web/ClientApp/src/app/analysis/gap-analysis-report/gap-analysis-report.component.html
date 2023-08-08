@@ -1,6 +1,7 @@
 <table mat-table *ngIf="report"
-       [dataSource]="dataSource" class="mat-elevation-z0">
-
+       [dataSource]="dataSource"
+       aria-label="Gap analysis report. The first column is a property name, and the second column is a calculated value."
+       class="mat-elevation-z0">
   <!-- Name Column -->
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef> Name </th>
