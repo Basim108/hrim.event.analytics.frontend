@@ -64,16 +64,14 @@ export class EventTypeAnalysisSettingsComponent implements OnInit, OnDestroy {
     this.logger.debug('setup analysis features and descriptions', this.gapSettings, this.countSettings)
   }
 
-  updateFeature(feature: AnalysisFeatureModel | undefined, settings: AnyEventTypeAnalysisSettings | null){
+  updateFeature(feature: AnalysisFeatureModel | undefined, settings: AnyEventTypeAnalysisSettings | null) {
     if (feature) {
       if (settings) {
         settings.is_disabled = false
         settings.description = feature.description ?? ''
       }
-    } else {
-      if (settings) {
-        settings.is_disabled = true
-      }
+    } else if (settings) {
+      settings.is_disabled = true
     }
   }
 
