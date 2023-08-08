@@ -12,7 +12,7 @@ export class DurationEventModel extends BaseEventModel {
     super(model, eventType)
     if (!model) return
     this.startedAt = DateTime.fromISO(model.started_at)
-    this.startedOn = this.startedAt.toISODate()
+    this.startedOn = this.startedAt.toISODate() ?? ''
     if (model.finished_at) {
       this.finishedAt = DateTime.fromISO(model.finished_at)
       this.finishedOn = this.finishedAt.toISODate()
@@ -27,7 +27,7 @@ export class DurationEventSnakeModel
 
   constructor(model: DurationEventModel) {
     super(model);
-    this.started_at = model.startedAt.toISO()
+    this.started_at = model.startedAt.toISO() ?? ''
     this.finished_at = model.finishedAt?.toISO() ?? null
   }
 }

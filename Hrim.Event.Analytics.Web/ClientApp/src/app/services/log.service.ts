@@ -1,4 +1,4 @@
-import {isDevMode, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({providedIn: "root"})
 export class LogService {
@@ -15,7 +15,6 @@ export class LogService {
   }
 
   debug(msg: any, ...params: any[]) {
-    // if (isDevMode())
     console.debug(msg, ...params)
   }
 

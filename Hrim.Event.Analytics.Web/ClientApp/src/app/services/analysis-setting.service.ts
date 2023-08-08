@@ -34,10 +34,11 @@ export class AnalysisSettingService {
   }
 
   save(entityId: string, analysisSettings: AnyEventTypeAnalysisSettings[]) {
+    this.logger.debug(`saving analysis settings for event type ${entityId}`, analysisSettings)
     const url = `${this.urlService.crudApiUrl}/${this.analysisUrl}/event-type/${entityId}`
     this.http.post<AnyEventTypeAnalysisSettings[]>(url, analysisSettings, {withCredentials: true})
       .subscribe({
-        next: () => this.logger.info(`successfully saved analysis settings for event type ${entityId}`),
+        next: () => this.logger.debug(`successfully saved analysis settings for event type ${entityId}`),
         error: err => this.logger.error(`failed to save analysis settings for event type ${entityId}`, analysisSettings, err)
       })
   }

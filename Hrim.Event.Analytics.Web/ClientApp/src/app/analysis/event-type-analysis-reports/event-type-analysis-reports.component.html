@@ -1,0 +1,17 @@
+<mat-form-field appearance="standard">
+  <mat-label>Select an analysis</mat-label>
+  <mat-select [(value)]="selectedAnalysisCode" (selectionChange)="selectedAnalysisChanged($event)">
+    <mat-option *ngFor="let info of availableAnalysis" [value]="info.code">{{info.code}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<mat-card *ngIf="selectedAnalysisCode">
+  <mat-card-title>{{getSelectedAnalysisDescription()}}</mat-card-title>
+  <mat-card-content>
+    <count-analysis-report *ngIf="isCountSelected"
+                           [report]="analysisReports!.countReport">
+    </count-analysis-report>
+    <gap-analysis-report *ngIf="isGapSelected"
+                         [report]="analysisReports!.gapReport">
+    </gap-analysis-report>
+  </mat-card-content>
+</mat-card>

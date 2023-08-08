@@ -1,3 +1,6 @@
+import {AnalysisReports} from "./analysis-report.model";
+import {IncomingAnalysisResult} from "./json-analysis-reports";
+
 export class UserEventType {
   id: string
   name: string = ''
@@ -6,4 +9,6 @@ export class UserEventType {
   is_deleted: boolean
   is_mine: boolean
   concurrent_token: number
+  analysis_results: IncomingAnalysisResult[]
+  analysisReports: AnalysisReports | null = null
 }

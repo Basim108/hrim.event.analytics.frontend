@@ -21,7 +21,10 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   isChanged: boolean = false
   form: FormGroup
   analysisSettings: AnyEventTypeAnalysisSettings[] = []
+  isAnalysisSettingsCreated = false
   isAnalysisSettingsChanged = false
+  isAnalysisSettingsNotEmpty= false
+  isAnalysisReportsNotEmpty = false
 
   formValueChangeSub: Subscription
 
@@ -35,7 +38,8 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
               private analysisSettingService: AnalysisSettingService,
               private logger: LogService) {
     logger.logConstructor(this);
-    this.originalEventType = {...this.data.model};
+    this.originalEventType = {...this.data.model}
+    this.isAnalysisReportsNotEmpty = data.model.analysis_results && data.model.analysis_results.length > 0
   }
 
   ngOnDestroy(): void {
@@ -65,11 +69,13 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
     this.formValueChangeSub = this.form.valueChanges
                                   .pipe(debounceTime(500))
                                   .subscribe(() => this.checkFormChanges())
+    this.isAnalysisSettingsCreated = !this.data.model.id
     this.analysisSettingService
-        .get(this.data.model.id)
+        .get(this.data.model.id || '00000000-0000-0000-0000-000000000000')
         .subscribe({
           next : settings => {
             this.analysisSettings = settings
+            this.isAnalysisSettingsNotEmpty = settings && settings.length > 0
           },
           error: err => this.logger.error(`Failed to load analysis settings for event type id ${this.data.model.id}`, err)
         })
@@ -107,6 +113,8 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
         .subscribe({
           next : (savedEventType) => {
             savedEventType.is_mine = true
+            if (this.isAnalysisSettingsChanged || this.isAnalysisSettingsCreated)
+              this.analysisSettingService.save(savedEventType.id, this.analysisSettings)
             this.dialogRef.close(savedEventType);
             this.eventService.updateEventTypesForEvents(savedEventType)
           },
@@ -115,8 +123,6 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
             this.dialogRef.disableClose = true;
           }
         });
-    if (this.isAnalysisSettingsChanged)
-      this.analysisSettingService.save(this.data.model.id, this.analysisSettings)
     this.logger.debug('onSave clicked: ', this.data);
   }
 

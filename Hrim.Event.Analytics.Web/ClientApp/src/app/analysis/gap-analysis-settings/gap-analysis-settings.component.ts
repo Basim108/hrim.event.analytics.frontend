@@ -41,9 +41,7 @@ export class GapAnalysisSettingsComponent implements OnInit {
   }
 
   isChanged() {
-    console.log('checking changes minimal gap', this.analysisInfo.settings.minimal_gap_length, this.originalSettings.settings.minimal_gap_length)
-    console.log('checking changes is on', this.analysisInfo.is_on, this.originalSettings.is_on)
-    return this.analysisInfo.is_on && this.originalSettings.is_on ||
+    return this.analysisInfo.is_on !== this.originalSettings.is_on ||
       this.analysisInfo.settings.minimal_gap_length !== this.originalSettings.settings.minimal_gap_length
 
   }

@@ -60,7 +60,7 @@ export class DurationEventDetailsDialog extends BaseEventDetailsDialog implement
     this.dialogRequest.model.startedAt = typeof (startedAt) === 'string'
                                           ? DateTime.fromISO(startedAt)
                                           : DateTime.fromJSDate(startedAt)
-    this.dialogRequest.model.startedOn = this.dialogRequest.model.startedAt.toISODate()
+    this.dialogRequest.model.startedOn = this.dialogRequest.model.startedAt.toISODate() ?? ''
     if (finishedAt) {
       this.dialogRequest.model.finishedAt = typeof (finishedAt) === 'string'
                                            ? DateTime.fromISO(finishedAt)
