@@ -22,6 +22,8 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   form: FormGroup
   analysisSettings: AnyEventTypeAnalysisSettings[] = []
   isAnalysisSettingsChanged = false
+  isAnalysisSettingsNotEmpty= false
+  isAnalysisReportsNotEmpty = false
 
   formValueChangeSub: Subscription
 
@@ -35,7 +37,8 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
               private analysisSettingService: AnalysisSettingService,
               private logger: LogService) {
     logger.logConstructor(this);
-    this.originalEventType = {...this.data.model};
+    this.originalEventType = {...this.data.model}
+    this.isAnalysisReportsNotEmpty = data.model.analysis_results && data.model.analysis_results.length > 0
   }
 
   ngOnDestroy(): void {
@@ -70,6 +73,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
         .subscribe({
           next : settings => {
             this.analysisSettings = settings
+            this.isAnalysisSettingsNotEmpty = settings && settings.length > 0
           },
           error: err => this.logger.error(`Failed to load analysis settings for event type id ${this.data.model.id}`, err)
         })

@@ -15,7 +15,9 @@ export class EventTypeTestData {
       description     : "",
       is_deleted      : false,
       concurrent_token: 1,
-      is_mine         : true
+      is_mine         : true,
+      analysis_results: [],
+      analysisReports: null
     }
     this.yogaPractice              = {
       "id"            : "dbbb1326-0b69-4b1b-a54a-25bcc4b07bb5",
@@ -24,7 +26,9 @@ export class EventTypeTestData {
       description     : "",
       is_deleted      : false,
       concurrent_token: 1,
-      "is_mine"       : true
+      "is_mine"       : true,
+      analysis_results: [],
+      analysisReports: null
     }
     this.successfulTroubleshooting = {
       "id"            : "f8034fca-780d-4874-8b8a-8f04a608a435",
@@ -33,7 +37,9 @@ export class EventTypeTestData {
       "color"         : "#7f98f5",
       is_deleted      : false,
       concurrent_token: 1,
-      "is_mine"       : true
+      "is_mine"       : true,
+      analysis_results: [],
+      analysisReports: null
     }
     this.badSleep                  = {
       "id"            : "ed22a207-e9e9-4f3e-8f1c-7e8a269d3448",
@@ -42,7 +48,9 @@ export class EventTypeTestData {
       "color"         : "#35e536",
       is_deleted      : false,
       concurrent_token: 1,
-      "is_mine"       : true
+      "is_mine"       : true,
+      analysis_results: [],
+      analysisReports: null
     }
   }
 

@@ -38,12 +38,17 @@
            [style.color]="getColorInputBackground()">&nbsp;
         </p>
       </mat-tab>
-      <mat-tab label="Analysis Settings" [disabled]="analysisSettings.length === 0">
-        <event-type-analysis-settings *ngIf="analysisSettings.length > 0"
+      <mat-tab label="Analysis Settings" [disabled]="!isAnalysisSettingsNotEmpty">
+        <event-type-analysis-settings *ngIf="isAnalysisSettingsNotEmpty"
                                       [eventTypeId]="data.model.id"
                                       [settings]="analysisSettings"
                                       (changed)="onAnalysisSettingsChanged($event)">
         </event-type-analysis-settings>
+      </mat-tab>
+      <mat-tab label="Analysis Reports" [disabled]="!isAnalysisReportsNotEmpty">
+        <event-type-analysis-reports *ngIf="isAnalysisReportsNotEmpty"
+                                      [reports]="data.model">
+        </event-type-analysis-reports>
       </mat-tab>
     </mat-tab-group>
 

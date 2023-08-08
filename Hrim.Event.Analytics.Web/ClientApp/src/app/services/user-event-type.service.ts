@@ -1,19 +1,22 @@
 import {Injectable} from "@angular/core";
 import {LogService} from "./log.service";
-import {Observable, Subject} from "rxjs";
+import {map, Observable, Subject} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {UserEventType} from "../shared/event-type.model";
 import {EntityState} from "../shared/entity-state";
 import {BackendUrlService} from "./backend-url.service";
+import {DateTime} from "luxon";
+import {tap} from "rxjs/operators";
+import {AnalysisReports} from "../shared/analysis-report.model";
 
 @Injectable({providedIn: 'root'})
 export class EventTypeService {
-  eventTypes$        = new Subject<UserEventType[]>();
+  eventTypes$ = new Subject<UserEventType[]>();
   selectedTypesInfo$ = new Subject<void>();
 
   typeContexts: { [eventTypeId: string]: EntityState<UserEventType> } = {}
 
-  eventTypeUrl       = 'v1/event-type'
+  eventTypeUrl = 'v1/event-type'
   entityUrl = 'v1/entity'
 
   constructor(private logger: LogService,
@@ -24,13 +27,21 @@ export class EventTypeService {
 
   load() {
     this.http.get<UserEventType[]>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}`, {withCredentials: true})
+        .pipe(
+          map(arr => arr.map(entity => {
+            if (entity.analysis_results)
+              entity.analysisReports = new AnalysisReports(entity.analysis_results)
+            return entity
+          })),
+          tap(x => this.logger.debug('event-types mapped after loading', x))
+        )
         .subscribe({
-                     next: userEventTypes => {
-                       this.logger.debug('User event types loaded from server:', userEventTypes)
-                       this.eventTypes$.next(userEventTypes);
-                       this.synchronizeTypeInfo(userEventTypes)
-                     }
-                   });
+          next: userEventTypes => {
+            this.logger.debug('User event types loaded from server:', userEventTypes)
+            this.eventTypes$.next(userEventTypes);
+            this.synchronizeTypeInfo(userEventTypes)
+          }
+        });
   }
 
   /**
@@ -69,8 +80,8 @@ export class EventTypeService {
         info.isSelected = isSelected
       }
     } else {
-      const context      = new EntityState<UserEventType>()
-      context.entity     = eventType
+      const context = new EntityState<UserEventType>()
+      context.entity = eventType
       context.isSelected = isSelected
 
       this.typeContexts[eventType.id] = context
@@ -86,8 +97,8 @@ export class EventTypeService {
     const options = {withCredentials: true};
     // TODO: check for creation through context.isCreated
     return entity.id
-           ? this.http.put<UserEventType>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}`, entity, options)
-           : this.http.post<UserEventType>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}`, entity, options);
+      ? this.http.put<UserEventType>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}`, entity, options)
+      : this.http.post<UserEventType>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}`, entity, options);
   }
 
   getDetails(entityId: string): Observable<UserEventType> {
@@ -97,19 +108,20 @@ export class EventTypeService {
   }
 
   delete(entity: UserEventType): Observable<UserEventType> {
-    const params  = new HttpParams().set('entity_type', 'event_type')
+    const params = new HttpParams().set('entity_type', 'event_type')
     const options = {params, withCredentials: true}
     return this.http.delete<UserEventType>(`${this.urlService.crudApiUrl}/${this.entityUrl}/${entity.id}`, options);
   }
 
   getEventType(eventTypeId: string): UserEventType {
     const info = this.typeContexts[eventTypeId]
-    if(!info){
+    if (!info) {
       this.logger.error(`Cannot find event in context by id: "${eventTypeId}"`, this.typeContexts)
     }
     return info.entity
   }
-  registerEventType(eventType: UserEventType): EntityState<UserEventType>{
+
+  registerEventType(eventType: UserEventType): EntityState<UserEventType> {
     let info = this.typeContexts[eventType.id]
     if (info) {
       info.entity = eventType

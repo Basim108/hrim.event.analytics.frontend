@@ -56,10 +56,10 @@ export class EventTypeAnalysisSettingsComponent implements OnInit, OnDestroy {
   }
 
   updateFeatures(features: AnalysisFeatureModel[]) {
-    const gapFeature = features.find(x => x.code == 'gap')
+    const gapFeature = features.find(x => x.code == GAP_ANALYSIS_CODE)
     this.updateFeature(gapFeature, this.gapSettings)
 
-    const countFeature = features.find(x => x.code == 'count')
+    const countFeature = features.find(x => x.code == COUNT_ANALYSIS_CODE)
     this.updateFeature(countFeature, this.countSettings)
     this.logger.debug('setup analysis features and descriptions', this.gapSettings, this.countSettings)
   }
