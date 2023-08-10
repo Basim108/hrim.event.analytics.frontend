@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using Auth0.AspNetCore.Authentication;
 using Hrim.Event.Analytics.Web.Cqrs.Users;
 using Hrim.Event.Analytics.Web.Models;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Hrim.Event.Analytics.Web.Controllers;
 
@@ -54,6 +56,11 @@ public class AccountController: Controller
         if (string.IsNullOrWhiteSpace(jwt)) {
             return Unauthorized("cannot get access token");
         }
+        var token = new JsonWebToken(jwt);
+        if (token.ValidTo < DateTime.Now) {
+            var refreshToken = await HttpContext.GetTokenAsync(CookieAuthenticationDefaults.AuthenticationScheme, "refresh_token");
+        }
+        
         var userProfile = await _mediator.Send(new ExternalUserProfileBuild(User.Claims), cancellationToken);
 
         await _mediator.Send(new RegisterExternalUserProfile(userProfile, jwt), cancellationToken);

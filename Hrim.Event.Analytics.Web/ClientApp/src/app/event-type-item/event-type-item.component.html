@@ -1,4 +1,4 @@
-<div class="event-type-item" [ngStyle]="{ borderColor: eventType.color}">
+<div class="event-type-item" [ngStyle]="{ borderColor: eventType.color, backgroundColor: eventType.color+'50strat'}">
     <div class="item-container"
          (click)="toggleEventType()">
         <mat-icon [attr.data-is-selected]="isSelected">done</mat-icon>

@@ -1,4 +1,3 @@
-using Auth0.AspNetCore.Authentication;
 using Hrimsoft.Core.Exceptions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -45,11 +44,12 @@ public static class AuthServiceRegistrations
                                       options.Scope.Clear();
                                       options.Scope.Add("openid");
                                       options.Scope.Add("profile");
+                                      options.Scope.Add("offline_access");
                                       options.TokenValidationParameters = new TokenValidationParameters {
                                           NameClaimType = "name"
                                       };
                                       options.Events = new OpenIdConnectEvents {
-                                          OnRedirectToIdentityProviderForSignOut = (context) => {
+                                          OnRedirectToIdentityProviderForSignOut = context => {
                                               var logoutUri     = $"https://{domain}/v2/logout?client_id={clientId}";
                                               var postLogoutUri = context.Properties.RedirectUri;
                                               if (!string.IsNullOrEmpty(postLogoutUri)) {
