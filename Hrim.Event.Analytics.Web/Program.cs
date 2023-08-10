@@ -30,12 +30,8 @@ builder.Host.UseSerilog((context, services, configuration) => {
                  .Enrich.WithProperty("ThreadId", Environment.CurrentManagedThreadId)
                  .Enrich.WithProperty("AspNetEnvironment", context.HostingEnvironment.EnvironmentName);
     }
-    if (context.HostingEnvironment.IsDevelopment()) {
-        configuration.WriteTo.Console();
-    }
-    else {
-        configuration.WriteTo.Console(new RenderedCompactJsonFormatter());
-    }
+    configuration.WriteTo.Console();
+    // configuration.WriteTo.Console(new RenderedCompactJsonFormatter());
 });
 var app = builder.Build();
 
@@ -46,10 +42,10 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapHealthChecks("/health", new HealthCheckOptions
-{
-    AllowCachingResponses = false
-});
+app.MapHealthChecks("/health",
+                    new HealthCheckOptions {
+                        AllowCachingResponses = false
+                    });
 app.MapControllerRoute(name: "default",
                        pattern: "{controller}/{action=Index}/{id?}");
 
