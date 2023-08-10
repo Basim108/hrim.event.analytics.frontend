@@ -77,6 +77,8 @@ export class GapAnalysisReport extends AnalysisReport {
 }
 
 function fromDotNetTimeStamp(timestamp: string): Duration {
+  if(!timestamp)
+    timestamp = '00:00:00'
   const parts = timestamp.split(':')
   const dotIdx = parts[0].indexOf('.')
   const days = dotIdx < 0 ? 0 : Number(parts[0].slice(0, dotIdx + 1))
