@@ -2,6 +2,7 @@ namespace Hrim.Event.Analytics.Web;
 
 public static class WebConsts
 {
+    public const string AUTH0_API       = "Auth0Api";
     public const string CRUD_API        = "CrudApi";
     public const string COMMAND         = "CqrsCommand={CqrsCommand}";
     public const string START_HANDLING  = "Start handling";
