@@ -9,6 +9,16 @@ namespace Hrim.Event.Analytics.Web.Authorization;
 public static class AuthServiceRegistrations
 {
     public static void AddEventAnalyticsAuthentication(this IServiceCollection services, IConfiguration appConfig, IHostEnvironment env) {
+        services.AddHttpContextAccessor();
+        services.AddTransient<IAuthorizationTokenManager, Auth0TokenManager>();
+        services.AddHttpClient<Auth0TokenManager>(WebConsts.AUTH0_API,
+                                                  cfg => {
+                                                      var domain = appConfig[Envs.AUTH0_DOMAIN];
+                                                      if (string.IsNullOrWhiteSpace(domain))
+                                                          throw new ConfigurationException(null, Envs.AUTH0_DOMAIN);
+
+                                                      cfg.BaseAddress = new Uri($"https://{domain}");
+                                                  });
         services.AddAuthentication(options => {
                      options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                      options.DefaultSignInScheme       = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -65,8 +75,7 @@ public static class AuthServiceRegistrations
 
                                               return Task.CompletedTask;
                                           },
-                                          OnRedirectToIdentityProvider = context =>
-                                          {
+                                          OnRedirectToIdentityProvider = context => {
                                               context.ProtocolMessage.SetParameter("audience", "event-analytics-crud-api");
                                               return Task.FromResult(0);
                                           }

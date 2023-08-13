@@ -1,5 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;
 using Auth0.AspNetCore.Authentication;
+using Hrim.Event.Analytics.Web.Authorization;
 using Hrim.Event.Analytics.Web.Cqrs.Users;
 using Hrim.Event.Analytics.Web.Models;
 using MediatR;
@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Hrim.Event.Analytics.Web.Controllers;
 
@@ -18,9 +16,14 @@ namespace Hrim.Event.Analytics.Web.Controllers;
 [Route("[controller]")]
 public class AccountController: Controller
 {
-    private readonly IMediator _mediator;
+    private readonly IMediator                  _mediator;
+    private readonly IAuthorizationTokenManager _authTokenManager;
 
-    public AccountController(IMediator mediator) { _mediator = mediator; }
+    public AccountController(IMediator                  mediator,
+                             IAuthorizationTokenManager authTokenManager) {
+        _mediator         = mediator;
+        _authTokenManager = authTokenManager;
+    }
 
     /// <summary> Authenticate with the Facebook </summary>
     [HttpGet("login")]
@@ -52,15 +55,10 @@ public class AccountController: Controller
     [HttpGet("token")]
     [Authorize]
     public async Task<IActionResult> GetTokenAsync(CancellationToken cancellationToken) {
-        var jwt = await HttpContext.GetTokenAsync(CookieAuthenticationDefaults.AuthenticationScheme, "access_token");
+        var jwt = await _authTokenManager.GetAccessTokenAsync(cancellationToken);
         if (string.IsNullOrWhiteSpace(jwt)) {
             return Unauthorized("cannot get access token");
         }
-        var token = new JsonWebToken(jwt);
-        if (token.ValidTo < DateTime.Now) {
-            var refreshToken = await HttpContext.GetTokenAsync(CookieAuthenticationDefaults.AuthenticationScheme, "refresh_token");
-        }
-        
         var userProfile = await _mediator.Send(new ExternalUserProfileBuild(User.Claims), cancellationToken);
 
         await _mediator.Send(new RegisterExternalUserProfile(userProfile, jwt), cancellationToken);
