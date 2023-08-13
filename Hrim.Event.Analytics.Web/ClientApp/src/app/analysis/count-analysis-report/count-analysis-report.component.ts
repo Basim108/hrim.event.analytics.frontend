@@ -23,15 +23,14 @@ export class CountAnalysisReportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataSource.data.push({name: 'The shortest duration event', value: this.report?.minDuration.toHuman(DURATION_OPTION)!})
-    this.dataSource.data.push({name: 'Date of the shortest event', value: this.report?.minDurationDate.toISODate()!})
-    this.dataSource.data.push({name: 'The longest duration event', value: this.report?.maxDuration.toHuman(DURATION_OPTION)!})
-    this.dataSource.data.push({name: 'Date of the longest event', value: this.report?.maxDurationDate.toISODate()!})
-    this.dataSource.data.push({name: 'Average duration event length', value: this.report?.avgDuration.toHuman(DURATION_OPTION)!})
     this.dataSource.data.push({name: 'Sum of all duration events', value: this.report?.totalDuration.toHuman(DURATION_OPTION)!})
     this.dataSource.data.push({name: 'Number of duration events', value: this.report?.durations.toString()!})
     this.dataSource.data.push({name: 'Number of occurrence events', value: this.report?.occurrences.toString()!})
     this.dataSource.data.push({name: 'Number of all events', value: (this.report?.occurrences! + this.report?.durations!).toString()!})
+    this.dataSource.data.push({name: 'Average duration event length', value: this.report?.avgDuration.toHuman(DURATION_OPTION)!})
+    this.dataSource.data.push({name: 'The shortest duration event', value: this.report?.minDuration.toHuman(DURATION_OPTION)!})
+    this.dataSource.data.push({name: 'Date of the shortest event', value: this.report?.minDurationDate.toISODate()!})
+    this.dataSource.data.push({name: 'The longest duration event', value: this.report?.maxDuration.toHuman(DURATION_OPTION)!})
+    this.dataSource.data.push({name: 'Date of the longest event', value: this.report?.maxDurationDate.toISODate()!})
   }
-
 }

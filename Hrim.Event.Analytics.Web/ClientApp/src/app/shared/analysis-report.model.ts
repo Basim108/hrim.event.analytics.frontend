@@ -82,7 +82,7 @@ function fromDotNetTimeStamp(timestamp: string): Duration {
   const parts = timestamp.split(':')
   const dotIdx = parts[0].indexOf('.')
   const days = dotIdx < 0 ? 0 : Number(parts[0].slice(0, dotIdx + 1))
-  const hours = dotIdx < 0 ? Number(parts[0]) : Number(parts[0].slice(dotIdx, parts[0].length - dotIdx + 1))
+  const hours = dotIdx < 0 ? Number(parts[0]) : Number(parts[0].slice(dotIdx + 1, parts[0].length - dotIdx + 1))
   const minutes = Number(parts[1])
   const seconds = Number(parts[2])
   const obj: any = {}
