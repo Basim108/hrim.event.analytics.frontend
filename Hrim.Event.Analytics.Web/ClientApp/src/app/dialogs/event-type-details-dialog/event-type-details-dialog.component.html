@@ -5,6 +5,18 @@
       <mat-tab label="Event Type">
         <p>
           <mat-form-field appearance="standard">
+            <mat-label>Parent Event Type</mat-label>
+            <mat-select [(value)]="data.model.parent_id"
+                        formControlName="parent">
+              <mat-option *ngFor="let type of allEventTypes; index as i"
+                          [value]="type.id">
+                {{type.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="standard">
             <mat-label>Event Type Name</mat-label>
             <input matInput
                    formControlName="name"
@@ -47,7 +59,7 @@
       </mat-tab>
       <mat-tab label="Analysis Reports" [disabled]="!isAnalysisReportsNotEmpty">
         <event-type-analysis-reports *ngIf="isAnalysisReportsNotEmpty"
-                                      [reports]="data.model">
+                                     [reports]="data.model">
         </event-type-analysis-reports>
       </mat-tab>
     </mat-tab-group>

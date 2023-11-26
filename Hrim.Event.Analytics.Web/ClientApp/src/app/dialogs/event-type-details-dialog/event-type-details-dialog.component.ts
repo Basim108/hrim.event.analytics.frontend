@@ -25,8 +25,10 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   isAnalysisSettingsChanged = false
   isAnalysisSettingsNotEmpty= false
   isAnalysisReportsNotEmpty = false
+  allEventTypes: UserEventType[]
 
   formValueChangeSub: Subscription
+  allEventTypesSub: Subscription
 
   private originalEventType: UserEventType;
 
@@ -44,16 +46,27 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.formValueChangeSub?.unsubscribe()
+    this.allEventTypesSub?.unsubscribe()
   }
 
   ngOnInit(): void {
+    this.allEventTypesSub = this.eventTypeService.eventTypes$
+                                .subscribe({
+                                  next: eventTypes => {
+                                    this.allEventTypes = this.data.model.id
+                                       ? eventTypes.filter(x => x.id != this.data.model.id)
+                                       : eventTypes
+                                    this.logger.log('getting event types for select component: ', this.allEventTypes)
+                                  }
+                                })
     this.isReadOnly = !!this.data.model.id && !this.data.model.is_mine;
     this.logger.debug('event type dialog isReadOnly', this.isReadOnly, this.data)
     const color = this.getColorFromHex(this.data.model.color || '#83ee84');
     this.form = this.formBuilder.group({
       name       : [this.data.model.name || '', [Validators.required]],
       description: [this.data.model.description || ''],
-      color      : new FormControl(color, [Validators.required])
+      color      : new FormControl(color, [Validators.required]),
+      parent     : [this.data.model.parent_id]
     });
     if (this.data.model.id && this.data.model.is_mine) {
       this.eventTypeService.getDetails(this.data.model.id)
@@ -71,7 +84,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
                                   .subscribe(() => this.checkFormChanges())
     this.isAnalysisSettingsCreated = !this.data.model.id
     this.analysisSettingService
-        .get(this.data.model.id || '00000000-0000-0000-0000-000000000000')
+        .get(this.data.model.id || 0)
         .subscribe({
           next : settings => {
             this.analysisSettings = settings
@@ -86,6 +99,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
     this.isChanged = this.originalEventType.name !== this.form.get('name')?.value ||
       this.originalEventType.description !== this.form.get('description')?.value ||
       this.originalEventType.color !== '#' + this.form.get('color')?.value?.hex ||
+      this.originalEventType.parent_id !== this.form.get('parent')?.value ||
       this.isAnalysisSettingsChanged;
     this.logger.debug(`${this.data.title.toLowerCase()} form is changed: `, this.isChanged)
   }
@@ -94,6 +108,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
     model.name = this.form.get('name')?.value;
     model.color = '#' + this.form.get('color')?.value.hex;
     model.description = this.form.get('description')?.value;
+    model.parent_id   = this.form.get('parent')?.value;
   }
 
   onAnalysisSettingsChanged(isChanged: boolean) {

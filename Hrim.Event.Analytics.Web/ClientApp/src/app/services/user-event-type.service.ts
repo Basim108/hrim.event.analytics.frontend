@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {LogService} from "./log.service";
-import {map, Observable, Subject} from "rxjs";
+import {map, Observable, ReplaySubject, Subject} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {UserEventType} from "../shared/event-type.model";
 import {EntityState} from "../shared/entity-state";
@@ -10,7 +10,7 @@ import {AnalysisReports} from "../shared/analysis-report.model";
 
 @Injectable({providedIn: 'root'})
 export class EventTypeService {
-  eventTypes$ = new Subject<UserEventType[]>();
+  eventTypes$ = new ReplaySubject<UserEventType[]>(1);
   selectedTypesInfo$ = new Subject<void>();
 
   typeContexts: { [eventTypeId: string]: EntityState<UserEventType> } = {}
@@ -35,10 +35,10 @@ export class EventTypeService {
           tap(x => this.logger.debug('event-types mapped after loading', x))
         )
         .subscribe({
-          next: userEventTypes => {
-            this.logger.debug('User event types loaded from server:', userEventTypes)
-            this.eventTypes$.next(userEventTypes);
-            this.synchronizeTypeInfo(userEventTypes)
+          next: loadedTypes => {
+            this.logger.debug('event types loaded from server:', loadedTypes)
+            this.eventTypes$.next(loadedTypes);
+            this.synchronizeTypeInfo(loadedTypes)
           }
         });
   }
@@ -55,7 +55,7 @@ export class EventTypeService {
       if (!this.typeContexts.hasOwnProperty(existedTypeId)) {
         continue
       }
-      if (loadedTypes.every(x => x.id !== existedTypeId)) {
+      if (loadedTypes.every(x => x.id != existedTypeId)) {
         delete this.typeContexts[existedTypeId]
       }
     }
@@ -100,7 +100,7 @@ export class EventTypeService {
       : this.http.post<UserEventType>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}`, entity, options);
   }
 
-  getDetails(entityId: string): Observable<UserEventType> {
+  getDetails(entityId: number | string): Observable<UserEventType> {
     return this.http.get<UserEventType>(`${this.urlService.crudApiUrl}/${this.eventTypeUrl}/${entityId}`, {
       withCredentials: true
     });
@@ -112,7 +112,7 @@ export class EventTypeService {
     return this.http.delete<UserEventType>(`${this.urlService.crudApiUrl}/${this.entityUrl}/${entity.id}`, options);
   }
 
-  getEventType(eventTypeId: string): UserEventType {
+  getEventType(eventTypeId: number | string): UserEventType {
     const info = this.typeContexts[eventTypeId]
     if (!info) {
       this.logger.error(`Cannot find event in context by id: "${eventTypeId}"`, this.typeContexts)

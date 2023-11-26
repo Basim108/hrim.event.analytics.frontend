@@ -2,7 +2,8 @@ import {AnalysisReports} from "./analysis-report.model";
 import {IncomingAnalysisResult} from "./json-analysis-reports";
 
 export class UserEventType {
-  id: string
+  id: number | string
+  parent_id: number
   name: string = ''
   description: string | null = ''
   color: string = ''

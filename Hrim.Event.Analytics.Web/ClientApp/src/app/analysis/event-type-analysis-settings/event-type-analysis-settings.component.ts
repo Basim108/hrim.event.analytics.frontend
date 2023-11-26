@@ -15,7 +15,7 @@ import {AnalysisSettingService} from "../../services/analysis-setting.service";
   styleUrls  : ['./event-type-analysis-settings.component.css']
 })
 export class EventTypeAnalysisSettingsComponent implements OnInit, OnDestroy {
-  @Input('eventTypeId') eventTypeId: string
+  @Input('eventTypeId') eventTypeId: number | string
   @Input('settings') settings: AnyEventTypeAnalysisSettings[]
   @Output() changed = new EventEmitter<boolean>()
 

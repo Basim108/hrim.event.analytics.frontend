@@ -45,18 +45,18 @@ describe('EventTypeService', () => {
     })
 
     it('after loading event types should set typesInfo', (done) => {
-        service.load()
-        const req = httpTestingController.expectOne(url)
-        expect(req.request.method).toEqual('GET')
-        req.flush(Object.values(testData))
-        expect(service.typeContexts).toBeTruthy()
-        for (let eventType of Object.values(testData)) {
-            const typeId = eventType.id
-            expect(service.typeContexts[typeId]).toBeTruthy()
-            expect(service.typeContexts[typeId].entity).toEqual(eventType)
-            expect(service.typeContexts[typeId].isSelected).toBeFalse()
-        }
-        done()
+      service.load()
+      const req = httpTestingController.expectOne(url)
+      expect(req.request.method).toEqual('GET')
+      req.flush(Object.values(testData))
+      expect(service.typeContexts).toBeTruthy()
+      for (let eventType of Object.values(testData)) {
+        const typeId = eventType.id
+        expect(service.typeContexts[typeId]).toBeTruthy()
+        expect(service.typeContexts[typeId].entity).toEqual(eventType)
+        expect(service.typeContexts[typeId].isSelected).toBeFalse()
+      }
+      done()
     })
 
     it('after loading event types should reset typesInfo', (done) => {
@@ -78,21 +78,24 @@ describe('EventTypeService', () => {
     })
 
     it('after loading event types should save type info of existed types', (done) => {
-        service.updateTypeContext(testData.reading, true)
-        service.updateTypeContext(testData.yogaPractice, false)
+      service.updateTypeContext(testData.reading, true)
+      service.updateTypeContext(testData.yogaPractice, false)
 
-        service.load()
-        const req = httpTestingController.expectOne(url)
-        expect(req.request.method).toEqual('GET')
-        req.flush([testData.reading])
-        const typeId = testData.reading.id
+      service.selectedTypesInfo$.subscribe({
+        next: () => {
+          expect(service.typeContexts).toBeTruthy()
+          expect(Object.keys(service.typeContexts).length).toEqual(1)
+          expect(service.typeContexts[testData.reading.id]).toBeTruthy()
+          expect(service.typeContexts[testData.reading.id].entity).toEqual(testData.reading)
+          expect(service.typeContexts[testData.reading.id].isSelected).toBeTrue()
+          done()
+        }
+      })
 
-        expect(service.typeContexts).toBeTruthy()
-        expect(Object.keys(service.typeContexts).length).toEqual(1)
-        expect(service.typeContexts[typeId]).toBeTruthy()
-        expect(service.typeContexts[typeId].entity).toEqual(testData.reading)
-        expect(service.typeContexts[typeId].isSelected).toBeTrue()
-        done()
+      service.load()
+      const req = httpTestingController.expectOne(url)
+      expect(req.request.method).toEqual('GET')
+      req.flush([testData.reading])
     })
 
     it('updateTypeInfo should add new event type info', () => {

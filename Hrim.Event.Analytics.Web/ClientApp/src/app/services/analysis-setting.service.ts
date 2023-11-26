@@ -28,12 +28,12 @@ export class AnalysisSettingService {
         });
   }
 
-  get(entityId: string): Observable<AnyEventTypeAnalysisSettings[]> {
+  get(entityId: number | string): Observable<AnyEventTypeAnalysisSettings[]> {
     const url = `${this.urlService.crudApiUrl}/${this.analysisUrl}/event-type/${entityId}`
     return this.http.get<AnyEventTypeAnalysisSettings[]>(url, {withCredentials: true})
   }
 
-  save(entityId: string, analysisSettings: AnyEventTypeAnalysisSettings[]) {
+  save(entityId: number | string, analysisSettings: AnyEventTypeAnalysisSettings[]) {
     this.logger.debug(`saving analysis settings for event type ${entityId}`, analysisSettings)
     const url = `${this.urlService.crudApiUrl}/${this.analysisUrl}/event-type/${entityId}`
     this.http.post<AnyEventTypeAnalysisSettings[]>(url, analysisSettings, {withCredentials: true})

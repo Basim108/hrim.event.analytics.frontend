@@ -76,12 +76,12 @@ describe('EventTypeListComponent', () => {
   it('onDeleteEventType should emit types without deleted one', done => {
     eventTypeService.eventTypes$.next([testEventTypes.reading, testEventTypes.badSleep])
     fixture.detectChanges()
+    component.onDeleteEventType(testEventTypes.badSleep)
     eventTypeService.eventTypes$.subscribe(types => {
       expect(types.length).toEqual(1)
       expect(types[0].id).toEqual(testEventTypes.reading.id)
       done()
     })
-    component.onDeleteEventType(testEventTypes.badSleep)
   })
 
   it('onCreateEventType when dialog canceled should not emit new event-type', () => {

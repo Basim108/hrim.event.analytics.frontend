@@ -5,8 +5,8 @@ export abstract class BaseEventModel extends EntityModel {
   eventType: UserEventType
 
   public isOccurrence: boolean = false
-  public props: { note: string } 
-  
+  public props: { note: string }
+
   protected constructor(snakeModel: BaseEventSnakeModel | null, eventType: UserEventType | null) {
     super(snakeModel?.id ?? '', snakeModel?.concurrent_token ?? -1)
     if (!snakeModel) {
@@ -21,9 +21,9 @@ export abstract class BaseEventModel extends EntityModel {
 }
 
 export abstract class BaseEventSnakeModel {
-  id: string
+  id: number | string
   event_type: UserEventType | null
-  event_type_id: string
+  event_type_id: number | string
   concurrent_token: number
   props: {note: string}
 

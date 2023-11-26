@@ -11,7 +11,7 @@ import {DateTime}                           from "luxon";
 
 export type EventSaveContext = {
   model: SomeEventModel,
-  next: (savedEvent: SomeEventModel) => void | null,
+  next: (savedEntity: SomeEventModel) => void | null,
   error: (err: any) => void | null
 }
 
@@ -22,7 +22,7 @@ export abstract class BaseEventDetailsDialog {
   protected saveContext: EventSaveContext
   isReadOnly: boolean = false
   isChanged: boolean  = false
-  selectedEventTypeId: string
+  selectedEventTypeId: number | string
   form: FormGroup
 
   protected formValueChangeSub: Subscription
@@ -89,7 +89,7 @@ export abstract class BaseEventDetailsDialog {
     this.eventService
         .save(this.saveContext.model)
         .subscribe({
-                     next : this.saveContext.next,
+                     next : savedEntity => this.saveContext.next(savedEntity),
                      error: err => {
                        this.logger.error('failed to save an event: ', this.dialogRequest, err)
                        this.saveContext.error(err)
