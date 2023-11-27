@@ -17,6 +17,7 @@ import {FormBuilder}                                                       from 
 import {MAT_COLOR_FORMATS, NGX_MAT_COLOR_FORMATS, NgxMatColorPickerModule} from "@angular-material-components/color-picker";
 import {UserEventType}                                                     from "../../shared/event-type.model";
 import {HrimEventService} from "../../services/hrim-event.service";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 describe('EventTypeDetailsDialogComponent', () => {
   let component: EventTypeDetailsDialog;
@@ -37,6 +38,7 @@ describe('EventTypeDetailsDialogComponent', () => {
                                              MatButtonModule,
                                              MatDialogModule,
                                              MatSelectModule,
+                                             MatAutocompleteModule,
                                              MatDatepickerModule,
                                              NgxMatColorPickerModule,
                                              NgxMatTimepickerModule,

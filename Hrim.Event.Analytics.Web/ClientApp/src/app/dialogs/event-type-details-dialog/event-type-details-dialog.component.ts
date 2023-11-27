@@ -4,7 +4,7 @@ import {LogService} from "../../services/log.service";
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {EventTypeService} from "../../services/user-event-type.service";
 import {Color} from "@angular-material-components/color-picker";
-import {debounceTime, Subscription} from "rxjs";
+import {debounceTime, distinctUntilChanged, Subject, Subscription} from "rxjs";
 import {UserEventType} from "../../shared/event-type.model";
 import {EventTypeDetailsDialogRequest} from "../../shared/dialogs/event-type-details-dialog-request";
 import {HrimEventService} from "../../services/hrim-event.service";
@@ -25,10 +25,15 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   isAnalysisSettingsChanged = false
   isAnalysisSettingsNotEmpty= false
   isAnalysisReportsNotEmpty = false
+  parentEventTypeOptions: UserEventType[]
   allEventTypes: UserEventType[]
+  parentEventTypeSearch: string = ''
+  selectedParentEventType: UserEventType | undefined
+  parentEventTypeFilter$ = new Subject<any>()
 
   formValueChangeSub: Subscription
   allEventTypesSub: Subscription
+  parentEventTypeFilterSub: Subscription
 
   private originalEventType: UserEventType;
 
@@ -50,12 +55,22 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.parentEventTypeFilterSub == this.parentEventTypeFilter$
+                                         .pipe(debounceTime(200),
+                                               distinctUntilChanged())
+                                         .subscribe({
+                                           next: event => this.filterEventTypeOptions(this.allEventTypes, event?.target?.value ?? '')
+                                         })
     this.allEventTypesSub = this.eventTypeService.eventTypes$
                                 .subscribe({
                                   next: eventTypes => {
                                     this.allEventTypes = this.data.model.id
                                        ? eventTypes.filter(x => x.id != this.data.model.id)
                                        : eventTypes
+                                    this.selectedParentEventType = this.data.model.parent_id
+                                      ? this.allEventTypes.find(x => x.id == this.data.model.parent_id)
+                                      : undefined
+                                    this.filterEventTypeOptions(this.allEventTypes, this.parentEventTypeSearch)
                                     this.logger.log('getting event types for select component: ', this.allEventTypes)
                                   }
                                 })
@@ -66,14 +81,13 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
       name       : [this.data.model.name || '', [Validators.required]],
       description: [this.data.model.description || ''],
       color      : new FormControl(color, [Validators.required]),
-      parent     : [this.data.model.parent_id]
+      parent     : [this.selectedParentEventType?.name]
     });
     if (this.data.model.id && this.data.model.is_mine) {
       this.eventTypeService.getDetails(this.data.model.id)
           .subscribe({
             next: loadedEventType => {
               this.logger.debug('User event type details was successfully loaded: ', loadedEventType)
-              this.updateModelFromControls(loadedEventType);
               this.data.model = loadedEventType
               this.originalEventType = {...loadedEventType};
             }
@@ -95,11 +109,20 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
     this.analysisSettingService.loadAvailable()
   }
 
+  onEventTypeSelected(event: any){
+    this.selectedParentEventType = event.option.value
+  }
+  private filterEventTypeOptions(allEventTypes: UserEventType[], filter: string){
+    const lowerFilter = filter.toLowerCase()
+    this.parentEventTypeOptions = filter
+      ? allEventTypes.filter(x => x.name.toLowerCase().indexOf(lowerFilter) > -1)
+      : allEventTypes
+  }
   checkFormChanges() {
     this.isChanged = this.originalEventType.name !== this.form.get('name')?.value ||
       this.originalEventType.description !== this.form.get('description')?.value ||
       this.originalEventType.color !== '#' + this.form.get('color')?.value?.hex ||
-      this.originalEventType.parent_id !== this.form.get('parent')?.value ||
+      this.originalEventType.parent_id != (this.form.get('parent')?.value?.id ?? 0) ||
       this.isAnalysisSettingsChanged;
     this.logger.debug(`${this.data.title.toLowerCase()} form is changed: `, this.isChanged)
   }
@@ -108,7 +131,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
     model.name = this.form.get('name')?.value;
     model.color = '#' + this.form.get('color')?.value.hex;
     model.description = this.form.get('description')?.value;
-    model.parent_id   = this.form.get('parent')?.value;
+    model.parent_id   = this.form.get('parent')?.value?.id;
   }
 
   onAnalysisSettingsChanged(isChanged: boolean) {

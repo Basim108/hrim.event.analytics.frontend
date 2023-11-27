@@ -5,14 +5,21 @@
       <mat-tab label="Event Type">
         <p>
           <mat-form-field appearance="standard">
-            <mat-label>Parent Event Type</mat-label>
-            <mat-select [(value)]="data.model.parent_id"
-                        formControlName="parent">
-              <mat-option *ngFor="let type of allEventTypes; index as i"
-                          [value]="type.id">
-                {{type.name}}
+            <input matInput
+                   placeholder="Parent Event Type"
+                   aria-label="Parent Event Type"
+                   [matAutocomplete]="auto"
+                   [value]="selectedParentEventType?.name ?? ''"
+                   (keyup)="parentEventTypeFilter$.next($event)"
+                   formControlName="parent"
+            />
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onEventTypeSelected($event)" >
+              <mat-option>-- None --</mat-option>
+              <mat-option *ngFor="let type of parentEventTypeOptions"
+                          [value]="type">
+                <span>{{type.name}}</span>
               </mat-option>
-            </mat-select>
+            </mat-autocomplete>
           </mat-form-field>
         </p>
         <p>
