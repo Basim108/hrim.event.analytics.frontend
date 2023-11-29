@@ -43,19 +43,18 @@ export class EventTypeItemComponent implements OnInit {
 
   onDeleteEventType(event: any) {
     event.stopPropagation()
-    if (window.confirm(`Are sure you want to delete "${this.eventType.name}"?`)) {
-      this.eventTypeService
-          .delete(this.eventType)
-          .subscribe({
-            next: (deletedEventType) => {
-              if (deletedEventType.is_deleted) {
-                this.delete.emit(this.eventType)
-              }
-              this.notificationService.success(`Successfully deleted`)
-            },
-            error: () => this.notificationService.error(`Failed to save deletion`)
-          });
-    }
+    this.notificationService
+        .confirmation(`Are sure you want to delete "${this.eventType.name}"?`,
+                      () => this.eventTypeService
+                                .delete(this.eventType)
+                                .subscribe({
+                                  next: (deletedEventType) => {
+                                    if (deletedEventType.is_deleted)
+                                      this.delete.emit(this.eventType)
+                                    this.notificationService.success(`Successfully deleted`)
+                                  },
+                                  error: () => this.notificationService.error(`Failed to save deletion`)
+                                }))
   }
 
   toggleEventType() {

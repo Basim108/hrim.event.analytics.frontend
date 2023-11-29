@@ -57,11 +57,10 @@ export class NotificationService {
    this.notificationService.error("confirm canceled");
    });
    */
-  confirmation(    message: string,
-    okCallback: () => void,
-    title = 'Are you sure?',
-    cancelCallback: () => any = () => {}
-  ) {
+  confirmation(message: string,
+               okCallback: () => void,
+               title = 'Are you sure?',
+               cancelCallback: () => any = () => {}) {
     const dialogRef = this.dialog.open(ConfirmationDialog, {
       width: '250px',
       data: {message: message, title: title}
