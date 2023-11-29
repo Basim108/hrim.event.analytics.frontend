@@ -79,4 +79,7 @@ Global
 		{9C310240-D760-4CEA-AC92-EF18E35908BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C310240-D760-4CEA-AC92-EF18E35908BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(RiderSharedRunConfigurations) = postSolution
+		File = Hrim.Event.Analytics.Web\ClientApp\.run\UI Tests.run.xml
+	EndGlobalSection
 EndGlobal

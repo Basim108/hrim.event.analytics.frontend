@@ -44,7 +44,7 @@ export class EventTypeItemComponent implements OnInit {
   onDeleteEventType(event: any) {
     event.stopPropagation()
     this.notificationService
-        .confirmation(`Are sure you want to delete "${this.eventType.name}"?`,
+        .confirmation(`You want to delete "${this.eventType.name}"?`,
                       () => this.eventTypeService
                                 .delete(this.eventType)
                                 .subscribe({

@@ -80,7 +80,7 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
     $event.stopPropagation()
     const eventKind = this.eventOfDay.isOccurrence ? 'occurrence' : 'duration'
     this.notificationService
-        .confirmation(`Are sure you want to delete "${this.eventOfDay.eventType.name}" ${eventKind}?`,
+        .confirmation(`You want to delete "${this.eventOfDay.eventType.name}" ${eventKind}?`,
                       () => this.eventService
                                 .deleteEvent(this.eventOfDay)
                                 .subscribe({
