@@ -10,6 +10,7 @@ import {MatDialog}                                                 from "@angula
 import {OccurrenceEventDetailsDialogRequest}                       from "../../../shared/dialogs/occurrence-event-details-dialog-request";
 import {DurationEventDetailsDialog}                                from "../../../dialogs/duration-event-details-dialog/duration-event-details-dialog";
 import {DurationEventDetailsDialogRequest}                         from "../../../shared/dialogs/duration-event-details-dialog-request";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
              selector   : 'app-event-of-day',
@@ -31,6 +32,7 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   constructor(private eventTypeService: EventTypeService,
               private eventService: HrimEventService,
               private detailsDialog: MatDialog,
+              private notificationService: NotificationService,
               private logger: LogService) {
   }
 
@@ -77,22 +79,24 @@ export class EventOfDayComponent implements OnInit, OnDestroy {
   onDelete($event: any) {
     $event.stopPropagation()
     const eventKind = this.eventOfDay.isOccurrence ? 'occurrence' : 'duration'
-    if(window.confirm(`Are sure you want to delete "${this.eventOfDay.eventType.name}" ${eventKind}?`)) {
-      this.eventService
-        .deleteEvent(this.eventOfDay)
-        .subscribe({
-          next: () => {
-            delete this.eventService.eventContext[this.eventOfDay.id]
-            this.delete.emit(this.eventOfDay)
-          },
-          error: err => {
-            const eventContext = this.eventService.eventContext[this.eventOfDay.id]
-            eventContext.isDeleted = true
-            eventContext.isUnsaved = true
-            this.logger.error('Failed to delete event: ' + err, this.eventOfDay, eventContext)
-          }
-        });
-    }
+    this.notificationService
+        .confirmation(`You want to delete "${this.eventOfDay.eventType.name}" ${eventKind}?`,
+                      () => this.eventService
+                                .deleteEvent(this.eventOfDay)
+                                .subscribe({
+                                  next: () => {
+                                    delete this.eventService.eventContext[this.eventOfDay.id]
+                                    this.delete.emit(this.eventOfDay)
+                                    this.notificationService.success(`Successfully deleted`)
+                                  },
+                                  error: err => {
+                                    const eventContext = this.eventService.eventContext[this.eventOfDay.id]
+                                    eventContext.isDeleted = true
+                                    eventContext.isUnsaved = true
+                                    this.notificationService.error(`Failed to save deletion`)
+                                    this.logger.error('Failed to delete event: ' + err, this.eventOfDay, eventContext)
+                                  }
+                                }))
   }
 
   getTopBorderStyle() {

@@ -1,0 +1,101 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~@angular/material/theming';
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+$achieve-primary: (
+50: #bac6ff,
+100: #6f82e4,
+200: #6478d9,
+300: #4254ad,
+400: #36479c,
+500: #24327b,
+600: #212e74,
+700: #1b2769,
+800: #111b55,
+900: #0c1447,
+   A100: #716fe4,
+   A200: #6664d9,
+   A400: #3d369c,
+   A700: #2d1b69,
+   contrast: (
+50: $dark-primary-text,
+100: $dark-primary-text,
+200: $dark-primary-text,
+300: $light-primary-text,
+400: $light-primary-text,
+500: $light-primary-text,
+600: $light-primary-text,
+700: $light-primary-text,
+800: $light-primary-text,
+900: $light-primary-text,
+      A100: $dark-primary-text,
+             A200: $light-primary-text,
+                    A400: $light-primary-text,
+                           A700: $light-primary-text,
+)
+);
+
+$achieve-red: (
+50: #ff7396,
+100: #eb5278,
+200: #d43f64,
+300: #c33357,
+400: #b1274a,
+500: #a12041,
+600: #951d3b,
+700: #881935,
+800: #7c152f,
+900: #6e1028,
+   A100: #eb5299,
+   A200: #d43f84,
+   A400: #b1275c,
+   A700: #881944,
+   contrast: (
+50: $dark-primary-text,
+100: $dark-primary-text,
+200: $dark-primary-text,
+300: $dark-primary-text,
+400: $dark-primary-text,
+500: $light-primary-text,
+600: $light-primary-text,
+700: $light-primary-text,
+800: $light-primary-text,
+900: $light-primary-text,
+      A100: $dark-primary-text,
+             A200: $light-primary-text,
+                    A400: $light-primary-text,
+                           A700: $light-primary-text,
+)
+);
+
+$primary: mat-color(mat-palette($achieve-primary));
+$accent: mat-color(mat-palette($achieve-primary, A200, A100, A400));
+$error: mat-color(mat-palette($achieve-red));
+$background: map-get($mat-light-theme-background, 'background');
+$success: mat-color(mat-palette($mat-light-green));
+
+.basic-container {
+  padding: 5px;
+}
+
+.blue-snackbar {
+  background: $primary;
+}
+
+.success-snackbar {
+  background: $success;
+  color: #0c1447;
+}
+
+.error-snackbar {
+  background: $error;
+  color: rgba(255, 255, 255, 0.9);
+}

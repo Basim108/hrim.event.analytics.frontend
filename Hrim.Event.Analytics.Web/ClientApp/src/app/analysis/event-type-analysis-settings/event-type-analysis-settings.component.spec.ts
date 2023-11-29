@@ -1,29 +1,15 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {EventTypeAnalysisSettingsComponent} from './event-type-analysis-settings.component';
-import {
-  AnyEventTypeAnalysisSettings,
-  EventTypeCountAnalysisSettings,
-  EventTypeGapAnalysisSettings
-} from "../../shared/event-type-analysis-settings";
+import {EventTypeCountAnalysisSettings, EventTypeGapAnalysisSettings} from "../../shared/event-type-analysis-settings";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {MatIconModule} from "@angular/material/icon";
 import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from "@angular/material/button";
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
-import {MatSelectModule} from "@angular/material/select";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {
-  MAT_COLOR_FORMATS,
-  NGX_MAT_COLOR_FORMATS,
-  NgxMatColorPickerModule
-} from "@angular-material-components/color-picker";
-import {NgxMatNativeDateModule, NgxMatTimepickerModule} from "@angular-material-components/datetime-picker";
-import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {NgxMatNativeDateModule} from "@angular-material-components/datetime-picker";
 import {EventTypeService} from "../../services/user-event-type.service";
 import {LogService} from "../../services/log.service";
 import {HrimEventService} from "../../services/hrim-event.service";
 import {FormBuilder} from "@angular/forms";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {NotificationService} from "../../services/notification.service";
 
 describe('EventTypeAnalysisSettingsComponent', () => {
   let component: EventTypeAnalysisSettingsComponent;
@@ -41,7 +27,8 @@ describe('EventTypeAnalysisSettingsComponent', () => {
       providers   : [
         EventTypeService, LogService,
         HrimEventService,
-        FormBuilder
+        FormBuilder,
+        NotificationService
       ]
     }).compileComponents();
 

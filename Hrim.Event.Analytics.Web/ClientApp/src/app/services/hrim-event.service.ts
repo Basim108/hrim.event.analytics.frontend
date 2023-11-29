@@ -12,6 +12,7 @@ import {EntityState} from "../shared/entity-state";
 import {BackendUrlService} from "./backend-url.service";
 import {UserEventType} from "../shared/event-type.model";
 import {EventTypeService} from "./user-event-type.service";
+import {NotificationService} from "./notification.service";
 
 @Injectable({providedIn: 'root'})
 export class HrimEventService {
@@ -27,6 +28,7 @@ export class HrimEventService {
   constructor(private logger: LogService,
               private urlService: BackendUrlService,
               private eventTypeService: EventTypeService,
+              private notificationService: NotificationService,
               private http: HttpClient) {
     logger.logConstructor(this)
   }
@@ -58,8 +60,12 @@ export class HrimEventService {
           const event = new OccurrenceEventModel(createdEvent, model.eventType)
           this.contextSaved(model, event)
           this.createdOccurrences$.next(event)
+          this.notificationService.success(`Successfully saved occurrence of "${model.eventType.name}"`)
         },
-        error: err => this.logger.error('Occurrence event creation failed: ' + err, model)
+        error: err => {
+          this.logger.error('Occurrence event creation failed: ' + err, model)
+          this.notificationService.error(`Failed to save occurrence of "${model.eventType.name}"`)
+        }
       })
   }
 
@@ -79,8 +85,12 @@ export class HrimEventService {
           const event = new DurationEventModel(createdEvent, model.eventType)
           this.contextSaved(model, event)
           this.createdDurations$.next(event)
+          this.notificationService.success(`Successfully saved duration event of "${model.eventType.name}"`)
         },
-        error: err => this.logger.error('Occurrence event creation failed: ' + err, model)
+        error: err => {
+          this.logger.error('Occurrence event creation failed: ' + err, model)
+          this.notificationService.error(`Failed to save duration event of "${model.eventType.name}"`)
+        }
       })
   }
 

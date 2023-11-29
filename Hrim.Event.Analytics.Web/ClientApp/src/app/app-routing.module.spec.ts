@@ -12,6 +12,12 @@ import {DateTime} from "luxon";
 import {MonthViewRouteModel} from "./shared/month-view-route.model";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {YearViewRouteModel} from "./shared/year-view-route.model";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatInputModule} from "@angular/material/input";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {LogService} from "./services/log.service";
+import {NotificationService} from "./services/notification.service";
 
 describe('Routing Module', () => {
   let location: Location
@@ -22,7 +28,11 @@ describe('Routing Module', () => {
       imports:[
         AppRoutingModule,
         HttpClientTestingModule,
-        RouterTestingModule.withRoutes(appRoutes)
+        RouterTestingModule.withRoutes(appRoutes),
+        MatDialogModule,
+        MatInputModule,
+        NoopAnimationsModule,
+        MatSnackBarModule
       ],
       declarations:[
         AppComponent,
@@ -30,7 +40,8 @@ describe('Routing Module', () => {
         YearViewComponent,
         LandingViewComponent,
         PageNotFoundComponent
-      ]
+      ],
+      providers:[LogService, NotificationService]
     })
     router = TestBed.inject(Router)
     location = TestBed.inject(Location)

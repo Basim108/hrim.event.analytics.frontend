@@ -1,12 +1,22 @@
 import {CalendarService} from './calendar.service';
 import {TestBed} from "@angular/core/testing";
 import {DateTime} from "luxon";
+import {MatDialogModule} from "@angular/material/dialog";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('CalendarService', () => {
   let service: CalendarService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [CalendarService] });
+    TestBed.configureTestingModule({
+      imports: [
+        MatDialogModule,
+        NoopAnimationsModule,
+        MatSnackBarModule
+      ],
+      providers: [CalendarService]
+    });
     service = TestBed.inject(CalendarService);
   });
 

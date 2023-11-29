@@ -8,6 +8,21 @@ import {EventTypeTestData} from "../../test_data/event-types";
 import {OccurrenceEventSnakeModel} from "../shared/occurrence-event.model";
 import {EventTypeService} from "./user-event-type.service";
 import {DurationEventSnakeModel} from "../shared/duration-event.model";
+import {NotificationService} from "./notification.service";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {BackendUrlService} from "./backend-url.service";
+import {MatIconModule} from "@angular/material/icon";
+import {MatInputModule} from "@angular/material/input";
+import {MatButtonModule} from "@angular/material/button";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatSelectModule} from "@angular/material/select";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatNativeDateModule,
+  NgxMatTimepickerModule
+} from "@angular-material-components/datetime-picker";
 
 describe('HrimEventService', () => {
   let service: HrimEventService;
@@ -25,8 +40,13 @@ describe('HrimEventService', () => {
     testOccurrences = new OccurrenceTestData(testEventTypes)
     testDurations = new DurationTestData(testEventTypes)
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [LogService, EventTypeService]
+      imports: [
+        HttpClientTestingModule,
+        MatDialogModule,
+        NoopAnimationsModule,
+        MatSnackBarModule
+      ],
+      providers: [LogService, BackendUrlService, EventTypeService, NotificationService]
     })
     service = TestBed.inject(HrimEventService);
     const eventTypeService = TestBed.inject(EventTypeService)

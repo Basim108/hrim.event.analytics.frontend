@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { GapAnalysisReportComponent } from './gap-analysis-report.component';
+import {GapAnalysisReportComponent} from './gap-analysis-report.component';
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('GapAnalysisReportComponent', () => {
   let component: GapAnalysisReportComponent;
@@ -8,9 +9,10 @@ describe('GapAnalysisReportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GapAnalysisReportComponent ]
+      imports: [NoopAnimationsModule],
+      declarations: [GapAnalysisReportComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(GapAnalysisReportComponent);
     component = fixture.componentInstance;

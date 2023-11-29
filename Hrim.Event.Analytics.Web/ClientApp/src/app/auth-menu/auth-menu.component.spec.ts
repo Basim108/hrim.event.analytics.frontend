@@ -5,6 +5,7 @@ import {AuthService}             from '../services/auth.service'
 import {LogService}              from '../services/log.service'
 import {HttpClientTestingModule} from '@angular/common/http/testing'
 import {TestUsers}               from '../../test_data/users'
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('AuthMenuComponent', () => {
   let component: AuthMenuComponent
@@ -15,7 +16,7 @@ describe('AuthMenuComponent', () => {
   beforeEach(async () => {
     testUsers = new TestUsers()
     await TestBed.configureTestingModule({
-                                           imports     : [HttpClientTestingModule],
+                                           imports     : [HttpClientTestingModule, NoopAnimationsModule],
                                            declarations: [AuthMenuComponent],
                                            providers   : [AuthService, LogService]
                                          })

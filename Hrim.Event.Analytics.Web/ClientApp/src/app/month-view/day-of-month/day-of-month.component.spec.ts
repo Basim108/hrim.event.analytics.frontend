@@ -19,6 +19,8 @@ import {MatSelectModule}                                                        
 import {MatDatepickerModule}                                                        from "@angular/material/datepicker";
 import {NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule} from "@angular-material-components/datetime-picker";
 import {NoopAnimationsModule}                                                       from "@angular/platform-browser/animations";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {NotificationService} from "../../services/notification.service";
 
 describe('DayOfMonthComponent', () => {
   let component: DayOfMonthComponent;
@@ -47,9 +49,15 @@ describe('DayOfMonthComponent', () => {
                                              NgxMatDatetimePickerModule,
                                              NgxMatTimepickerModule,
                                              NgxMatNativeDateModule,
-                                             NoopAnimationsModule
+                                             NoopAnimationsModule,
+                                             MatSnackBarModule
                                            ],
-                                           providers   : [LogService, HrimEventService, EventTypeService]
+                                           providers   : [
+                                             LogService,
+                                             HrimEventService,
+                                             EventTypeService,
+                                             NotificationService
+                                           ]
                                          })
                  .compileComponents();
 

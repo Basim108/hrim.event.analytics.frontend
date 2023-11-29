@@ -2,6 +2,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { ErrorMetadataService } from './error-metadata.service';
 import {LogService} from "./log.service";
+import {MatDialogModule} from "@angular/material/dialog";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('ErrorMetadataService', () => {
   let service: ErrorMetadataService;
@@ -9,6 +12,11 @@ describe('ErrorMetadataService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [
+        MatDialogModule,
+        NoopAnimationsModule,
+        MatSnackBarModule
+      ],
       providers: [LogService]
     });
     logService = TestBed.inject(LogService);

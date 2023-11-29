@@ -9,6 +9,9 @@ import {MatButtonModule} from '@angular/material/button'
 import {MatDialogModule} from '@angular/material/dialog'
 import {MatInputModule} from '@angular/material/input'
 import {DateTime} from 'luxon'
+import {NotificationService} from "../../services/notification.service";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('MonthPagesComponent', () => {
   let component: MonthPagesComponent
@@ -23,10 +26,12 @@ describe('MonthPagesComponent', () => {
                      MatIconModule,
                      MatButtonModule,
                      MatDialogModule,
-                     MatInputModule
+                     MatInputModule,
+                     NoopAnimationsModule,
+                     MatSnackBarModule
                    ],
                    declarations: [MonthPagesComponent],
-                   providers:    [RouteService]
+                   providers:    [RouteService, NotificationService]
                  })
                  .compileComponents()
 
