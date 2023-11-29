@@ -9,6 +9,7 @@ import {OccurrenceEventDetailsDialogRequest}  from "../../shared/dialogs/occurre
 import {DateTime}                             from "luxon";
 import {BaseEventDetailsDialog}               from "../base-event-details-dialog";
 import {BaseEventModel}                       from "../../shared/base-event.model";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
              selector   : 'app-occurrence-event-details-dialog',
@@ -24,8 +25,9 @@ export class OccurrenceEventDetailsDialog extends BaseEventDetailsDialog impleme
               formBuilder: FormBuilder,
               eventTypeService: EventTypeService,
               eventService: HrimEventService,
+              notificationService: NotificationService,
               logger: LogService) {
-    super(formBuilder, eventTypeService, eventService, logger)
+    super(formBuilder, eventTypeService, eventService, notificationService, logger)
     logger.logConstructor(this)
     this.saveContext         = {
       model: this.dialogRequest.model,

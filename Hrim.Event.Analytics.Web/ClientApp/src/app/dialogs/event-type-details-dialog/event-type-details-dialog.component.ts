@@ -10,6 +10,7 @@ import {EventTypeDetailsDialogRequest} from "../../shared/dialogs/event-type-det
 import {HrimEventService} from "../../services/hrim-event.service";
 import {AnalysisSettingService} from "../../services/analysis-setting.service";
 import {AnyEventTypeAnalysisSettings} from "../../shared/event-type-analysis-settings";
+import {NotificationService} from "../../services/notification.service";
 
 @Component({
   selector   : 'app-event-type-details-dialog',
@@ -43,6 +44,7 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
               private eventService: HrimEventService,
               private eventTypeService: EventTypeService,
               private analysisSettingService: AnalysisSettingService,
+              private notificationService: NotificationService,
               private logger: LogService) {
     logger.logConstructor(this);
     this.originalEventType = {...this.data.model}
@@ -155,10 +157,12 @@ export class EventTypeDetailsDialog implements OnInit, OnDestroy {
               this.analysisSettingService.save(savedEventType.id, this.analysisSettings)
             this.dialogRef.close(savedEventType);
             this.eventService.updateEventTypesForEvents(savedEventType)
+            this.notificationService.success(`Successfully saved "${this.data.model.name}"`)
           },
           error: error => {
             this.logger.error('failed to save a user event type: ', error)
             this.dialogRef.disableClose = true;
+            this.notificationService.error(`Failed to save "${this.data.model.name}"`)
           }
         });
     this.logger.debug('onSave clicked: ', this.data);

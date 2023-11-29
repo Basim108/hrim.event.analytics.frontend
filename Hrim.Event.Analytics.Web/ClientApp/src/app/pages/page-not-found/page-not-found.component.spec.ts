@@ -1,6 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PageNotFoundComponent } from './page-not-found.component';
+import {PageNotFoundComponent} from './page-not-found.component';
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('PageNotFoundComponent', () => {
   let component: PageNotFoundComponent;
@@ -9,9 +12,14 @@ describe('PageNotFoundComponent', () => {
   beforeEach(async () => {
     pending()
     await TestBed.configureTestingModule({
-      declarations: [ PageNotFoundComponent ]
+      declarations: [PageNotFoundComponent],
+      imports: [
+        MatDialogModule,
+        NoopAnimationsModule,
+        MatSnackBarModule
+      ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(PageNotFoundComponent);
     component = fixture.componentInstance;

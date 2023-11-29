@@ -8,7 +8,6 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef}              
 import {MatSelectModule}                                                            from "@angular/material/select";
 import {MatDatepickerModule}                                                        from "@angular/material/datepicker";
 import {NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule} from "@angular-material-components/datetime-picker";
-import {NoopAnimationsModule}                                                       from "@angular/platform-browser/animations";
 import {EventTypeService}                                                           from "../../services/user-event-type.service";
 import {HrimEventService}                                                           from "../../services/hrim-event.service";
 import {LogService}                                                                 from "../../services/log.service";
@@ -18,6 +17,9 @@ import {EventTypeTestData}                                                      
 import {of}                                                                         from "rxjs";
 import {DurationEventModel}                                                         from "../../shared/duration-event.model";
 import {DurationTestData}                                                           from "../../../test_data/events";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {NotificationService} from "../../services/notification.service";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('DurationEventDetailsDialog', () => {
   let component: DurationEventDetailsDialog;
@@ -48,12 +50,13 @@ describe('DurationEventDetailsDialog', () => {
                                              NgxMatDatetimePickerModule,
                                              NgxMatTimepickerModule,
                                              NgxMatNativeDateModule,
-                                             NoopAnimationsModule
+                                             NoopAnimationsModule,
+                                             MatSnackBarModule
                                            ],
                                            declarations: [DurationEventDetailsDialog],
                                            providers   : [
                                              EventTypeService, HrimEventService, LogService,
-                                             FormBuilder,
+                                             FormBuilder, NotificationService,
                                              {provide: MAT_DIALOG_DATA, useValue: dialogRequest},
                                              {provide: MatDialogRef, useValue: dialogRef},
                                            ]

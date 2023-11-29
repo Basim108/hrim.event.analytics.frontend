@@ -19,6 +19,9 @@ import {MatInputModule}          from '@angular/material/input'
 import {of}                      from 'rxjs'
 import {DateTime}                from 'luxon'
 import {MonthViewRouteModel}     from '../shared/month-view-route.model'
+import {NotificationService} from "../services/notification.service";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('MonthViewComponent', () => {
   let component: MonthViewComponent
@@ -35,7 +38,9 @@ describe('MonthViewComponent', () => {
                      MatIconModule,
                      MatButtonModule,
                      MatDialogModule,
-                     MatInputModule
+                     MatInputModule,
+                     NoopAnimationsModule,
+                     MatSnackBarModule
                    ],
                    declarations: [
                      MonthViewComponent,
@@ -45,7 +50,7 @@ describe('MonthViewComponent', () => {
                      EventTypeListComponent,
                      EventTypeItemComponent
                    ],
-                   providers:    [CalendarService, LogService, RouteService]
+                   providers:    [CalendarService, LogService, RouteService, NotificationService]
                  })
                  .compileComponents()
 

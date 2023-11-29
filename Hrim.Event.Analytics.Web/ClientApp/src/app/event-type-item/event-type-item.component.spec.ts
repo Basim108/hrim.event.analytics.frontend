@@ -10,6 +10,9 @@ import {EventTypeTestData}                        from '../../test_data/event-ty
 import {of}                            from 'rxjs'
 import {UserEventType}                 from '../shared/event-type.model'
 import {EntityState}                   from "../shared/entity-state";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {NotificationService} from "../services/notification.service";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('EventTypeItemComponent', () => {
   let component: EventTypeItemComponent
@@ -29,10 +32,12 @@ describe('EventTypeItemComponent', () => {
                                              HttpClientTestingModule,
                                              MatIconModule,
                                              MatButtonModule,
-                                             MatDialogModule
+                                             MatDialogModule,
+                                             MatSnackBarModule,
+                                             NoopAnimationsModule
                                            ],
                                            declarations: [EventTypeItemComponent],
-                                           providers   : [EventTypeService,
+                                           providers   : [EventTypeService, NotificationService,
                                                           { provide: MatDialogRef, useValue: dialogRef}]
                                          })
                  .compileComponents()

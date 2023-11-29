@@ -1,24 +1,30 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {BaseEventDetailsDialog}                                                     from "./base-event-details-dialog";
-import {OccurrenceEventDetailsDialog}                                               from "./occurrence-event-details-dialog/occurrence-event-details-dialog";
-import {DateTime}                                                                   from "luxon";
-import {HttpClientTestingModule}                                                    from "@angular/common/http/testing";
-import {MatIconModule}                                                              from "@angular/material/icon";
-import {MatButtonModule}                                                            from "@angular/material/button";
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef}                             from "@angular/material/dialog";
-import {EventTypeService}                                                           from "../services/user-event-type.service";
-import {MatSelectModule}                                                            from "@angular/material/select";
-import {MatDatepickerModule}                                                        from "@angular/material/datepicker";
-import {NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule} from "@angular-material-components/datetime-picker";
-import {OccurrenceEventDetailsDialogRequest}                                        from "../shared/dialogs/occurrence-event-details-dialog-request";
-import {HrimEventService}                                                           from "../services/hrim-event.service";
-import {LogService}                                                                 from "../services/log.service";
-import {FormBuilder}                                                                from "@angular/forms";
-import {MatInputModule}                                                             from "@angular/material/input";
-import {NoopAnimationsModule}                                                       from "@angular/platform-browser/animations";
-import {OccurrenceTestData}                                                         from "../../test_data/events";
-import {EventTypeTestData}                                                          from "../../test_data/event-types";
+import {BaseEventDetailsDialog} from "./base-event-details-dialog";
+import {OccurrenceEventDetailsDialog} from "./occurrence-event-details-dialog/occurrence-event-details-dialog";
+import {DateTime} from "luxon";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {EventTypeService} from "../services/user-event-type.service";
+import {MatSelectModule} from "@angular/material/select";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatNativeDateModule,
+  NgxMatTimepickerModule
+} from "@angular-material-components/datetime-picker";
+import {OccurrenceEventDetailsDialogRequest} from "../shared/dialogs/occurrence-event-details-dialog-request";
+import {HrimEventService} from "../services/hrim-event.service";
+import {LogService} from "../services/log.service";
+import {FormBuilder} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {OccurrenceTestData} from "../../test_data/events";
+import {EventTypeTestData} from "../../test_data/event-types";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {NotificationService} from "../services/notification.service";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 
 describe('BaseEventDetailsDialog', () => {
@@ -40,12 +46,13 @@ describe('BaseEventDetailsDialog', () => {
                                              NgxMatDatetimePickerModule,
                                              NgxMatTimepickerModule,
                                              NgxMatNativeDateModule,
-                                             NoopAnimationsModule
+                                             NoopAnimationsModule,
+                                             MatSnackBarModule
                                            ],
                                            declarations: [OccurrenceEventDetailsDialog],
                                            providers   : [
                                              EventTypeService, HrimEventService, LogService,
-                                             FormBuilder,
+                                             FormBuilder, NotificationService,
                                              {
                                                provide : MAT_DIALOG_DATA,
                                                useValue: dialogRequest

@@ -9,6 +9,7 @@ import {RouteService}            from '../services/route.service'
 import {RouterTestingModule}     from '@angular/router/testing'
 import {Router}                  from '@angular/router'
 import {TestUsers}               from '../../test_data/users'
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent
@@ -21,7 +22,8 @@ describe('HeaderComponent', () => {
     await TestBed.configureTestingModule({
                                            imports     : [
                                              HttpClientTestingModule,
-                                             RouterTestingModule.withRoutes([])
+                                             RouterTestingModule.withRoutes([]),
+                                             NoopAnimationsModule
                                            ],
                                            declarations: [HeaderComponent, AuthMenuComponent],
                                            providers   : [AuthService, LogService, RouteService]

@@ -1,23 +1,29 @@
-import {ComponentFixture, TestBed}                                         from '@angular/core/testing';
-import {EventTypeDetailsDialog}                                            from './event-type-details-dialog.component';
-import {HttpClientTestingModule}                                           from "@angular/common/http/testing";
-import {MatIconModule}                                                     from "@angular/material/icon";
-import {MatInputModule}                                                    from "@angular/material/input";
-import {MatButtonModule}                                                   from "@angular/material/button";
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef}                    from "@angular/material/dialog";
-import {MatSelectModule}                                                   from "@angular/material/select";
-import {MatDatepickerModule}                                               from "@angular/material/datepicker";
-import {NgxMatNativeDateModule, NgxMatTimepickerModule}                    from "@angular-material-components/datetime-picker";
-import {NoopAnimationsModule}                                              from "@angular/platform-browser/animations";
-import {EventTypeDetailsDialogRequest}                                     from "../../shared/dialogs/event-type-details-dialog-request";
-import {EventTypeTestData}                                                 from "../../../test_data/event-types";
-import {EventTypeService}                                                  from "../../services/user-event-type.service";
-import {LogService}                                                        from "../../services/log.service";
-import {FormBuilder}                                                       from "@angular/forms";
-import {MAT_COLOR_FORMATS, NGX_MAT_COLOR_FORMATS, NgxMatColorPickerModule} from "@angular-material-components/color-picker";
-import {UserEventType}                                                     from "../../shared/event-type.model";
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {EventTypeDetailsDialog} from './event-type-details-dialog.component';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {MatIconModule} from "@angular/material/icon";
+import {MatInputModule} from "@angular/material/input";
+import {MatButtonModule} from "@angular/material/button";
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {MatSelectModule} from "@angular/material/select";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {NgxMatNativeDateModule, NgxMatTimepickerModule} from "@angular-material-components/datetime-picker";
+import {EventTypeDetailsDialogRequest} from "../../shared/dialogs/event-type-details-dialog-request";
+import {EventTypeTestData} from "../../../test_data/event-types";
+import {EventTypeService} from "../../services/user-event-type.service";
+import {LogService} from "../../services/log.service";
+import {FormBuilder} from "@angular/forms";
+import {
+  MAT_COLOR_FORMATS,
+  NGX_MAT_COLOR_FORMATS,
+  NgxMatColorPickerModule
+} from "@angular-material-components/color-picker";
+import {UserEventType} from "../../shared/event-type.model";
 import {HrimEventService} from "../../services/hrim-event.service";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {NotificationService} from "../../services/notification.service";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('EventTypeDetailsDialogComponent', () => {
   let component: EventTypeDetailsDialog;
@@ -43,12 +49,13 @@ describe('EventTypeDetailsDialogComponent', () => {
                                              NgxMatColorPickerModule,
                                              NgxMatTimepickerModule,
                                              NgxMatNativeDateModule,
-                                             NoopAnimationsModule
+                                             NoopAnimationsModule,
+                                             MatSnackBarModule
                                            ],
                                            providers   : [
                                              EventTypeService, LogService,
                                              HrimEventService,
-                                             FormBuilder,
+                                             FormBuilder, NotificationService,
                                              {provide: MAT_DIALOG_DATA, useValue: dialogRequest},
                                              {provide: MatDialogRef, useValue: {}},
                                              {provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS},

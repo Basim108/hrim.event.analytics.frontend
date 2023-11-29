@@ -4,6 +4,10 @@ import {LogService} from "./log.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {EventTypeTestData} from "../../test_data/event-types";
 import {BackendUrlService} from "./backend-url.service";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {NotificationService} from "./notification.service";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 describe('EventTypeService', () => {
@@ -19,8 +23,13 @@ describe('EventTypeService', () => {
     beforeEach(() => {
         testData = new EventTypeTestData()
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [LogService, BackendUrlService]
+            imports: [
+              HttpClientTestingModule,
+              MatDialogModule,
+              NoopAnimationsModule,
+              MatSnackBarModule
+            ],
+            providers: [LogService, BackendUrlService, NotificationService]
         })
         service = TestBed.inject(EventTypeService)
         httpTestingController = TestBed.inject(HttpTestingController)

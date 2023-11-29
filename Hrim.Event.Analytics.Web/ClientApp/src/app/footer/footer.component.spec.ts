@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FooterComponent } from './footer.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatInputModule} from "@angular/material/input";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -9,7 +13,13 @@ describe('FooterComponent', () => {
   beforeEach(async () => {
     pending()
     await TestBed.configureTestingModule({
-      declarations: [ FooterComponent ]
+      declarations: [ FooterComponent ],
+      imports: [
+        MatDialogModule,
+        MatInputModule,
+        NoopAnimationsModule,
+        MatSnackBarModule
+      ]
     })
     .compileComponents();
 

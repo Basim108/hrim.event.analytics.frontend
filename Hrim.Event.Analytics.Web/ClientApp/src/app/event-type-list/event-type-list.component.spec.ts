@@ -11,6 +11,9 @@ import {EventTypeTestData}          from '../../test_data/event-types'
 import {EventTypeItemComponent}     from '../event-type-item/event-type-item.component'
 import {of}                         from 'rxjs'
 import {UserEventType}              from '../shared/event-type.model'
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {NotificationService} from "../services/notification.service";
 
 describe('EventTypeListComponent', () => {
   let component: EventTypeListComponent
@@ -26,10 +29,14 @@ describe('EventTypeListComponent', () => {
                      MatIconModule,
                      MatButtonModule,
                      MatDialogModule,
-                     MatInputModule
+                     MatInputModule,
+                     MatSnackBarModule,
+                     MatDialogModule,
+                     MatInputModule,
+                     NoopAnimationsModule
                    ],
                    declarations: [EventTypeListComponent, EventTypeItemComponent],
-                   providers:    [EventTypeService]
+                   providers:    [EventTypeService, NotificationService]
                  })
                  .compileComponents()
     eventTypeService = TestBed.inject(EventTypeService)

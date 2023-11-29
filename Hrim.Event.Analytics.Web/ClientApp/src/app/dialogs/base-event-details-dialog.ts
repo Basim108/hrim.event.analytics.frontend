@@ -8,6 +8,7 @@ import {BaseDetailsDialogRequest}           from "../shared/dialogs/base-details
 import {Component}                          from "@angular/core";
 import {SomeEventModel}                     from "../shared/some-event.model";
 import {DateTime}                           from "luxon";
+import {NotificationService} from "../services/notification.service";
 
 export type EventSaveContext = {
   model: SomeEventModel,
@@ -36,6 +37,7 @@ export abstract class BaseEventDetailsDialog {
   protected constructor(protected formBuilder: FormBuilder,
                         protected eventTypeService: EventTypeService,
                         protected eventService: HrimEventService,
+                        private notificationService: NotificationService,
                         protected logger: LogService) {
 
   }
@@ -89,10 +91,14 @@ export abstract class BaseEventDetailsDialog {
     this.eventService
         .save(this.saveContext.model)
         .subscribe({
-                     next : savedEntity => this.saveContext.next(savedEntity),
+                     next : savedEntity => {
+                       this.saveContext.next(savedEntity)
+                       this.notificationService.success(`Successfully saved`)
+                     },
                      error: err => {
                        this.logger.error('failed to save an event: ', this.dialogRequest, err)
                        this.saveContext.error(err)
+                       this.notificationService.error(`Failed to save`)
                      }
                    });
     this.logger.debug('Saving an event: ', this.dialogRequest);

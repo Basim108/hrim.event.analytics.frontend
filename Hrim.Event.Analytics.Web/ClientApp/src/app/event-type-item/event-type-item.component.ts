@@ -5,6 +5,7 @@ import {EventTypeDetailsDialog} from "../dialogs/event-type-details-dialog/event
 import {EventTypeDetailsDialogRequest} from "../shared/dialogs/event-type-details-dialog-request";
 import {EventTypeService} from "../services/user-event-type.service";
 import {UserEventType} from "../shared/event-type.model";
+import {NotificationService} from "../services/notification.service";
 
 @Component({
   selector   : 'app-event-type-item',
@@ -18,6 +19,7 @@ export class EventTypeItemComponent implements OnInit {
 
   constructor(public editDialog: MatDialog,
               private eventTypeService: EventTypeService,
+              private notificationService: NotificationService,
               private logger: LogService) {
     logger.logConstructor(this)
   }
@@ -49,7 +51,9 @@ export class EventTypeItemComponent implements OnInit {
               if (deletedEventType.is_deleted) {
                 this.delete.emit(this.eventType)
               }
-            }
+              this.notificationService.success(`Successfully deleted`)
+            },
+            error: () => this.notificationService.error(`Failed to save deletion`)
           });
     }
   }

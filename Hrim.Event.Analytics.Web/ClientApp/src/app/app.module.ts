@@ -6,7 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from "@angular/material/button";
 import {AppRoutingModule} from "./app-routing.module";
 import {MatDialogModule} from "@angular/material/dialog";
-import {MatFormFieldModule} from "@angular/material/form-field";
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
@@ -61,6 +61,8 @@ import {GapAnalysisReportComponent} from './analysis/gap-analysis-report/gap-ana
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from '@angular/material/snack-bar';
+import {AlertDialog, ConfirmationDialog} from "./services/notification.service";
 
 @NgModule({
   declarations: [
@@ -85,43 +87,48 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     CountAnalysisSettingsComponent,
     EventTypeAnalysisReportsComponent,
     CountAnalysisReportComponent,
-    GapAnalysisReportComponent
+    GapAnalysisReportComponent,
+    ConfirmationDialog,
+    AlertDialog
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        AppRoutingModule,
-        MatIconModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatInputModule,
-        NgxMatColorPickerModule,
-        ReactiveFormsModule,
-        MatMenuModule,
-        MatSelectModule,
-        MatDatepickerModule,
-        NgxMatDatetimePickerModule,
-        NgxMatTimepickerModule,
-        NgxMatNativeDateModule,
-        MatTabsModule,
-        MatSlideToggleModule,
-        MatExpansionModule,
-        FormsModule,
-        MatListModule,
-        MatCardModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatAutocompleteModule,
-    ],
-  providers   : [
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgxMatColorPickerModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule,
+    MatTabsModule,
+    MatSlideToggleModule,
+    MatExpansionModule,
+    FormsModule,
+    MatListModule,
+    MatCardModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatAutocompleteModule,
+    MatSnackBarModule,
+  ],
+  providers: [
     {provide: ErrorHandler, useClass: ErrorMetadataService},
     {provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS},
     {provide: HTTP_INTERCEPTORS, useClass: ApiResponseInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: ApiRequestInterceptor, multi: true},
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 5000}}
   ],
-  bootstrap   : [AppComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

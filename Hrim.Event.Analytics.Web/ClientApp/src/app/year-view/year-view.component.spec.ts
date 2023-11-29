@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { YearViewComponent } from './year-view.component';
+import {YearViewComponent} from './year-view.component';
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('YearViewComponent', () => {
   let component: YearViewComponent;
@@ -8,9 +9,10 @@ describe('YearViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ YearViewComponent ]
+      declarations: [YearViewComponent],
+      imports: [NoopAnimationsModule]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(YearViewComponent);
     component = fixture.componentInstance;
