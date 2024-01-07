@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using Serilog;
 
 namespace Hrim.Event.Analytics.Web.Authorization;
 
@@ -78,7 +77,6 @@ public static class AuthServiceRegistrations
                                           },
                                           OnRedirectToIdentityProvider = context => {
                                               if (!env.IsDevelopment()) {
-                                                  Log.Logger.Information("Login {RedirectUri}", context.ProtocolMessage.RedirectUri);
                                                   if(!context.ProtocolMessage.RedirectUri.Contains("https"))
                                                     context.ProtocolMessage.RedirectUri = context.ProtocolMessage.RedirectUri.Replace("http", "https");
                                               }
