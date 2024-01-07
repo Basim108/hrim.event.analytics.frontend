@@ -78,7 +78,9 @@ public static class AuthServiceRegistrations
                                           },
                                           OnRedirectToIdentityProvider = context => {
                                               if (!env.IsDevelopment()) {
-                                                  Log.Logger.Information("Login {RedirectUri}", context.Properties.RedirectUri);
+                                                  Log.Logger.Information("Login {RedirectUri}", context.ProtocolMessage.RedirectUri);
+                                                  if(!context.ProtocolMessage.RedirectUri.Contains("https"))
+                                                    context.ProtocolMessage.RedirectUri = context.ProtocolMessage.RedirectUri.Replace("http", "https");
                                               }
                                               context.ProtocolMessage.SetParameter("audience", "event-analytics-crud-api");
                                               return Task.FromResult(0);
