@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 namespace Hrim.Event.Analytics.Web.Authorization;
 
@@ -76,6 +77,9 @@ public static class AuthServiceRegistrations
                                               return Task.CompletedTask;
                                           },
                                           OnRedirectToIdentityProvider = context => {
+                                              if (!env.IsDevelopment()) {
+                                                  Log.Logger.Information("Login {RedirectUri}", context.Properties.RedirectUri);
+                                              }
                                               context.ProtocolMessage.SetParameter("audience", "event-analytics-crud-api");
                                               return Task.FromResult(0);
                                           }
